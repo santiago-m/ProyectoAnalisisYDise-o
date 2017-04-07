@@ -1,4 +1,6 @@
 package trivia;
+import org.javalite.activejdbc.Base;
+import trivia.User;
 
 /**
  * Hello world!
@@ -8,6 +10,13 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+      Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "franco", "franco");
+
+      User u = new User();
+      u.set("username", "Maradona");
+      u.set("password", "messi");
+      u.saveIt();
+
+      Base.close();
     }
 }
