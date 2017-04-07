@@ -1,3 +1,6 @@
+//PAGE GIT
+//http://rogerdudler.github.io/git-guide/
+//
 Santi's Change:
 
 Integrantes: Maria, Santiago Jose
@@ -19,3 +22,10 @@ I'm so fucking watching you!!
 Mati's Change:
 
 ah re loco!
+
+
+//////////////////////////
+
+activejdbc
+
+**TUTORIAL PREGUNTA2 https://github.com/se-unrc/**
