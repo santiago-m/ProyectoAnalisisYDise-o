@@ -1,12 +1,12 @@
 Historia 01: Como usuario, quisiera que hubieran preguntas sobre diversas tematicas.
-Historia 2: Como usuario, me gustaria poder mandar emoticones.
-Historia 3: Como usuario, me gustaria seguir respondiendo preguntas mientras responda correctamente.
-Historia 4: Como usuario, quisiera sumar puntos cuando respondo correctamente.
-Historia 5: Como usuario, quisiera quitar puntos de vida a mi adversario con cada pregunta que respondo de manera correcta.
-Historia 6: Como usuario, me gustaria sumar puntos de vida cada vez que respondo mas de X cantidad de preguntas de manera correcta.
-Historia 7: Como administrador de la app/juego, me gustaria moderar preguntas que los usuarios propongan.
-Historia 8: Como usuario, quiero poder loguearme con el fin de guardar mis progresos local o remotamente.
-Historia 9: Como administrador, quiero poder loguearme con el fin de acceder al historial de cambios hechos por mis compañeros.
+Historia 02: Como usuario, me gustaria que hubiese un tiempo limite para contestar cada pregunta.
+Historia 03: Como usuario, me gustaria seguir respondiendo preguntas mientras responda correctamente.
+Historia 04: Como usuario, quisiera sumar puntos cuando respondo correctamente.
+Historia 05: Como usuario, quisiera quitar puntos de vida a mi adversario con cada pregunta que respondo de manera correcta.
+Historia 06: Como usuario, me gustaria sumar puntos de vida cada vez que respondo mas de X cantidad de preguntas de manera correcta.
+Historia 07: Como administrador de la app/juego, me gustaria moderar preguntas que los usuarios propongan.
+Historia 08: Como usuario, quiero poder loguearme con el fin de guardar mis progresos local o remotamente.
+Historia 09: Como administrador, quiero poder loguearme con el fin de acceder al historial de cambios hechos por mis compañeros.
 Historia 10: Como administrador, me gustaria ser capaz de crear preguntas nuevas.
 Historia 11: Como administrador, me gustaria votar respecto a las preguntas creadas o aceptadas por mis compañeros antes que sean agregadas al juego.
 Historia 12: Como usuario, me gustaria ganar habilidades de uso limitado tras completar ciertos sub objetivos que el juego proponga.
