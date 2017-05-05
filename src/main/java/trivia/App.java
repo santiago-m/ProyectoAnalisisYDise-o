@@ -17,6 +17,11 @@ public class App
       u.set("password", "messi");
       u.saveIt();
 
+      User prueba1 = new User();
+      prueba1.set("username", "gregory");
+      prueba1.set("password", "asd");
+      prueba1.saveIt();
+
       Base.close();
     }
 }
