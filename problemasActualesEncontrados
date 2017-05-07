@@ -1,0 +1,9 @@
+problemas encontrados actualmente:
+
+------------app.java------------------
+
+    1) Al borrar la informacion de la base de datos (OPCION 3 Menu Inicial). Hay un llamado a recolectarDatos(); Los datos igual se borran.
+
+    2) Falta reiniciar ID auto incremental luego de borrar.
+
+    3) Metodo clearScreen() no funciona.
