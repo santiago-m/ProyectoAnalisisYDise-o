@@ -7,7 +7,7 @@ public class User extends Model {
 	Scanner in = new Scanner(System.in);
 	String username;
 	String password;
-	int puntos;
+	int points;
 
 	public User() {
 		super();
@@ -17,15 +17,23 @@ public class User extends Model {
 	public User(String name, String pass) {
 		username = name;
 		password = pass;
-		puntos = 0;
+		points = 0;
 	}
 
 	public String getUsername(){
 		return username;
 	}
 
-	public String getPassword(){
+	public String getPassword(){		// public why?
 		return password;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void incPoint() {
+		points++;
 	}
 
 

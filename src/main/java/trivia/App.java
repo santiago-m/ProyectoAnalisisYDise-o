@@ -24,14 +24,17 @@ public class App
         	else {
         		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "root");
 
-      			User usuario = recolectarDatos();
+                // De aca saque lo de recolectar datos.. porque si borrabas todos los datos, no tenia sentido pedir el usuario y contrasenia
+                // Seria mas util un case.. Ver despues
         
      			if (operacion == 1) {
-     			   logIn(usuario);
+                    User usuario = recolectarDatos();
+     			    logIn(usuario);
      			}
      			else if (operacion == 2) {
+                    User usuario = recolectarDatos();
      			    register(usuario);
-     			    System.out.println("Usuario Registrado Exitosamente."); 
+     			    System.out.println("Usuario Registrado Exitosamente!. Presione ENTER para volver al menu inicial."); 
      			    read();
       			}
      			else{
@@ -39,7 +42,7 @@ public class App
 					for(User u: listaCompleta) {   //<==== this line of code will initiate the actual query to DB
    						u.delete();
 					}
-      			    System.out.println("Informacion borrada. Pesione ENTER para volver al menu inicial.");
+      			    System.out.println("Informacion borrada. Presione ENTER para volver al menu inicial.");
       			    read();
       			}
      			
@@ -89,7 +92,7 @@ public class App
 
         user.set("username", user.username);
         user.set("password", user.password);
-        user.set("puntaje", user.puntos);
+        //user.set("puntaje", user.puntos);     //los puntos no los setea la clase User a 0 ?
 
         return user;
     }
@@ -98,7 +101,7 @@ public class App
 	* Metodo que carga los datos desde la DB del juego para que el usuario recupere su progreso anterior. Log In
 */
 
-    public static void logIn(User usuario) {
+    public static void logIn(User usuario) {    // Hay que ver de cambiarlo para poner las variables en privado en la clase user
     	boolean quieroVolver = false;
     	String resp;
         List<User> listUsers = User.where("username = '"+usuario.get("username")+"' and password = '"+usuario.get("password")+"'");
@@ -130,7 +133,7 @@ public class App
             usuario = recolectarDatos();
             list = User.where("username = '"+usuario.get("username")+"'");
         }
-	    usuario.saveIt();
+	    usuario.saveIt();  // ver de capturar ecepcion usuario sin nombre
     }
 
 /**
