@@ -92,7 +92,7 @@ public class App
 
         user.set("username", name);
         user.set("password", pass);
-        user.set("puntaje", user.getPoints());
+        //user.set("puntaje", user.getPoints());
 
         return user;
     }
@@ -104,7 +104,7 @@ public class App
     public static void logIn(User usuario) {
     	boolean quieroVolver = false;
     	String resp;
-        
+
         String userN = usuario.getUsername();
         String userP = usuario.getPassword();
 
@@ -154,7 +154,8 @@ public class App
 	            Runtime.getRuntime().exec("cls");
     	    }
         	else {
-            	Runtime.getRuntime().exec("clear");
+            	//Runtime.getRuntime().exec("clear");
+                System.out.print('\u000C');
         	}
     	}
     	catch (final Exception e) {
