@@ -6,7 +6,7 @@ import java.util.List;
 
 public class App
 {
-    static Scanner in;
+    private static Scanner in;
 
 /**
 	* Metodo principal desde el cual se manejan las opciones de la aplicacion.
@@ -90,9 +90,9 @@ public class App
 
         User user = new User(name, pass);
 
-        user.set("username", user.username);
-        user.set("password", user.password);
-        //user.set("puntaje", user.puntos);     //los puntos no los setea la clase User a 0 ?
+        user.set("username", name);
+        user.set("password", pass);
+        user.set("puntaje", user.getPoints());
 
         return user;
     }
@@ -101,13 +101,17 @@ public class App
 	* Metodo que carga los datos desde la DB del juego para que el usuario recupere su progreso anterior. Log In
 */
 
-    public static void logIn(User usuario) {    // Hay que ver de cambiarlo para poner las variables en privado en la clase user
+    public static void logIn(User usuario) {
     	boolean quieroVolver = false;
     	String resp;
-        List<User> listUsers = User.where("username = '"+usuario.get("username")+"' and password = '"+usuario.get("password")+"'");
+        
+        String userN = usuario.getUsername();
+        String userP = usuario.getPassword();
+
+        List<User> listUsers = User.where("username = 'userN' and password = 'userP'");
 
         while (listUsers.isEmpty() && (!quieroVolver)) {
-            System.out.println("Lo lamento, el usuario o contraseña ingresada es incorrecta.");
+            System.out.println("Lo lamento, el usuario o contrasenia ingresada es incorrecta.");
             System.out.println("Presione enter para intentarlo nuevamente o escriba 'get me back' para volver al menu anterior.");
             resp = read();
 
@@ -116,7 +120,7 @@ public class App
             }
             else {
             	usuario = recolectarDatos();
-            	listUsers = User.where("username = '"+usuario.get("username")+"' and password = '"+usuario.get("password")+"'");
+            	listUsers = User.where("username = 'userN' and password = 'userP'");
             }
         }
         usuario = listUsers.get(0);
@@ -126,12 +130,14 @@ public class App
 	* Metodo que verifica los datos ingresados y si no estan en el sistema los carga en la base de datos.
 */
     public static void register(User usuario) {
-        List<User> list = User.where("username = '"+usuario.get("username")+"'");
+        String userN = usuario.getUsername();
+
+        List<User> list = User.where("username = 'userN'");
 
         while ( (!list.isEmpty())) {
             System.out.println("Lo lamento, el nombre de usuario ingresado ya esta registrado. Intente con otro");
             usuario = recolectarDatos();
-            list = User.where("username = '"+usuario.get("username")+"'");
+            list = User.where("username = 'userN'");
         }
 	    usuario.saveIt();  // ver de capturar ecepcion usuario sin nombre
     }
