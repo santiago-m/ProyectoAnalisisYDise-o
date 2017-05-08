@@ -1,9 +1,24 @@
-problemas encontrados actualmente:
+-----------------------------ACLARACIONES-------------------------------------------------------------------------
+
+User.where("username = 'userN' and password = 'userP'"); no puede ser escrito de esa manera, ya que userN es el nombre de la variable, no el valor de la misma. La manera correcta DEBE SER la siguiente:
+
+        User.where("username = '"+userN+"' and password = '"+userP+"'");
+
+De esa forma la consulta a sql se realiza con los valores de las variables y no con sus nombres.
+
+------------------------------------------------------------------------------------------------------------------
+
+
+problemas encontrados actualmente: 
 
 ------------app.java------------------
 
-    1) Al borrar la informacion de la base de datos (OPCION 3 Menu Inicial). Hay un llamado a recolectarDatos(); Los datos igual se borran.
+    1) Al borrar la informacion de la base de datos (OPCION 3 Menu Inicial). Hay un llamado a recolectarDatos(); Los datos igual se borran. (+)
 
-    2) Falta reiniciar ID auto incremental luego de borrar.
+    2) Falta reiniciar ID auto incremental luego de borrar. (+)
 
     3) Metodo clearScreen() no funciona.
+
+
+ref:
+    <problema> (+) = problema resuelto.
