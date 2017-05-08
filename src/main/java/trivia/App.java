@@ -1,8 +1,12 @@
 package trivia;
 import org.javalite.activejdbc.Base;
 import trivia.User;
+import trivia.Admin;
+import trivia.SqlCommands;
 import java.util.Scanner;
 import java.util.List;
+import java.sql.*;
+
 
 public class App
 {
@@ -30,6 +34,8 @@ public class App
      			if (operacion == 1) {
                     User usuario = recolectarDatos();
      			    logIn(usuario);
+     			    System.out.println("Log In Exitoso. Presione Enter para proseguir.");
+        			read();
      			}
      			else if (operacion == 2) {
                     User usuario = recolectarDatos();
@@ -38,10 +44,7 @@ public class App
      			    read();
       			}
      			else{
-					List<User> listaCompleta = User.findAll();
-					for(User u: listaCompleta) {   //<==== this line of code will initiate the actual query to DB
-   						u.delete();
-					}
+					deleteData();
       			    System.out.println("Informacion borrada. Presione ENTER para volver al menu inicial.");
       			    read();
       			}
@@ -92,7 +95,7 @@ public class App
 
         user.set("username", name);
         user.set("password", pass);
-        //user.set("puntaje", user.getPoints());
+        user.set("puntaje", user.getPoints());
 
         return user;
     }
@@ -108,22 +111,24 @@ public class App
         String userN = usuario.getUsername();
         String userP = usuario.getPassword();
 
-        List<User> listUsers = User.where("username = 'userN' and password = 'userP'");
+        List<User> listUsers = User.where("username = '"+userN+"' and password = '"+userP+"'");
 
         while (listUsers.isEmpty() && (!quieroVolver)) {
             System.out.println("Lo lamento, el usuario o contrasenia ingresada es incorrecta.");
-            System.out.println("Presione enter para intentarlo nuevamente o escriba 'get me back' para volver al menu anterior.");
+            System.out.println("Presione enter para intentarlo nuevamente o escriba 'ret' para volver al menu anterior.");
             resp = read();
 
-            if (resp.toLowerCase() == "get me back") {
+            if (resp.toLowerCase().equals("ret")) {
             	quieroVolver = true;
             }
             else {
             	usuario = recolectarDatos();
-            	listUsers = User.where("username = 'userN' and password = 'userP'");
+            	listUsers = User.where("username = '"+userN+"' and password = '"+userP+"'");
             }
         }
-        usuario = listUsers.get(0);
+        if (!quieroVolver) {
+        	usuario = listUsers.get(0);
+        }
     }
 
 /**
@@ -132,15 +137,28 @@ public class App
     public static void register(User usuario) {
         String userN = usuario.getUsername();
 
-        List<User> list = User.where("username = 'userN'");
+        List<User> list = User.where("username = '"+userN+"'");
 
         while ( (!list.isEmpty())) {
             System.out.println("Lo lamento, el nombre de usuario ingresado ya esta registrado. Intente con otro");
             usuario = recolectarDatos();
-            list = User.where("username = 'userN'");
+            list = User.where("username = '"+userN+"'");
         }
+
 	    usuario.saveIt();  // ver de capturar ecepcion usuario sin nombre
     }
+
+/**
+	* Metodo que borra la informacion local y resetea el ID autoincremental.
+*/
+
+    public static void deleteData() {
+    	List<User> listaCompleta = User.findAll();
+		for(User u: listaCompleta) {   //<==== this line of code will initiate the actual query to DB
+   			u.delete();
+		}
+		SqlCommands.runQuery("jdbc:mysql://localhost/trivia", "root", "root", "ALTER TABLE users AUTO_INCREMENT = 1");
+	}
 
 /**
 	* Metodo que limpia la consola.
