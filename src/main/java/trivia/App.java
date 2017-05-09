@@ -24,6 +24,7 @@ public class App
 
         	if (operacion == 4) {
         		terminar = true;
+        		clearScreen();
         	}
         	else {
         		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "root");
@@ -34,8 +35,6 @@ public class App
      			if (operacion == 1) {
                     User usuario = recolectarDatos();
      			    logIn(usuario);
-     			    System.out.println("Log In Exitoso. Presione Enter para proseguir.");
-        			read();
      			}
      			else if (operacion == 2) {
                     User usuario = recolectarDatos();
@@ -78,6 +77,90 @@ public class App
         return opcion;
     }
 
+    public static int menuAdministracion() {
+    	int opcion = 0;
+        while ((opcion != 2) && (opcion != 1) && (opcion != 3) && (opcion != 4)) {
+            clearScreen();
+
+            System.out.println("------------------Menu Inicial---------------------");
+            System.out.println();
+            System.out.println("1) Crear pregunta.");
+            System.out.println("2) Listar Preguntas Activas.");
+            System.out.println("3) Administrar Preguntas.");
+            System.out.println("4) Log out.");
+            System.out.println();
+            System.out.println("---------------------------------------------------");
+            System.out.println("Escriba el numero de opcion correspondiente: "); 
+            in = new Scanner(System.in);
+            opcion = in.nextInt();
+        }      
+        return opcion;
+    }
+
+    public static int menuJugar() {
+    	int opcion = 0;
+        while ((opcion != 2) && (opcion != 1) && (opcion != 3)) {
+            clearScreen();
+
+            System.out.println("------------------Menu Inicial---------------------");
+            System.out.println();
+            System.out.println("1) Jugar.");
+            System.out.println("2) Revisar Score.");
+            System.out.println("3) Log Out");
+            System.out.println();
+            System.out.println("---------------------------------------------------");
+            System.out.println("Escriba el numero de opcion correspondiente: "); 
+            in = new Scanner(System.in);
+            opcion = in.nextInt();
+        }      
+        return opcion;
+    }
+
+    public static void administrar() {
+    	boolean logOut = false;
+    	
+    	while (!logOut){
+    		int operacion = menuAdministracion();
+
+    		if (operacion == 4) {
+    			logOut = true;
+    			clearScreen();
+    		}
+    		else {
+    			if (operacion == 1) {
+
+    			}
+    			else if (operacion == 2) {
+
+    			}
+    			else {
+
+    			}
+    		}
+    	}
+    }
+
+    public static void jugar() {
+    	boolean logOut = false;
+
+    	while (!logOut) {
+    		int operacion = menuJugar();
+
+    		if (operacion == 3) {
+    			logOut = true;
+    			clearScreen();
+    		}
+    		else {
+    			if (operacion == 1) {
+    			}
+    			else {
+
+    			}
+    		}
+    	}
+
+    }
+
 /**
 	* Metodo que recolecta y carga los datos proporcionados por el usuario para posteriormente verificarlos.
 */
@@ -107,13 +190,19 @@ public class App
     public static void logIn(User usuario) {
     	boolean quieroVolver = false;
     	String resp;
+    	List<User> listUsers;
+    	List<Admin> listAdmins;
 
         String userN = usuario.getUsername();
         String userP = usuario.getPassword();
 
-        List<User> listUsers = User.where("username = '"+userN+"' and password = '"+userP+"'");
+        //Controlando administradores.
+        listAdmins = Admin.where("username = '"+userN+"' and password = '"+userP+"'");
 
-        while (listUsers.isEmpty() && (!quieroVolver)) {
+        //Controlando usuarios estandar.
+        listUsers = User.where("username = '"+userN+"' and password = '"+userP+"'");
+
+        while (listAdmins.isEmpty() && listUsers.isEmpty() && (!quieroVolver)) {
             System.out.println("Lo lamento, el usuario o contrasenia ingresada es incorrecta.");
             System.out.println("Presione enter para intentarlo nuevamente o escriba 'ret' para volver al menu anterior.");
             resp = read();
@@ -123,11 +212,26 @@ public class App
             }
             else {
             	usuario = recolectarDatos();
+				
+				listAdmins = Admin.where("username = '"+userN+"' and password = '"+userP+"'");
             	listUsers = User.where("username = '"+userN+"' and password = '"+userP+"'");
             }
         }
         if (!quieroVolver) {
-        	usuario = listUsers.get(0);
+        	if (listAdmins.isEmpty()){
+        		usuario = listUsers.get(0);
+        		System.out.println("Log In Exitoso. Presione Enter para proseguir.");
+        		read();
+
+        		jugar();
+        	}
+        	else {
+        		usuario = listAdmins.get(0);
+        		System.out.println("Log In Exitoso. Presione Enter para proseguir.");
+        		read();
+
+        		administrar();
+        	}
         }
     }
 
@@ -172,12 +276,13 @@ public class App
 	            Runtime.getRuntime().exec("cls");
     	    }
         	else {
-            	//Runtime.getRuntime().exec("clear");
-                System.out.print('\u000C');
+            		System.out.print("\u001b[2J");
+					System.out.flush();
         	}
     	}
     	catch (final Exception e) {
       		System.out.println("Cannot clear screen. Unknown operating system");
+      		System.out.println(e);
     	}
 	}
 
