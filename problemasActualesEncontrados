@@ -13,14 +13,21 @@ Admin extiende de User para facilitar el logeo y para que ademas comparta los at
 
 
 problemas encontrados actualmente: 
+    -----------------------_Resueltos------------------------------
 
-------------app.java------------------
+                ------------app.java------------------
 
-    1) Al borrar la informacion de la base de datos (OPCION 3 Menu Inicial). Hay un llamado a recolectarDatos(); Los datos igual se borran. (+)
+               1) Al borrar la informacion de la base de datos (OPCION 3 Menu Inicial). Hay un llamado a       recolectarDatos(); Los datos igual se borran. (+)
 
-    2) Falta reiniciar ID auto incremental luego de borrar. (+)
+               2) Falta reiniciar ID auto incremental luego de borrar. (+)
 
-    3) Metodo clearScreen() no funciona. (+)
+               3) Metodo clearScreen() no funciona. (+)
+
+
+
+--------------------------------Sin Resolver------------------------------------------------
+    ------------app.java------------------
+    1) Solo se puede loguear exitosamente en un intento. Despues de eso falla el logueo aun si los datos son correctos.
 
 
 ref:
