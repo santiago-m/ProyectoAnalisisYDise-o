@@ -19,4 +19,4 @@ CREATE TABLE admins (
 
 INSERT INTO admins (id, username, password) VALUES
  (1, 'sajoma', '13794682'),
- (2, 'matesuiso', 'contraseñaMati');
+ (2, 'matesuiso', 'asd');
