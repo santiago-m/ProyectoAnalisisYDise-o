@@ -6,11 +6,13 @@ import trivia.SqlCommands;
 import java.util.Scanner;
 import java.util.List;
 import java.sql.*;
+import java.util.Random;
 
 
 public class App
 {
     private static Scanner in;
+    private static User usuario;
 
 /**
 	* Metodo principal desde el cual se manejan las opciones de la aplicacion.
@@ -33,12 +35,12 @@ public class App
                 // Seria mas util un case.. Ver despues
         
      			if (operacion == 1) {
-                    User usuario = recolectarDatos();
-     			    logIn(usuario);
+                    usuario = recolectarDatos();
+     			    logIn();
      			}
      			else if (operacion == 2) {
-                    User usuario = recolectarDatos();
-     			    register(usuario);
+                    usuario = recolectarDatos();
+     			    register();
      			    System.out.println("Usuario Registrado Exitosamente!. Presione ENTER para volver al menu inicial."); 
      			    read();
       			}
@@ -79,7 +81,7 @@ public class App
 
     public static int menuAdministracion() {
     	int opcion = 0;
-        while ((opcion != 2) && (opcion != 1) && (opcion != 3) && (opcion != 4)) {
+        while ((opcion != 2) && (opcion != 1) && (opcion != 3) && (opcion != 4) && (opcion != 5)) {
             clearScreen();
 
             System.out.println("------------------Menu Inicial---------------------");
@@ -87,7 +89,8 @@ public class App
             System.out.println("1) Crear pregunta.");
             System.out.println("2) Listar Preguntas Activas.");
             System.out.println("3) Administrar Preguntas.");
-            System.out.println("4) Log out.");
+            System.out.println("4) Jugar.");
+            System.out.println("5) Log out.");
             System.out.println();
             System.out.println("---------------------------------------------------");
             System.out.println("Escriba el numero de opcion correspondiente: "); 
@@ -106,7 +109,7 @@ public class App
             System.out.println();
             System.out.println("1) Jugar.");
             System.out.println("2) Revisar Score.");
-            System.out.println("3) Log Out");
+            System.out.println("3) Dejar de jugar.");
             System.out.println();
             System.out.println("---------------------------------------------------");
             System.out.println("Escriba el numero de opcion correspondiente: "); 
@@ -122,25 +125,28 @@ public class App
     	while (!logOut){
     		int operacion = menuAdministracion();
 
-    		if (operacion == 4) {
+    		if (operacion == 5) {
     			logOut = true;
     			clearScreen();
     		}
     		else {
     			if (operacion == 1) {
-
     			}
     			else if (operacion == 2) {
 
     			}
-    			else {
+    			else if (operacion == 3) {
 
+    			}
+    			else {
+    				jugar();
     			}
     		}
     	}
     }
 
     public static void jugar() {
+    	uncheckAllQuestions();
     	boolean logOut = false;
 
     	while (!logOut) {
@@ -152,12 +158,99 @@ public class App
     		}
     		else {
     			if (operacion == 1) {
+    				List<Question> preguntas = Question.where("creador != '"+usuario.getString("username")+"'");
+    				int cantPreguntas = preguntas.size();
+
+    				if (cantPreguntas > 0) {
+    					comenzarAResponder(cantPreguntas, preguntas.get(0).getInteger("id"), preguntas.get(preguntas.size()-1).getInteger("id"));	
+    				}
+    				else {
+    					System.out.println("Lo siento, todas las preguntas disponibles fueron creadas por ti. No puedo dejarte responder.");
+    					read();
+    				}
+
+    				
     			}
     			else {
-
+    				clearScreen();
+    				System.out.println("Score: "+obtenerScore());
+    				read();
     			}
     		}
     	}
+    }
+
+    public static void comenzarAResponder (int cantidadPreguntas, int minIndice, int maxIndice) {
+    	boolean terminar = false;
+    	int cantidadRespondidas = 0;
+		List<Question> aux;
+		Question pregunta;
+		int nroPregunta;
+		int posicionRespCorrecta;
+		int respuestaDada;
+		String[] respuestasEnOrden;
+    	
+    	while ((!terminar) && (cantidadRespondidas < cantidadPreguntas)) {
+    		clearScreen();
+
+    		nroPregunta = randInt(minIndice, maxIndice);
+    		aux = Question.where("id = ?", nroPregunta);
+    		pregunta = aux.get(0);
+    		pregunta.calcularOpciones();
+    		respuestasEnOrden = new String[pregunta.getCantOpciones()];
+
+
+    		if ( (!pregunta.checked()) && (!(pregunta.get("creador").equals(usuario.get("username")) )) ){
+    			posicionRespCorrecta = randInt(1, pregunta.getCantOpciones());
+    			
+    			System.out.println(pregunta.get("pregunta"));
+    			System.out.println();
+
+    			for (int i = 1; i <= pregunta.getCantOpciones(); i++) {
+    				
+    				if (i > posicionRespCorrecta) {
+    					respuestasEnOrden[i-1] = (String) pregunta.get("wrong"+String.valueOf(i-1));
+    					System.out.println(i+") "+respuestasEnOrden[i-1]);	
+    				}
+    				else if (i < posicionRespCorrecta) {
+    					respuestasEnOrden[i-1] = (String) pregunta.get("wrong"+String.valueOf(i));
+    					System.out.println(i+") "+respuestasEnOrden[i-1]);		
+    				}
+    				else {
+    					respuestasEnOrden[i-1] = (String) pregunta.get("respuestaCorrecta");
+    					System.out.println(i+") "+respuestasEnOrden[i-1]);	
+    				}
+    			}
+    			System.out.println();
+    			System.out.println("9) Terminar el juego.");
+
+    			System.out.println();
+    			System.out.println();
+    			System.out.print("Ingrese la opcion deseada: ");
+    			respuestaDada = readInt();
+    		
+    			cantidadRespondidas++;
+    			pregunta.check();
+
+    			if (respuestaDada == 9) {
+    				terminar = true;
+    			}
+    			else {
+    				if (respuestaDada == posicionRespCorrecta) {
+    					System.out.println("Respuesta correcta!! +5 puntos :D");
+    					usuario.incPoints();
+    					usuario.set("puntaje", usuario.getPoints());
+    					usuario.saveIt();
+    					read();
+    				}
+    			}
+    		}
+    	}
+    	uncheckAllQuestions();
+    }
+
+    public static int obtenerScore() {
+    	return (int) usuario.getPoints();
 
     }
 
@@ -187,7 +280,7 @@ public class App
 	* Metodo que carga los datos desde la DB del juego para que el usuario recupere su progreso anterior. Log In
 */
 
-    public static void logIn(User usuario) {
+    public static void logIn() {
     	boolean quieroVolver = false;
     	String resp;
     	List<User> listUsers;
@@ -214,12 +307,13 @@ public class App
             	usuario = recolectarDatos();
 				
 				listAdmins = Admin.where("username = '"+userN+"' and password = '"+userP+"'");
-            	listUsers = User.where("username = '"+userN+"' and password = '"+userP+"'");
+        		listUsers = User.where("username = '"+userN+"' and password = '"+userP+"'");
             }
         }
         if (!quieroVolver) {
         	if (listAdmins.isEmpty()){
         		usuario = listUsers.get(0);
+        		usuario.setPoints((Integer) usuario.get("puntaje"));
         		System.out.println("Log In Exitoso. Presione Enter para proseguir.");
         		read();
 
@@ -227,6 +321,7 @@ public class App
         	}
         	else {
         		usuario = listAdmins.get(0);
+        		usuario.setPoints((Integer) usuario.get("puntaje"));
         		System.out.println("Log In Exitoso. Presione Enter para proseguir.");
         		read();
 
@@ -238,7 +333,7 @@ public class App
 /**
 	* Metodo que verifica los datos ingresados y si no estan en el sistema los carga en la base de datos.
 */
-    public static void register(User usuario) {
+    public static void register() {
         String userN = usuario.getUsername();
 
         List<User> list = User.where("username = '"+userN+"'");
@@ -289,6 +384,46 @@ public class App
 	public static String read() {
 		in = new Scanner(System.in);
 		return in.nextLine();
+	}
+
+	public static int readInt() {
+		in = new Scanner(System.in);
+		return in.nextInt();
+	}
+
+/**
+	* Returns a pseudo-random number between min and max, inclusive.
+	* The difference between min and max can be at most
+	* <code>Integer.MAX_VALUE - 1</code>.
+	*
+	* @param min Minimum value
+	* @param max Maximum value.  Must be greater than min.
+	* @return Integer between min and max, inclusive.
+	* @see java.util.Random#nextInt(int)
+*/
+	public static int randInt(int min, int max) {
+
+    	// NOTE: This will (intentionally) not run as written so that folks
+    	// copy-pasting have to think about how to initialize their
+    	// Random instance.  Initialization of the Random instance is outside
+    	// the main scope of the question, but some decent options are to have
+    	// a field that is initialized once and then re-used as needed or to
+    	// use ThreadLocalRandom (if using at least Java 1.7).
+    	Random rand = new Random();
+
+    	// nextInt is normally exclusive of the top value,
+    	// so add 1 to make it inclusive
+    	int randomNum = rand.nextInt((max - min) + 1) + min;
+
+    	return randomNum;
+	}
+
+	public static void uncheckAllQuestions() {
+		List<Question> allQuestions = Question.findAll();
+
+		for(Question q: allQuestions) {
+   			q.unCheck();
+		}
 	}
 }
 

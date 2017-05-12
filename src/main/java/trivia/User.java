@@ -32,8 +32,12 @@ public class User extends Model {
 		return points;
 	}
 
-	public void incPoint() {
-		points++;
+	public void incPoints() {
+		points+= 5;
+	}
+
+	public void setPoints(int puntaje) {
+		points = puntaje;
 	}
 
 
