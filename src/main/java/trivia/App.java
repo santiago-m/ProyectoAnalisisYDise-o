@@ -84,7 +84,7 @@ public class App
         while ((opcion != 2) && (opcion != 1) && (opcion != 3) && (opcion != 4) && (opcion != 5)) {
             clearScreen();
 
-            System.out.println("------------------Menu Inicial---------------------");
+            System.out.println("------------------Menu Administracion---------------------");
             System.out.println();
             System.out.println("1) Crear pregunta.");
             System.out.println("2) Listar Preguntas Activas.");
@@ -105,7 +105,7 @@ public class App
         while ((opcion != 2) && (opcion != 1) && (opcion != 3)) {
             clearScreen();
 
-            System.out.println("------------------Menu Inicial---------------------");
+            System.out.println("------------------Menu Jugador---------------------");
             System.out.println();
             System.out.println("1) Jugar.");
             System.out.println("2) Revisar Score.");
@@ -131,11 +131,20 @@ public class App
     		}
     		else {
     			if (operacion == 1) {
+                    clearScreen();
+    				crearPregunta();
+                    System.out.println("Operacion finalizada con exito. Presione enter para continuar.");
+                    read();
     			}
     			else if (operacion == 2) {
-
+                    clearScreen();
+                    listarActivas();
+                    System.out.println("No hay mas preguntas que mostrar. Presiones enter para continuar.");
+                    read();
     			}
     			else if (operacion == 3) {
+                    clearScreen();
+                    administrarPreguntas();
 
     			}
     			else {
@@ -145,7 +154,165 @@ public class App
     	}
     }
 
-    public static void jugar() {
+    private static void listarActivas() {
+        List<Question> allQuestions = Question.findAll();
+        Question preguntaActual;
+        for (int i = 0; i < allQuestions.size(); i++) {
+            preguntaActual = new Question();
+            preguntaActual = allQuestions.get(i);
+
+            if (preguntaActual.getBoolean("active")) {
+                System.out.println("Pregunta "+(i+1)+":");
+                System.out.println(preguntaActual.getString("pregunta"));
+                System.out.println();
+                System.out.println("    "+preguntaActual.getString("respuestaCorrecta"));
+                System.out.println("    "+preguntaActual.getString("wrong1"));
+                System.out.println("    "+preguntaActual.getString("wrong2"));
+                System.out.println("    "+preguntaActual.getString("wrong3"));
+                System.out.println();
+                System.out.println();
+            }
+        }
+    }
+
+    private static void administrarPreguntas() {
+        List<Question> allQuestions = Question.findAll();
+
+        for (int i = 0; i < allQuestions.size(); i++) {
+            Question preguntaActual = allQuestions.get(i);
+
+            System.out.println("Pregunta "+(i+1)+":");
+            System.out.println(preguntaActual.getString("pregunta"));
+            System.out.println();
+            System.out.println("    "+preguntaActual.getString("respuestaCorrecta"));
+            System.out.println("    "+preguntaActual.getString("wrong1"));
+            System.out.println("    "+preguntaActual.getString("wrong2"));
+            System.out.println("    "+preguntaActual.getString("wrong3"));
+
+            if (preguntaActual.getBoolean("active")) {
+                System.out.println("ACTIVA");
+            }
+            else {
+                System.out.println("NO ACTIVA");   
+            }
+            System.out.println();
+            System.out.println();
+        }
+
+        System.out.print("Seleccione el numero correspondiente a la pregunta que desea administrar: ");
+        int preg = readInt();
+
+        Question pregunta = allQuestions.get(preg-1);
+
+        editQuestion(pregunta);
+    }
+
+    private static void editQuestion(Question pregunta) {
+        boolean terminar = false;
+        String modif;
+
+        while (!terminar) {
+            int operacion = menuQuestion();
+
+        switch (operacion) {
+            case 1: System.out.println("Pregunta Actual: "+ pregunta.getString("pregunta"));
+                    System.out.print("Pregunta Modificada: ");
+                    modif = read();
+                    pregunta.set("pregunta", modif);
+                    break;
+
+            case 2: System.out.println("Respuesta Correcta Actual: "+ pregunta.getString("respuestaCorrecta"));
+                    System.out.print("Nueva Correcta: ");
+                    modif = read();
+                    pregunta.set("respuestaCorrecta", modif);
+                    break;
+
+            case 3: System.out.println("Opcion Incorrecta Actual: "+ pregunta.getString("wrong1"));
+                    System.out.print("Nueva Incorrecta: ");
+                    modif = read();
+                    pregunta.set("wrong1", modif);
+                    break;
+
+            case 4: System.out.println("Opcion Incorrecta Actual: "+ pregunta.getString("wrong2"));
+                    System.out.print("Nueva Incorrecta: ");
+                    modif = read();
+                    pregunta.set("wrong2", modif);
+                    break;
+
+            case 5: System.out.println("Opcion Incorrecta Actual: "+ pregunta.getString("wrong3"));
+                    System.out.print("Nueva Incorrecta: ");
+                    modif = read();
+                    pregunta.set("wrong3", modif);
+                    break;
+
+            case 6: System.out.println("Estado anterior: "+(pregunta.getBoolean("active")?"Activa":"No Activa"));
+                    pregunta.set("active", (!(pregunta.getBoolean("active"))));
+                    System.out.println("Estado Actual: "+(pregunta.getBoolean("active")?"Activa":"No Activa"));
+                    break;
+
+            case 7: System.out.print("Desea Guardar los cambios? SI/NO: ");
+                    if (read().toLowerCase().equals("si")) {
+                        pregunta.saveIt();
+                        System.out.println("Cambios guardados.");
+                    }
+                    else {
+                        System.out.println("Cambios descartados.");
+                    }
+                    System.out.println("Presione enter para volver.");
+                    read();
+                    terminar = true;
+                    break;
+            }
+        }
+    }
+
+    private static int menuQuestion() {
+        int resp = 0;
+        while ((resp < 1 || resp > 7)) {
+            System.out.println("1) Editar Pregunta");
+            System.out.println("2) Editar Respuesta Correcta");
+            System.out.println("3) Editar Incorrecta 1");
+            System.out.println("4) Editar Incorrecta 2");
+            System.out.println("5) Editar Incorrecta 3");
+            System.out.println("6) Activar/Desactivar");
+            System.out.println("7) Terminar");
+
+            System.out.println();
+            resp = readInt();
+        }
+        return resp;
+    }
+
+    /**
+        * Metodo que permite a un administrador crear una pregunta.
+    */
+    
+    private static void crearPregunta() {
+    	Question pregunta = new Question();
+    	System.out.print("Pregunta: ");
+        pregunta.set("pregunta", read());
+        System.out.print("Respuesta Correcta: ");
+        pregunta.set("respuestaCorrecta", read());
+
+        System.out.println("Cuantas opciones incorrectas va a tener tu pregunta? (1;3)");
+        int cant = readInt();
+
+        for (int i = 0; i < cant; i++) {
+            System.out.println("Respuesta incorrecta "+i+": ");
+            pregunta.set("wrong"+String.valueOf(i+1), read());
+        }
+
+        System.out.println("Desea guardar la pregunta en la base de datos? YES/NO");
+        if (read().toLowerCase().equals("yes")) {
+            pregunta.set("creador", usuario.getString("username"));
+            pregunta.set("leido", false);
+            pregunta.set("active", false);
+
+            pregunta.saveIt();
+        }
+    }
+
+    private static void jugar() {
     	uncheckAllQuestions();
     	boolean logOut = false;
 
@@ -180,7 +347,11 @@ public class App
     	}
     }
 
-    public static void comenzarAResponder (int cantidadPreguntas, int minIndice, int maxIndice) {
+
+/**
+    * Metodo que permite al usuario responder las preguntas.
+*/
+    private static void comenzarAResponder (int cantidadPreguntas, int minIndice, int maxIndice) {
     	boolean terminar = false;
     	int cantidadRespondidas = 0;
 		List<Question> aux;
@@ -243,22 +414,31 @@ public class App
     					usuario.saveIt();
     					read();
     				}
+    				else {
+    					System.out.println("Respuesta Incorrecta.- -100 puntos :(");
+    					read();
+    					System.out.println("Nah, mentira. No perdiste puntos pero si respondiste mal. :D");
+    					System.out.println("Presione enter para pasar a la siguiente pregunta");
+    					read();
+    				}
     			}
     		}
     	}
     	uncheckAllQuestions();
     }
 
-    public static int obtenerScore() {
+/**
+    * Metodo que devuelve el puntaje del usuario.-
+*/
+    private static int obtenerScore() {
     	return (int) usuario.getPoints();
-
     }
 
 /**
 	* Metodo que recolecta y carga los datos proporcionados por el usuario para posteriormente verificarlos.
 */
 
-    public static User recolectarDatos() {
+    private static User recolectarDatos() {
         clearScreen();
 
         System.out.print("Username: ");
@@ -280,7 +460,7 @@ public class App
 	* Metodo que carga los datos desde la DB del juego para que el usuario recupere su progreso anterior. Log In
 */
 
-    public static void logIn() {
+    private static void logIn() {
     	boolean quieroVolver = false;
     	String resp;
     	List<User> listUsers;
@@ -333,7 +513,7 @@ public class App
 /**
 	* Metodo que verifica los datos ingresados y si no estan en el sistema los carga en la base de datos.
 */
-    public static void register() {
+    private static void register() {
         String userN = usuario.getUsername();
 
         List<User> list = User.where("username = '"+userN+"'");
@@ -351,7 +531,7 @@ public class App
 	* Metodo que borra la informacion local y resetea el ID autoincremental.
 */
 
-    public static void deleteData() {
+    private static void deleteData() {
     	List<User> listaCompleta = User.findAll();
 		for(User u: listaCompleta) {   //<==== this line of code will initiate the actual query to DB
    			u.delete();
@@ -363,7 +543,7 @@ public class App
 	* Metodo que limpia la consola.
 */
 
-    public static void clearScreen() {
+    private static void clearScreen() {
     	try {
         	final String os = System.getProperty("os.name");
 
@@ -381,12 +561,12 @@ public class App
     	}
 	}
 
-	public static String read() {
+	private static String read() {
 		in = new Scanner(System.in);
 		return in.nextLine();
 	}
 
-	public static int readInt() {
+	private static int readInt() {
 		in = new Scanner(System.in);
 		return in.nextInt();
 	}
@@ -401,7 +581,7 @@ public class App
 	* @return Integer between min and max, inclusive.
 	* @see java.util.Random#nextInt(int)
 */
-	public static int randInt(int min, int max) {
+	private static int randInt(int min, int max) {
 
     	// NOTE: This will (intentionally) not run as written so that folks
     	// copy-pasting have to think about how to initialize their
@@ -426,4 +606,5 @@ public class App
 		}
 	}
 }
+
 
