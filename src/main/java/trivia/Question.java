@@ -6,7 +6,9 @@ public class Question extends Model {
 	private int cantOpciones = 1;
 
 	static{
-    	validatePresenceOf("pregunta").message("Please, provide your username");
+    	validatePresenceOf("pregunta").message("Please, provide a question");
+      validatePresenceOf("respuestaCorrecta").message("Please, provide a correct answer");
+      validatePresenceOf("wrong1").message("Please, provide at least a wrong answer");
   	}
 
   	public boolean checked(){
