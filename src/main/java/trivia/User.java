@@ -1,10 +1,8 @@
 package trivia;
-import java.util.Scanner;
 
 import org.javalite.activejdbc.Model;
 
 public class User extends Model {
-	private Scanner in = new Scanner(System.in);
 	private String username;
 	private String password;
 	private int points;
@@ -18,6 +16,10 @@ public class User extends Model {
 		username = name;
 		password = pass;
 		points = 0;
+	}
+
+	public void setUsername(String newUsername) {
+		username = newUsername;
 	}
 
 	public String getUsername(){
