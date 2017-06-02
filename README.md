@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+<<<<<<<< HEAD
 Welcome to Pregunta2
 =================
 
