@@ -5,10 +5,16 @@
     <br>
     <div id="mydiv">
 
-        {{cantAnswer}}
+        <p id="message">{{cantAnswer}}</p>
         <form action="/play" method="post">
             <input type="submit" value="Jugar" 
                 name="play_btn" id="play_btn" />
+        </form>
+        <br>
+
+        <form action="/menuHost" method="get">
+            <input type="submit" value="MultiPlayer" 
+                name="hostMenu_btn" id="hostMenu_btn" />
         </form>
         <br>
 

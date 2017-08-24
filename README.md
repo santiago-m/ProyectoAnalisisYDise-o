@@ -1,5 +1,4 @@
-<<<<<<<< HEAD
-Welcome to Pregunta2
+-->>Welcome to Pregunta2
 =================
 
 Este es un proyecto utilizado para enseñar/aprender algunas herramientas en el marco de la asignatura "Análisis y Diseño de Algoritmos" del Departamento de Computación de la UNRC.
@@ -355,38 +354,3 @@ Los tests vuelven a pasar y voila, ya tenemos especificación, código y prueba 
 # Licence
 
 This project is licensed under the MIT License - see the LICENSE.md file for details
-=======
-//PAGE GIT
-//http://rogerdudler.github.io/git-guide/
-//
-Santi's Change:
-
-Integrantes: Maria, Santiago Jose
-			 Pera, Eduardo Nicolas
-			 Rivero, Matias Gabriel
-			 
-Razon de modificacion: Probar GIT :D
-
-fechaModificacion: 07/04/2017 10:26
-
-==========================================
- 
-Edu's Change:
-
-I'm so fucking watching you!!
-
-=========================================
- 
-Mati's Change:
-
-ah re loco!
-
-
-//////////////////////////
-
-activejdbc
-
-**TUTORIAL PREGUNTA2 https://github.com/se-unrc/**
-
-ah re loco
->>>>>>> 0cd39df27bc522c11c38062a02ebb0ab7cbdc73a

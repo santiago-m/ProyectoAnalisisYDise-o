@@ -43,4 +43,36 @@ public class UserTest{
 
         assertEquals(user.isValid(), false);
     }
+
+    @Test
+    public void nonNegativePoints() {
+        User user = new User("asd", "dsa");
+
+        user.setPoints(-1);
+
+        assertEquals(user.getPoints()>=0 , true);
+    }
+
+    @Test
+    public void morePoints() {
+        User user1 = new User ("user1", "prueba");
+        User user2 = new User ("user2", "prueba");
+
+        user1.incPoints();
+
+        assertEquals(user1.getPoints(), (user2.getPoints()+5) );
+    }
+
+    @Test
+    public void morePoints2() {
+        User user1 = new User ("user1", "prueba");
+        User user2 = new User ("user2", "prueba");
+
+        user1.incPoints();
+        user2.setPoints(5);
+
+        assertEquals(user1.getPoints(), user2.getPoints());
+
+    }
+
 }

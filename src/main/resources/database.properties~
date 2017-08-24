@@ -1,9 +1,0 @@
-development.driver=com.mysql.jdbc.Driver
-development.username=franco
-development.password=franco
-development.url=jdbc:mysql://localhost/trivia
-
-development.test.driver=com.mysql.jdbc.Driver
-development.test.username=franco
-development.test.password=franco
-development.test.url=jdbc:mysql://localhost/trivia_test
