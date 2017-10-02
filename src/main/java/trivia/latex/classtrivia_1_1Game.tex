@@ -1,0 +1,202 @@
+\hypertarget{classtrivia_1_1Game}{}\section{trivia.\+Game Class Reference}
+\label{classtrivia_1_1Game}\index{trivia.\+Game@{trivia.\+Game}}
+Inheritance diagram for trivia.\+Game\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classtrivia_1_1Game}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classtrivia_1_1Game_ac0ed7c3b89cdb6936ada292648db5165}{Game}} ()
+\item 
+boolean \mbox{\hyperlink{classtrivia_1_1Game_a541c6b1a5cac82e7bc3ba39feccf22a7}{is\+Closed}} ()
+\item 
+Hash\+Map \mbox{\hyperlink{classtrivia_1_1Game_af7ae2d61676f50cea2d5cd07fe37713f}{close\+Game}} ()
+\item 
+\mbox{\hyperlink{classtrivia_1_1Game_a66e59862c017262e9294558a9e024cbe}{Game}} (\mbox{\hyperlink{classtrivia_1_1User}{User}} unico\+Usuario)
+\item 
+\mbox{\hyperlink{classtrivia_1_1Game_a03c33ebd51af0b2137101ac28e5b2536}{Game}} (\mbox{\hyperlink{classtrivia_1_1User}{User}} user1, \mbox{\hyperlink{classtrivia_1_1User}{User}} user2)
+\item 
+Hash\+Map \mbox{\hyperlink{classtrivia_1_1Game_a7b5d8f58e7646f91e21f0182d985960a}{obtener\+Pregunta}} (\mbox{\hyperlink{classtrivia_1_1User}{User}} player)
+\item 
+void \mbox{\hyperlink{classtrivia_1_1Game_ab5041f892c2f683775d09f2eee17e8d2}{respondio\+Correctamente}} (\mbox{\hyperlink{classtrivia_1_1User}{User}} jugador, int veces\+Correctas)
+\item 
+void \mbox{\hyperlink{classtrivia_1_1Game_a9cc89954f712f9423034b39cc0b13981}{initialize\+Players}} ()
+\item 
+\mbox{\Hypertarget{classtrivia_1_1Game_a7ab103e6a0b31ede06021ab65a9cde31}\label{classtrivia_1_1Game_a7ab103e6a0b31ede06021ab65a9cde31}} 
+int {\bfseries get\+Cant\+Usuarios} ()
+\item 
+\mbox{\Hypertarget{classtrivia_1_1Game_a011392205502ca7e6be98ac42b2647d3}\label{classtrivia_1_1Game_a011392205502ca7e6be98ac42b2647d3}} 
+\mbox{\hyperlink{classtrivia_1_1User}{User}} {\bfseries get\+Player1} ()
+\item 
+\mbox{\Hypertarget{classtrivia_1_1Game_a509143fb3810d089e542b241841d1a3e}\label{classtrivia_1_1Game_a509143fb3810d089e542b241841d1a3e}} 
+\mbox{\hyperlink{classtrivia_1_1User}{User}} {\bfseries get\+Player2} ()
+\item 
+\mbox{\Hypertarget{classtrivia_1_1Game_afefdce3a9a90710fd816910d50679e6a}\label{classtrivia_1_1Game_afefdce3a9a90710fd816910d50679e6a}} 
+void {\bfseries set\+Player1} (\mbox{\hyperlink{classtrivia_1_1User}{User}} player)
+\item 
+\mbox{\Hypertarget{classtrivia_1_1Game_afcf7f65afe4042216dea76c9a95c49c4}\label{classtrivia_1_1Game_afcf7f65afe4042216dea76c9a95c49c4}} 
+void {\bfseries set\+Player2} (\mbox{\hyperlink{classtrivia_1_1User}{User}} player)
+\item 
+\mbox{\Hypertarget{classtrivia_1_1Game_a8bae3bf163c788ab952ea4d518203bde}\label{classtrivia_1_1Game_a8bae3bf163c788ab952ea4d518203bde}} 
+void {\bfseries set\+Cant\+Usuarios} (int cantidad)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{classtrivia_1_1Game_acff76e402d22f7d1b17c2f8c878ec9fc}{init\+Game}} (\mbox{\hyperlink{classtrivia_1_1Game}{Game}} game, \mbox{\hyperlink{classtrivia_1_1User}{User}} user)
+\item 
+static void \mbox{\hyperlink{classtrivia_1_1Game_ac78e285c8f07840b96bd4bba0d65869b}{init\+Game}} (\mbox{\hyperlink{classtrivia_1_1Game}{Game}} game, int cant\+Preguntas, \mbox{\hyperlink{classtrivia_1_1User}{User}} user1, \mbox{\hyperlink{classtrivia_1_1User}{User}} user2)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Clase que permite administrar una partida del juego. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+3 
+\end{DoxyVersion}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classtrivia_1_1Game_ac0ed7c3b89cdb6936ada292648db5165}\label{classtrivia_1_1Game_ac0ed7c3b89cdb6936ada292648db5165}} 
+\index{trivia\+::\+Game@{trivia\+::\+Game}!Game@{Game}}
+\index{Game@{Game}!trivia\+::\+Game@{trivia\+::\+Game}}
+\subsubsection{\texorpdfstring{Game()}{Game()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily trivia.\+Game.\+Game (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor basico de la clase.-\/ \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{classtrivia_1_1Game_a66e59862c017262e9294558a9e024cbe}\label{classtrivia_1_1Game_a66e59862c017262e9294558a9e024cbe}} 
+\index{trivia\+::\+Game@{trivia\+::\+Game}!Game@{Game}}
+\index{Game@{Game}!trivia\+::\+Game@{trivia\+::\+Game}}
+\subsubsection{\texorpdfstring{Game()}{Game()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily trivia.\+Game.\+Game (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classtrivia_1_1User}{User}}}]{unico\+Usuario }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor de un juego Single Player. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em unico\+Usuario} & Usuario que desea abrir una partida single player. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classtrivia_1_1Game_a03c33ebd51af0b2137101ac28e5b2536}\label{classtrivia_1_1Game_a03c33ebd51af0b2137101ac28e5b2536}} 
+\index{trivia\+::\+Game@{trivia\+::\+Game}!Game@{Game}}
+\index{Game@{Game}!trivia\+::\+Game@{trivia\+::\+Game}}
+\subsubsection{\texorpdfstring{Game()}{Game()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily trivia.\+Game.\+Game (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classtrivia_1_1User}{User}}}]{user1,  }\item[{\mbox{\hyperlink{classtrivia_1_1User}{User}}}]{user2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor de un juego Multi-\/\+Player. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em user1} & Usuario que creo el juego multi-\/player. \\
+\hline
+{\em user2} & Usuario que se unio al juego multi-\/player. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classtrivia_1_1Game_af7ae2d61676f50cea2d5cd07fe37713f}\label{classtrivia_1_1Game_af7ae2d61676f50cea2d5cd07fe37713f}} 
+\index{trivia\+::\+Game@{trivia\+::\+Game}!close\+Game@{close\+Game}}
+\index{close\+Game@{close\+Game}!trivia\+::\+Game@{trivia\+::\+Game}}
+\subsubsection{\texorpdfstring{close\+Game()}{closeGame()}}
+{\footnotesize\ttfamily Hash\+Map trivia.\+Game.\+close\+Game (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Metodo que cierra el juego actual y devuelve un map con los datos del ganador y perdedor de la partida. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{classtrivia_1_1Game_acff76e402d22f7d1b17c2f8c878ec9fc}\label{classtrivia_1_1Game_acff76e402d22f7d1b17c2f8c878ec9fc}} 
+\index{trivia\+::\+Game@{trivia\+::\+Game}!init\+Game@{init\+Game}}
+\index{init\+Game@{init\+Game}!trivia\+::\+Game@{trivia\+::\+Game}}
+\subsubsection{\texorpdfstring{init\+Game()}{initGame()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily static void trivia.\+Game.\+init\+Game (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classtrivia_1_1Game}{Game}}}]{game,  }\item[{\mbox{\hyperlink{classtrivia_1_1User}{User}}}]{user }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Metodo estatico que inicializa un juego multi-\/player con el primer jugador. Lo pone en cola hasta que se una el segundo jugador. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em game} & Juego que se desea inicializar. \\
+\hline
+{\em user} & Usuario que busca jugar Multi-\/\+Player. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classtrivia_1_1Game_ac78e285c8f07840b96bd4bba0d65869b}\label{classtrivia_1_1Game_ac78e285c8f07840b96bd4bba0d65869b}} 
+\index{trivia\+::\+Game@{trivia\+::\+Game}!init\+Game@{init\+Game}}
+\index{init\+Game@{init\+Game}!trivia\+::\+Game@{trivia\+::\+Game}}
+\subsubsection{\texorpdfstring{init\+Game()}{initGame()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily static void trivia.\+Game.\+init\+Game (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classtrivia_1_1Game}{Game}}}]{game,  }\item[{int}]{cant\+Preguntas,  }\item[{\mbox{\hyperlink{classtrivia_1_1User}{User}}}]{user1,  }\item[{\mbox{\hyperlink{classtrivia_1_1User}{User}}}]{user2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Metodo estatico que inicializa un juego multi-\/player con ambos jugadores necesarios.-\/ El estado del juego pasa a ser activo. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em game} & Juego que se inicializa. \\
+\hline
+{\em user1} & Jugador 1 de la partida. \\
+\hline
+{\em user2} & Jugador 2 de la partida. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classtrivia_1_1Game_a9cc89954f712f9423034b39cc0b13981}\label{classtrivia_1_1Game_a9cc89954f712f9423034b39cc0b13981}} 
+\index{trivia\+::\+Game@{trivia\+::\+Game}!initialize\+Players@{initialize\+Players}}
+\index{initialize\+Players@{initialize\+Players}!trivia\+::\+Game@{trivia\+::\+Game}}
+\subsubsection{\texorpdfstring{initialize\+Players()}{initializePlayers()}}
+{\footnotesize\ttfamily void trivia.\+Game.\+initialize\+Players (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Metodo que inicializa los atributos de los jugadores antes de iniciar el juego. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{classtrivia_1_1Game_a541c6b1a5cac82e7bc3ba39feccf22a7}\label{classtrivia_1_1Game_a541c6b1a5cac82e7bc3ba39feccf22a7}} 
+\index{trivia\+::\+Game@{trivia\+::\+Game}!is\+Closed@{is\+Closed}}
+\index{is\+Closed@{is\+Closed}!trivia\+::\+Game@{trivia\+::\+Game}}
+\subsubsection{\texorpdfstring{is\+Closed()}{isClosed()}}
+{\footnotesize\ttfamily boolean trivia.\+Game.\+is\+Closed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Metodo que devuelve True si el juego esta cerrado o inactivo, y False en caso contrario. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{classtrivia_1_1Game_a7b5d8f58e7646f91e21f0182d985960a}\label{classtrivia_1_1Game_a7b5d8f58e7646f91e21f0182d985960a}} 
+\index{trivia\+::\+Game@{trivia\+::\+Game}!obtener\+Pregunta@{obtener\+Pregunta}}
+\index{obtener\+Pregunta@{obtener\+Pregunta}!trivia\+::\+Game@{trivia\+::\+Game}}
+\subsubsection{\texorpdfstring{obtener\+Pregunta()}{obtenerPregunta()}}
+{\footnotesize\ttfamily Hash\+Map trivia.\+Game.\+obtener\+Pregunta (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classtrivia_1_1User}{User}}}]{player }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Metodo que devuelve una pregunta que puede ser respondida por un usuario con sus respectivas opciones. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em player} & Jugador que debe responder la pregunta. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classtrivia_1_1Game_ab5041f892c2f683775d09f2eee17e8d2}\label{classtrivia_1_1Game_ab5041f892c2f683775d09f2eee17e8d2}} 
+\index{trivia\+::\+Game@{trivia\+::\+Game}!respondio\+Correctamente@{respondio\+Correctamente}}
+\index{respondio\+Correctamente@{respondio\+Correctamente}!trivia\+::\+Game@{trivia\+::\+Game}}
+\subsubsection{\texorpdfstring{respondio\+Correctamente()}{respondioCorrectamente()}}
+{\footnotesize\ttfamily void trivia.\+Game.\+respondio\+Correctamente (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classtrivia_1_1User}{User}}}]{jugador,  }\item[{int}]{veces\+Correctas }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Metodo que actualiza los datos del juego cada vez que un usuario responde correctamente. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em jugador} & Jugador que respondio correctamente. \\
+\hline
+{\em veces\+Correctas} & Cantidad de respuestas respondidas correctamente de manera consecutiva. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Game.\+java\end{DoxyCompactItemize}

@@ -1,0 +1,102 @@
+\hypertarget{classtrivia_1_1App}{}\section{trivia.\+App Class Reference}
+\label{classtrivia_1_1App}\index{trivia.\+App@{trivia.\+App}}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtrivia_1_1App_ad2da3a023757541d9eecc0a10a213168}\label{classtrivia_1_1App_ad2da3a023757541d9eecc0a10a213168}} 
+static void {\bfseries main} (String\mbox{[}$\,$\mbox{]} args)
+\item 
+static int \mbox{\hyperlink{classtrivia_1_1App_adcedb003b5a5fa73689c3d7a276f9530}{rand\+Int}} (int min, int max)
+\item 
+static void \mbox{\hyperlink{classtrivia_1_1App_a626312af5afd16555429d2241273d85d}{open\+DB}} ()
+\item 
+static void \mbox{\hyperlink{classtrivia_1_1App_a32815da15f55607f228ee3a431c98e46}{close\+DB}} ()
+\item 
+static boolean \mbox{\hyperlink{classtrivia_1_1App_a0ba549b8577987ac6565b91ad65d6cce}{existe\+Host}} (String host\+Name)
+\item 
+static void \mbox{\hyperlink{classtrivia_1_1App_a4753bc6610d49e0d101c01d00b4b99d6}{close\+Host}} (String usuario\+Creador)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Clase Principal que administra el juego y sus subprocesos. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+5 
+\end{DoxyVersion}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classtrivia_1_1App_a32815da15f55607f228ee3a431c98e46}\label{classtrivia_1_1App_a32815da15f55607f228ee3a431c98e46}} 
+\index{trivia\+::\+App@{trivia\+::\+App}!close\+DB@{close\+DB}}
+\index{close\+DB@{close\+DB}!trivia\+::\+App@{trivia\+::\+App}}
+\subsubsection{\texorpdfstring{close\+D\+B()}{closeDB()}}
+{\footnotesize\ttfamily static void trivia.\+App.\+close\+DB (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Metodo que intenta cerrar la conexion a la base de datos. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{classtrivia_1_1App_a4753bc6610d49e0d101c01d00b4b99d6}\label{classtrivia_1_1App_a4753bc6610d49e0d101c01d00b4b99d6}} 
+\index{trivia\+::\+App@{trivia\+::\+App}!close\+Host@{close\+Host}}
+\index{close\+Host@{close\+Host}!trivia\+::\+App@{trivia\+::\+App}}
+\subsubsection{\texorpdfstring{close\+Host()}{closeHost()}}
+{\footnotesize\ttfamily static void trivia.\+App.\+close\+Host (\begin{DoxyParamCaption}\item[{String}]{usuario\+Creador }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Metodo estatico que cierra la partida que tiene por creador al usuario cuyo nombre es pasado como parametro. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em usuario\+Creador} & nombre de usuario del creador de la partida que se desea cerrar. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classtrivia_1_1App_a0ba549b8577987ac6565b91ad65d6cce}\label{classtrivia_1_1App_a0ba549b8577987ac6565b91ad65d6cce}} 
+\index{trivia\+::\+App@{trivia\+::\+App}!existe\+Host@{existe\+Host}}
+\index{existe\+Host@{existe\+Host}!trivia\+::\+App@{trivia\+::\+App}}
+\subsubsection{\texorpdfstring{existe\+Host()}{existeHost()}}
+{\footnotesize\ttfamily static boolean trivia.\+App.\+existe\+Host (\begin{DoxyParamCaption}\item[{String}]{host\+Name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Metodo estatico booleano que retorna true si el hostname pasado como parametro ya esta siendo usado por otro usuario. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em host\+Name} & nombre de la partida que se desea crear, la cual es controlada para que no existan dos partidas con el mismo nombre. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classtrivia_1_1App_a626312af5afd16555429d2241273d85d}\label{classtrivia_1_1App_a626312af5afd16555429d2241273d85d}} 
+\index{trivia\+::\+App@{trivia\+::\+App}!open\+DB@{open\+DB}}
+\index{open\+DB@{open\+DB}!trivia\+::\+App@{trivia\+::\+App}}
+\subsubsection{\texorpdfstring{open\+D\+B()}{openDB()}}
+{\footnotesize\ttfamily static void trivia.\+App.\+open\+DB (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Metodo que intenta abrir una conexion a la base de datos. \begin{DoxyAuthor}{Author}
+Maria, Santiago; Rivero, Matias. 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{classtrivia_1_1App_adcedb003b5a5fa73689c3d7a276f9530}\label{classtrivia_1_1App_adcedb003b5a5fa73689c3d7a276f9530}} 
+\index{trivia\+::\+App@{trivia\+::\+App}!rand\+Int@{rand\+Int}}
+\index{rand\+Int@{rand\+Int}!trivia\+::\+App@{trivia\+::\+App}}
+\subsubsection{\texorpdfstring{rand\+Int()}{randInt()}}
+{\footnotesize\ttfamily static int trivia.\+App.\+rand\+Int (\begin{DoxyParamCaption}\item[{int}]{min,  }\item[{int}]{max }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Returns a pseudo-\/random number between min and max, inclusive. The difference between min and max can be at most {\ttfamily Integer.\+M\+A\+X\+\_\+\+V\+A\+L\+UE -\/ 1}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em min} & Minimum value \\
+\hline
+{\em max} & Maximum value. Must be greater than min. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Integer between min and max, inclusive. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+java.\+util.\+Random\+::next\+Int(int) 
+\end{DoxySeeAlso}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+App.\+java\end{DoxyCompactItemize}
