@@ -31,23 +31,8 @@ public class App
     public static Map hostUser = new HashMap();
     public static Map hosts = new HashMap();
 
-    public static void main( String[] args )
-    {
-        /*
-        before((request, response) -> {
-          boolean authenticated;
-          // ... check if authenticated
-          if (!authenticated) {
-            halt(401, "You are not welcome here");
-          }
-        });
-
-
-        after((request, response) -> {
-          response.header("foo", "set by after filter");
-        });
-        */
-
+    public static void main( String[] args ) {
+      
       //Se selecciona la carpeta en la cual se guardaran los archivos estaticos, como css o json.
       staticFileLocation("/public");
 
@@ -55,6 +40,7 @@ public class App
       webSocket("/edicionPreguntas", edicionPreguntas.class);
       // Se inician los servicios WebSocket
       webSocket("/search", busqueda.class);
+      webSocket("/game", QuestionWebSocketHandler.class);
       //se reinicia el servidor con los datos actualizados
       init();
 

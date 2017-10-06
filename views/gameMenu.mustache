@@ -1,84 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Menu Principal</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="websocket.js"></script>
 
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+<center>
+    <h2>Menu Juego</h2><br>
+    <br>
+    <div id="mydiv">
 
-    <style>
-    body {
-        background-color: #e2e2e2;
+        <input type="submit" value="sendMessage" onclick="sendMessage()" name="wsButton" id="wsButton" />
 
-    }
-    </style>
-  </head>
+        <p id="message">{{cantAnswer}}</p>
+        <form action="/play" method="post">
+            <input type="submit" value="Jugar" 
+                name="play_btn" id="play_btn" />
+        </form>
+        <br>
 
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">Pregunta2</a>
+        <form action="/menuHost" method="get">
+            <input type="submit" value="MultiPlayer" 
+                name="hostMenu_btn" id="hostMenu_btn" />
+        </form>
+        <br>
 
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
+        <form action="/profile" method="get">
+            <input type="submit" value="Ver Perfil" 
+                name="profile_btn" id="profile_btn" />
+        </form>
+        <br>
+        <br>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-              <a class="nav-link" href="/"> Menu Principal <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-              <form action="/play" method="POST" id="jugar"></form>
-              <a class="nav-link" href="/play" onclick="document.getElementById('jugar').submit(); return false;"> Un jugador </a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/menuHost"> Multi-Jugador </a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/profile"> Perfil </a>
-          </li>
-          <li class="nav-item">
-              <form action="/logout" method="POST" id="salir"></form>
-              <a class="nav-link" href="/logout" onclick="document.getElementById('salir').submit(); return false;"> Cerrar Sesion </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-    <center>
-      <br>
-      <h2>Menu Principal</h2>
-
-      <br>
-
-      <div id="container-fluid">
-
-          <p id="message">{{cantAnswer}}</p>
-          <form action="/play" method="POST">
-              <input type="submit" value="Jugar Solo" class="btn btn-outline-primary" />
-          </form>
-          <br>
-
-          <form action="/menuHost" method="GET">
-              <input type="submit" value="Multi-Jugador" class="btn btn-outline-primary" />
-          </form>
-          <br>
-
-          <form action="/profile" method="GET">
-              <input type="submit" value="Ver Perfil" class="btn btn-outline-success" />
-          </form>
-          <br>
-          <br>
-
-          <form action="/logout" method="POST">
-              <input type="submit" value="Cerrar Sesion" class="btn btn-outline-danger" />
-          </form>
-      </div>
-    </center>
-
-    <script type="text/javascript" src="js/jquery-3.2.1.js"></script>
-    <script type="text/javascript" src="js/popper.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js" ></script>
-  </body>
-</html>
+        <form action="/logout" method="post">
+            <input type="submit" value="Cerrar Sesion" 
+                name="logout_btn" id="logout_btn" />
+        </form>
+    </div>
+</center>
