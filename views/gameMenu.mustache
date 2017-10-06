@@ -1,9 +1,12 @@
 <link rel="stylesheet" href="css/style.css">
+<script src="websocket.js"></script>
 
 <center>
     <h2>Menu Juego</h2><br>
     <br>
     <div id="mydiv">
+
+        <input type="submit" value="sendMessage" onclick="sendMessage()" name="wsButton" id="wsButton" />
 
         <p id="message">{{cantAnswer}}</p>
         <form action="/play" method="post">

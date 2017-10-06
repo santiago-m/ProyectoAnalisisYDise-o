@@ -29,30 +29,18 @@ public class App
     private static final String SESSION_NAME = "username";
     private static ArrayList<Game> games = new ArrayList<Game>();
     private static Map hostUser = new HashMap();
+    
     private static Map hosts = new HashMap();
 
-    public static void main( String[] args )
-    {
-        /*
-        before((request, response) -> {
-          boolean authenticated;
-          // ... check if authenticated
-          if (!authenticated) {
-            halt(401, "You are not welcome here");
-          }
-        });
-
-
-        after((request, response) -> {
-          response.header("foo", "set by after filter");
-        });
-        */
-
+    public static void main( String[] args ) {
+      
       //Se selecciona la carpeta en la cual se guardaran los archivos estaticos, como css o json.
       staticFileLocation("/public");
 
       //WebSocket usado para la edicion de preguntas
       webSocket("/edicionPreguntas", edicionPreguntas.class);
+
+      webSocket("/game", QuestionWebSocketHandler.class);
 
       //se reinicia el servidor con los datos actualizados
       init();
