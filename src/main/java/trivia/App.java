@@ -1,6 +1,10 @@
 package trivia;
+
+import org.eclipse.jetty.websocket.api.Session;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DBException;
+import org.json.JSONObject;
+
 import trivia.User;
 import trivia.Game;
 
@@ -18,6 +22,7 @@ import org.eclipse.jetty.websocket.api.*;
 
 import java.util.Random;
 
+
 /**
   * Clase Principal que administra el juego y sus subprocesos.
   * @author Maria, Santiago; Rivero, Matias.
@@ -27,6 +32,9 @@ import java.util.Random;
 public class App
 {
     private static final String SESSION_NAME = "username";
+
+    public static Map<String, Session> sessions = new HashMap();
+
     private static ArrayList<Game> games = new ArrayList<Game>();
     private static Map hostUser = new HashMap();
     
@@ -299,7 +307,7 @@ public class App
 
             Game newGame = new Game();
 
-            Game.initGame(newGame, (int) hosts.get(hostName), (User) hostUser.get(hostName), (User) request.session().attribute("user"));
+            Game.initGame(newGame, (int) hosts.get(hostName), (User) hostUser.get(hostName), (User) request.session().attribute("user"),(Session) request.session().attribute("jettySession"), (Session) request.session().attribute("jettySession"));
 
             games.add(newGame);
             request.session().attribute("gameIndex", games.size()-1);
@@ -441,7 +449,7 @@ public class App
         post("/singlePlayerGame", (request, response) -> {
           Game aux = new Game();
 
-          Game.initGame(aux, request.session().attribute("user"));
+          Game.initGame(aux, request.session().attribute("user"), (Session) request.session().attribute("jettySession"));
 
           games.add(aux);
           request.session().attribute("gameIndex", games.size()-1);
@@ -462,7 +470,7 @@ public class App
             else {
               if (request.session().attribute("gameIndex") == null) {
                 Game aux = new Game();
-                Game.initGame(aux, (User) request.session().attribute("user"));
+                Game.initGame(aux, (User) request.session().attribute("user"), (Session) request.session().attribute("jettySession"));
                 games.add(aux);
 
                 request.session().attribute("gameIndex", games.size()-1);
@@ -471,7 +479,7 @@ public class App
                 games.remove(request.session().attribute("gameIndex"));
                 closeHost(request.session().attribute(SESSION_NAME));
                 Game aux = new Game();
-                Game.initGame(aux, (User) request.session().attribute("user"));
+                Game.initGame(aux, (User) request.session().attribute("user"), (Session) request.session().attribute("jettySession"));
                 games.add(aux);
 
                 request.session().attribute("gameIndex", games.size()-1);
@@ -626,6 +634,10 @@ public class App
           }
 
           return null;
+        });
+
+         post ("/jSession", (request, response) -> {
+          return "OK!";
         });
 
     }
