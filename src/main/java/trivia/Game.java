@@ -1,5 +1,7 @@
 package trivia;
 import org.javalite.activejdbc.Model;
+import org.eclipse.jetty.websocket.api.Session;
+
 import trivia.Respondida;
 
 import java.util.HashMap;
@@ -18,11 +20,13 @@ public class Game extends Model{
       validatePresenceOf("jugador2").message("Please, provide your username");
       validatePresenceOf("ganador").message("It must be a winner");
     }
-	private User player1, player2;
-	private int cantPreguntas;
- 	private int cantJugadoresConectados;
- 	private boolean activo;
- 	private HashMap cantRespondidas = new HashMap();
+
+    private Session sessionP1, sessionP2;
+    private User player1, player2;
+    private int cantPreguntas;
+ 	  private int cantJugadoresConectados;
+ 	  private boolean activo;
+ 	  private HashMap cantRespondidas = new HashMap();
 
     /**
       * Constructor basico de la clase.-
@@ -145,7 +149,7 @@ public class Game extends Model{
     * @param game Juego que se desea inicializar.
     * @param user Usuario que busca jugar Multi-Player.
   */
-  public static void initGame(Game game, User user) {
+  public static void initGame(Game game, User user, Session userSession) {
     App.openDB();
     game.set("jugador1", user.getInteger("id"));
     game.set("jugador2", -1);
@@ -153,8 +157,13 @@ public class Game extends Model{
     game.set("estado", "activo");
     game.saveIt();
 
+
+    game.setSession(1, userSession);
     game.setPlayer1(user);
+
+    game.setSession(2, null);
     game.setPlayer2(null);
+
     game.setCantUsuarios(1);
     App.closeDB();
     game.initRespondidaOnePlayer();
@@ -168,7 +177,7 @@ public class Game extends Model{
     * @param user1 Jugador 1 de la partida.
     * @param user2 Jugador 2 de la partida.
   */
-  public static void initGame(Game game, int cantPreguntas, User user1, User user2) {
+  public static void initGame(Game game, int cantPreguntas, User user1, User user2, Session user1Session, Session user2Session) {
     App.openDB();
     game.set("jugador1", user1.getInteger("id"));
     game.set("jugador2", user2.getInteger("id"));
@@ -176,8 +185,12 @@ public class Game extends Model{
     game.set("estado", "activo");
     game.saveIt();
 
+    game.setSession(1, user1Session);
     game.setPlayer1(user1);
+
+    game.setSession(2, user2Session);
     game.setPlayer2(user2);
+
     game.setCantUsuarios(2);
     game.initializePlayers();
     game.setCantPreguntas(cantPreguntas);
@@ -316,6 +329,18 @@ public class Game extends Model{
 
   private void setCantPreguntas(int cantPreguntas) {
     this.cantPreguntas = cantPreguntas;
+  }
+
+  private void setSession(int sessionNum, Session session) {
+    if (sessionNum > 2 || sessionNum < 1) {
+      throw new IllegalArgumentException("The only possible values for sessionNum is 1 or 2");
+    }
+    else if (sessionNum == 1) {
+      sessionP1 = session;
+    }
+    else {
+      sessionP2 = session;
+    }
   }
 
 }
