@@ -166,9 +166,8 @@ public class App
         );       
 
         //Funcion anonima que permite a un administrador administrar las preguntas existentes en la base de datos.
-        //ACTUALMENTE NO DISPONIBLE
         get("/adminQuestions", (req, res) -> {
-          return new ModelAndView(new HashMap(), "./views/commingSoon.mustache");
+          return new ModelAndView(new HashMap(), "./views/adminQuestions.mustache");
         }, new MustacheTemplateEngine()
         );       
 
@@ -230,6 +229,65 @@ public class App
           return new ModelAndView(hosts, "./views/listarHosts.mustache");
         }, new MustacheTemplateEngine()
         );
+
+        get ("/changeQuestion", (request, response) -> {          
+            return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
+        }, new MustacheTemplateEngine()
+        );
+
+
+        post ("/adminQuestions", (request, response) -> {
+
+            openDB();
+            List<Question> cambiar = Question.where("id = "+ Integer.parseInt(request.queryParams("id_question")));
+
+            Question pregunta = cambiar.get(0);
+
+            preguntas.put("ID", pregunta.getInteger("id"));
+            preguntas.put("pregunta", pregunta.get("pregunta"));
+            preguntas.put("opcion 1", pregunta.getString("respuestaCorrecta"));
+            preguntas.put("opcion 2", pregunta.getString("wrong1"));
+            preguntas.put("opcion 3", pregunta.getString("wrong2"));
+            preguntas.put("opcion 4", pregunta.getString("wrong3"));
+            preguntas.put("activada", pregunta.getString("active"));
+
+            closeDB();
+
+            response.redirect("./changeQuestion");
+
+            return null;
+        }); 
+
+        post ("/changeQuestion", (request, response) -> {
+
+          openDB();
+
+          List<Question> cambiar = Question.where("id = "+ (Integer) preguntas.get("ID"));
+          Question pregunta = cambiar.get(0);
+
+          pregunta.set("pregunta", request.queryParams("cambiar0")).saveIt();
+          pregunta.set("respuestaCorrecta", request.queryParams("cambiar1")).saveIt();
+          pregunta.set("wrong1", request.queryParams("cambiar2")).saveIt();
+          if (request.queryParams("cambiar3") != null) {
+            pregunta.set("wrong2", request.queryParams("cambiar3")).saveIt();
+
+            if (request.queryParams("cambiar4") != null) {
+              pregunta.set("wrong3", request.queryParams("cambiar4")).saveIt();
+            }
+          }
+
+          if (request.queryParams("cb-activa") != null) {
+            pregunta.set("active", 1).saveIt();
+          } else {
+            pregunta.set("active", 0).saveIt();
+          }
+
+          closeDB();
+
+          response.redirect("./adminMenu");
+
+          return null;
+        });
 
         //Funcion anonima tipo POST que inicializa un juego entre el usuario y el creador de la partida que ha elegido.
         post("/selectHost", (request, response) -> {
