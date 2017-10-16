@@ -4,6 +4,8 @@ import org.eclipse.jetty.websocket.api.*;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import com.google.gson.Gson;
 import org.json.JSONObject;
+import java.util.List;
+import java.util.ArrayList;
 
 
 @WebSocket
@@ -12,8 +14,15 @@ public class QuestionWebSocketHandler {
     @OnWebSocketConnect
     public void onConnect(Session user) throws Exception {
         System.out.println("conectado");
-        
-        sendMessage(user, "hola");
+        System.out.println(user.getRemote().toString());
+        List cookies = user.getUpgradeRequest().getCookies();
+        System.out.println("Handler!");
+        System.out.println("Handler!");
+        System.out.println(cookies.toString());
+        System.out.println("Handler!");
+        System.out.println("Handler!");
+
+        //sendMessage(user);
     }
 
     @OnWebSocketClose
@@ -25,14 +34,14 @@ public class QuestionWebSocketHandler {
     public void onMessage(Session user, String message) {
         System.out.println("mensaje recibido");
         System.out.println(message);
-        sendMessage(user, message);
+        sendMessage(user);
     }
 
-    public void sendMessage(Session sesion, String msg) {
+    public void sendMessage(Session sesion) {
         if (sesion.isOpen()) {
             try {
                 sesion.getRemote().sendString(String.valueOf(new JSONObject()
-                    .put("sesion", sesion.toString())
+                    .put("sesion", sesion)
                 ));    
                 System.out.println("La sesion esta abierta");
             }
