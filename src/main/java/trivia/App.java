@@ -33,7 +33,7 @@ public class App
 {
     private static final String SESSION_NAME = "username";
 
-    public static Map<String, Session> sessions = new HashMap();
+    public static List<spark.Session> openSessions = new ArrayList<>();
 
     private static ArrayList<Game> games = new ArrayList<Game>();
     public static Map hostUser = new HashMap();
@@ -68,6 +68,17 @@ public class App
 
         //Funcion anonima utilizada para mostrar el menu principal de la aplicacion.
         get("/", (req, res) -> {
+
+          String cookies = req.cookies().toString();
+          
+          //PRUEBA COOKIES!
+          System.out.println("App");
+          System.out.println("App");
+          System.out.println(cookies);
+          System.out.println("App");
+          System.out.println("App");
+          //PRUEBA COOKIES!
+
           String username = req.session().attribute(SESSION_NAME);
           String category = req.session().attribute("category");
 
@@ -600,6 +611,12 @@ public class App
             request.session().attribute("category", (usuario instanceof Admin)?"admin":"user");
 
             mensajes.put("estadoLogin", "");
+
+            //Antes de loguearse, añade la cookie del cliente como como atributo de la sesion,
+            //Luego añade la sesion a la lista de sesiones abiertas. 
+            request.session().attribute("sessionCookies", request.cookies());
+            openSessions.add(request.session());
+
             response.redirect("/");
             return null;
           }

@@ -5,7 +5,7 @@ webSocket.onclose = function () { alert("WebSocket connection closed") };
 
 function print(msg) {
 	var jsonData = JSON.parse(msg.data);
-	console.log(msg);
+	console.log(jsonData.sesion);
 
 }
 
