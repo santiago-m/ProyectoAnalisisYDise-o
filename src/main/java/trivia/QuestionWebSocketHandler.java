@@ -10,43 +10,43 @@ import java.util.ArrayList;
 
 @WebSocket
 public class QuestionWebSocketHandler {
+    public static List<Session> sessions = new ArrayList<>();
 
     @OnWebSocketConnect
     public void onConnect(Session user) throws Exception {
-        System.out.println("conectado");
-        System.out.println(user.getRemote().toString());
-        List cookies = user.getUpgradeRequest().getCookies();
-        System.out.println("Handler!");
-        System.out.println("Handler!");
-        System.out.println(cookies.toString());
-        System.out.println("Handler!");
-        System.out.println("Handler!");
+        sessions.add(user);
+        System.out.println("WebSocket iniciado en: "+user.getLocalAddress().toString());
 
         //sendMessage(user);
     }
 
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
+        sessions.remove(user);
         System.out.println("closed");
     }
 
     @OnWebSocketMessage
     public void onMessage(Session user, String message) {
         spark.Session sparkSession;
-        if (message.startsWith("username: ") {
+        String ipClient = (user.getLocalAddress().toString()).substring(user.getLocalAddress().toString().indexOf(":"));
+
+        if (message.startsWith("username: ")) {
             System.out.println(message.lastIndexOf("username: "));
 
             for (spark.Session s : App.openSessions) {
-                if (s.attribute(SESSION_NAME.equals(message.substring(message.lastIndexOf("username: "))))) { 
-                    s.attribute("endPoint", user.getRemote())
+                if ((s.attribute(App.SESSION_NAME).equals(message.substring(message.lastIndexOf("username: "))))) { 
+                    s.attribute("clientAddress", ipClient);
                     sparkSession = s;
+                    break;
                 }
             }
         }
         else {
             for (spark.Session s : App.openSessions) {
-                if (s.attribute("endPoint").equals(user.getRemote())) {
+                if (s.attribute("clientAddress").equals(ipClient)) {
                     sparkSession = s;
+                    break;
                 }
             }
             System.out.println("mensaje recibido");
