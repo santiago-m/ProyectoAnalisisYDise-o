@@ -859,7 +859,8 @@ public class App {
       try {
 
         destino.getRemote()
-               .sendString(String.valueOf(new JSONObject().put("id", id)
+               .sendString(String.valueOf(new JSONObject()/*.put("datos", cambiar)*/
+                                                          .put("id", id)
                                                           .put("pregunta", preguntas)
                                                           .put("correcta", correcta)
                                                           .put("mal1", mal1)
