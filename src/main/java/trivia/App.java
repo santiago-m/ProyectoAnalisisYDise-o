@@ -31,7 +31,7 @@ import java.util.Random;
 
 public class App
 {
-    private static final String SESSION_NAME = "username";
+    public static final String SESSION_NAME = "username";
 
     public static List<spark.Session> openSessions = new ArrayList<>();
 
