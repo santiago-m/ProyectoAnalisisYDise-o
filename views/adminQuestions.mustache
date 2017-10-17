@@ -11,7 +11,30 @@
 	<br>
 	<br>
 
-	<div id="mydiv">
+	<!--<div>
+		<button id="volver">Volver</button>
+	</div>-->
+	<div id="mydiv3">
+
+		<input type="placeholder" name="cambiar" id="cambiar"/>
+
+		<!--<div id="bloque"></div>-->
+		<form id="bloque" action="/adminQuestions" method="post">
+
+			<input id="submit" name="submit" type="submit" class="btn btn-default" value="Cambiar" />
+		</form>
+	</div>
+
+	<br>
+	<br>
+	<!--
+	<p id="demo">Let AJAX change this text.</p>
+
+	<button id="button">Change Content</button>
+	
+	<br>
+	<br>-->
+	<div id="mydiv2">
 		<p id="message">{{estadoPregunta}}</p>
 		<form action="/adminQuestions" method="post">
 			<strong>ID de la pregunta a editar: <strong>
@@ -20,4 +43,6 @@
 			<input id="btn_submit" name="btn_submit" type="submit" class="btn btn-default" value="Buscar" />
 		</form>
 	</div>
+
+	<script src="js/edicionPreguntas.js"></script>
 </center>
