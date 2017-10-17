@@ -1,6 +1,6 @@
 package trivia;
 
-import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.*;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DBException;
 import org.json.JSONObject;
@@ -9,18 +9,17 @@ import trivia.User;
 import trivia.Game;
 
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Random;
 
 import static spark.Spark.*;
 
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 
-import org.eclipse.jetty.websocket.api.*;
-
-import java.util.Random;
 import com.google.gson.Gson;
 
 
@@ -30,64 +29,74 @@ import com.google.gson.Gson;
   * @version 0.5
 */
 
-public class App
-{
-    public static final String SESSION_NAME = "username";
+public class App {
 
-    public static List<spark.Session> openSessions = new ArrayList<>();
+  private static final String SESSION_NAME = "username";
+  private static ArrayList<Game> games = new ArrayList<Game>();
+  private static Map hostUser = new HashMap();
+  private static Map hosts = new HashMap();
 
-    public static ArrayList<Game> games = new ArrayList<Game>();
-    private static Map hostUser = new HashMap();
+  static Map<Session, String> concurr = new ConcurrentHashMap<>();
+  static int nextUserNumber = 1;
+
+  public static void main( String[] args ) { 
+
+  public static List<spark.Session> openSessions = new ArrayList<>();
+
+  public static ArrayList<Game> games = new ArrayList<Game>();
+  private static Map hostUser = new HashMap();
     
-    private static Map hosts = new HashMap();
+  private static Map hosts = new HashMap();
 
-    public static void main( String[] args ) {
+  public static void main( String[] args ) {
       
-      //Se selecciona la carpeta en la cual se guardaran los archivos estaticos, como css o json.
-      staticFileLocation("/public");
+    //Se selecciona la carpeta en la cual se guardaran los archivos estaticos, como css o json.
+    staticFileLocation("/public");
 
-      //WebSocket usado para la edicion de preguntas
-      webSocket("/edicionPreguntas", edicionPreguntas.class);
+    //WebSocket usado para la edicion de preguntas
+    webSocket("/edicionPreguntas", edicionPreguntas.class);
+    webSocket("/game", QuestionWebSocketHandler.class);
+    webSocket("/wait", espera.class);
+      
+    //se reinicia el servidor con los datos actualizados
+     init();
 
-      webSocket("/game", QuestionWebSocketHandler.class);
+      //HashMap con los valores del perfil del usuario de la sesion iniciada.
+      Map profile = new HashMap();
+      //HashMap que permite mostrar mensajes en diferentes fases del juego.
+      Map mensajes = new HashMap();
+      //HashMap que almacena la cantidad de preguntas respondidas de manera correcta por cada usuario iniciado.-
+      Map jugadorRespuesta = new HashMap();
+      //HashMap donde se almacena una pregunta con sus respectivas opciones.
+      final Map preguntas = new HashMap();
+      //HashMap que almacena el ganador y perdedor de una partida.
+      Map winnerLoser = new HashMap();
 
-      //se reinicia el servidor con los datos actualizados
-      init();
+      //Se inicializa el contador de hosts
+      hosts.put("cantidadHosts", 0);
 
-        //HashMap con los valores del perfil del usuario de la sesion iniciada.
-        Map profile = new HashMap();
-        //HashMap que permite mostrar mensajes en diferentes fases del juego.
-        Map mensajes = new HashMap();
-        //HashMap que almacena la cantidad de preguntas respondidas de manera correcta por cada usuario iniciado.-
-        Map jugadorRespuesta = new HashMap();
-        //HashMap donde se almacena una pregunta con sus respectivas opciones.
-        final Map preguntas = new HashMap();
-        //HashMap que almacena el ganador y perdedor de una partida.
-        Map winnerLoser = new HashMap();
 
-        //Se inicializa el contador de hosts
-        hosts.put("cantidadHosts", 0);
 
-        //Funcion anonima utilizada para mostrar el menu principal de la aplicacion.
-        get("/", (req, res) -> {
+      //Funcion anonima utilizada para mostrar el menu principal de la aplicacion.
+      get("/", (req, res) -> {
 
-          String username = req.session().attribute(SESSION_NAME);
-          String category = req.session().attribute("category");
+        String username = req.session().attribute(SESSION_NAME);
+        String category = req.session().attribute("category");
 
-          if ((username != null) && (category != null)) {
-              if (category.equals("user")) {
-                res.redirect("/gameMenu");
-                return null;
-              }
-              else {
-                res.redirect("/adminMenu");
-                return null;
-              }
+        if ((username != null) && (category != null)) {
+          if (category.equals("user")) {
+            res.redirect("/gameMenu");
+            return null;
           }
           else {
-              return new ModelAndView(new HashMap(), "./views/mainpage.mustache");
+            res.redirect("/adminMenu");
+            return null;
           }
-        }, new MustacheTemplateEngine()
+        }
+        else {
+          return new ModelAndView(new HashMap(), "./views/mainpage.mustache");
+        }
+      }, new MustacheTemplateEngine()
       );
 
         //Funcion anonima utilizada para mostrar el menu del jugador.
@@ -235,37 +244,35 @@ public class App
         );
 
         // Funcion que expone los datos actuales de una pregunta para proceder a la edicion
-        get ("/changeQuestion", (request, response) -> {
-           return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
+        get ("/changeQuestion", (request, response) -> {          
+            return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
         }, new MustacheTemplateEngine()
         );
 
         // Funcion que basada en la pregunta que se quiere editar, la busca con sus respectivas opciones
         post ("/adminQuestions", (request, response) -> {
+          openDB();
+          List<Question> cambiar = Question.where("id = "+ Integer.parseInt(request.queryParams("opciones")));
 
-         openDB();
-         List<Question> cambiar = Question.where("id = "+ Integer.parseInt(request.queryParams("opciones")));
+          Question pregunta = cambiar.get(0);
 
-         Question pregunta = cambiar.get(0);
+          preguntas.put("ID", pregunta.getInteger("id"));
+          preguntas.put("pregunta", pregunta.get("pregunta"));
+          preguntas.put("opcion 1", pregunta.getString("respuestaCorrecta"));
+          preguntas.put("opcion 2", pregunta.getString("wrong1"));
+          preguntas.put("opcion 3", pregunta.getString("wrong2"));
+          preguntas.put("opcion 4", pregunta.getString("wrong3"));
+          preguntas.put("activada", pregunta.getString("active"));
 
-         preguntas.put("ID", pregunta.getInteger("id"));
-         preguntas.put("pregunta", pregunta.get("pregunta"));
-         preguntas.put("opcion 1", pregunta.getString("respuestaCorrecta"));
-         preguntas.put("opcion 2", pregunta.getString("wrong1"));
-         preguntas.put("opcion 3", pregunta.getString("wrong2"));
-         preguntas.put("opcion 4", pregunta.getString("wrong3"));
-         preguntas.put("activada", pregunta.getString("active"));
+          closeDB();
 
-         closeDB();
-
-         response.redirect("./changeQuestion");
-
-         response.redirect("./adminMenu");
-         return null;
+          response.redirect("/changeQuestion");
+          
+          return null;
        });
 
        // Funcion que hace efectivos los cambios de la pregunta en la base de datos
-       post ("/changeQuestion", (request, response) -> {
+        post ("/changeQuestion", (request, response) -> {
 
          openDB();
 
@@ -321,6 +328,7 @@ public class App
         post("/host", (request, response) -> {
           String hostName = request.queryParams("hostName");
           int cantPreguntas = 0;
+
           try {
             cantPreguntas = Integer.parseInt(request.queryParams("cantPreguntas"));
           } 
@@ -343,16 +351,17 @@ public class App
           }
           closeDB();
 
-            mensajes.put("estadoHost", "");
+          mensajes.put("estadoHost", "");
 
-            hostUser.put(hostName, (User) request.session().attribute("user"));
-            hostUser.put(request.session().attribute(SESSION_NAME), "Host "+hosts.size());
-            hosts.put("Host "+ (((int) hosts.get("cantidadHosts"))+1), hostName);
-            hosts.put("cantidadHosts",( (int) hosts.get("cantidadHosts"))+1);
-            hosts.put(hostName, cantPreguntas);
+          hostUser.put(hostName, (User) request.session().attribute("user"));
+          hostUser.put(request.session().attribute(SESSION_NAME), "Host "+hosts.size());
+          hosts.put("Host "+ (((int) hosts.get("cantidadHosts"))+1), hostName);
+          hosts.put("cantidadHosts",( (int) hosts.get("cantidadHosts"))+1);
+          hosts.put(hostName, cantPreguntas);
 
-            response.redirect("/waiting");
-          }
+          response.redirect("/waiting");
+
+          } 
           else {
             mensajes.put("estadoHost", "Lo siento, el nombre de host ya existe o ya existe un host creado por este usuario.");
             response.redirect("/hostLAN");
@@ -362,21 +371,24 @@ public class App
 
         //Funcion anonima tipo post que se ejecuta iterativamente hasta que dos jugadores estan conectados. Entonces crea un juego multiplayer
         post("/waitForPlayers", (request, response) -> {
-      int actualMax = games.size()-1;
-      Game aux;
+          int actualMax = games.size()-1;
+          Game aux;
+
           for (int i = actualMax; i >= 0; i--) {
             aux = games.get(i);
             if ((aux.getPlayer2() != null) && (aux.getPlayer1() == (User) request.session().attribute("user"))) {
-          request.session().attribute("gameIndex", i);
+              request.session().attribute("gameIndex", i);
               break;
             }
           }
+
           if (request.session().attribute("gameIndex") != null) {
             response.redirect("/play");
           }
           else {
             response.redirect("/waiting");
           }
+
           return null;
         });
 
@@ -818,4 +830,81 @@ public class App
         hostUser.remove(hostName);
       }
     }
+
+
+    public static void sendQuestions (String sender, String message) throws java.io.IOException{
+
+      openDB();
+      List<Question> cambiar = Question.where("pregunta like '%"+message+"%'");
+
+      List<Integer> id = new ArrayList<Integer>();
+      List<String> preguntas = new ArrayList<String>();
+      List<String> correcta = new ArrayList<String>();
+      List<String> mal1 = new ArrayList<String>();
+      List<String> mal2 = new ArrayList<String>();
+      List<String> mal3 = new ArrayList<String>();
+      List<String> activa = new ArrayList<String>();
+
+      cambiar.stream().forEach(p -> { id.add(p.getInteger("id"));
+                                      preguntas.add(p.getString("pregunta"));
+                                      correcta.add(p.getString("respuestaCorrecta"))
+                                      mal1.add(p.getString("wrong1"));
+                                      mal2.add(p.getString("wrong2"));
+                                      mal3.add(p.getString("wrong3"));
+                                      activa.add(p.getString("active"));
+                                    });
+      
+      Session destino = (Session) getKeyFromValue(concurr, sender);
+
+      try {
+
+        destino.getRemote()
+               .sendString(String.valueOf(new JSONObject().put("id", id)
+                                                          .put("pregunta", preguntas)
+                                                          .put("correcta", correcta)
+                                                          .put("mal1", mal1)
+                                                          .put("mal2", mal2)
+                                                          .put("mal3", mal3)
+                                                          .put("activa", activa)
+                                                          ));
+  
+      } catch (Exception r){
+        r.printStackTrace();
+      }
+
+      closeDB();
+
+
+    }
+
+    /*
+    public static String pasar (Question l) {
+      return l.getString("pregunta");
+    }
+
+    public static String createHtml(List pasar) {
+      return article( input().withType("radio")//pasar.each(p -> input().withType("radio"))
+                    ).render();
+    }
+    */
+
+    /*
+    public static <T, E> Set<T> getKeysByValue(Map<T, E> map, E value) {
+      return map.entrySet()
+              .stream()
+              .filter(entry -> Objects.equals(entry.getValue(), value))
+              .map(Map.Entry::getKey)
+              .collect(Collectors.toSet());
+    }
+    */
+
+    public static Object getKeyFromValue(Map hm, Object value) {
+            for (Object o : hm.keySet()) {
+              if (hm.get(o).equals(value)) {
+                return o;
+              }
+            }
+            return null;
+          }
+    
 }
