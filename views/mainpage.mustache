@@ -1,66 +1,169 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Menu Principal</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="This Game is an university project, specifically for the third year 'Licenciatura en Ciencias de la Computacion's subject named 'Ingenieria de Software' in the UNRC (Universidad Nacional de Rio Cuarto)">
+  <meta name="author" content="Maria, Santiago Jose; Rivero, Matias Gabriel">
+  <link rel="icon" href="favicon.ico">
+  <title>Preguntados</title>
 
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <style>
-      body {
-        background-color: #e2e2e2;
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-      }
-    </style>
-  </head>
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">Pregunta2</a>
+  <!-- Bootstrap Jquery Validator-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>
 
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/jumbotron.css">
+</head>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-              <a class="nav-link active" href="/"> Menu Principal <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/login"> Login </a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="register"> Registro </a>
-          </li>
-        </ul>
+<body>
+  <div id="navBar"></div>
+  
+
+  <!-- Modal -->
+  <div id="modalSignIn"></div>
+  <div id="modalSignUp"></div>
+
+  <div id="estadoLogin" hidden>{{estadoLogin}}</div>
+  <div id="estadoRegistro" hidden>{{estadoRegistro}}</div>
+
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <div class="container">
+      <h2>Gallery</h2>
+      <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1"></li>
+          <li data-target="#myCarousel" data-slide-to="2"></li>
+          <li data-target="#myCarousel" data-slide-to="3"></li>
+          <li data-target="#myCarousel" data-slide-to="4"></li>
+          <li data-target="#myCarousel" data-slide-to="5"></li>
+          <li data-target="#myCarousel" data-slide-to="6"></li>
+          <li data-target="#myCarousel" data-slide-to="7"></li>
+        </ol>
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+          <div class="item active">
+            <img src="img/terminal1.png" alt="Terminal Menu">
+          </div>
+          <div class="item">
+            <img src="img/terminal2.png" alt="Terminal Game">
+          </div>
+          
+          <div class="item">
+            <img src="img/beta1-1.png" alt="Beta 1 Menu">
+          </div>
+          <div class="item">
+            <img src="img/beta1-2.png" alt="Beta 1 Game">
+          </div>
+
+          <div class="item">
+            <img src="img/beta2-1.png" alt="Beta 2 Menu">
+          </div>
+          <div class="item">
+            <img src="img/beta2-2.png" alt="Beta 2 Game">
+          </div>
+
+          <div class="item">
+            <img src="img/beta3-1.png" alt="Beta 3 Menu">
+          </div>
+          <div class="item">
+            <img src="img/beta3-2.png" alt="Beta 3 Game">
+          </div>
+
+        </div>
+        <!-- Left and right controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+        <span class="sr-only">Next</span>
+        </a>
       </div>
-    </nav>
+    </div>
+  </div>
+  
 
+  <div class="container">
+    <h2>Top 10 Score</h2>
+    <div class="bs-example">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Username</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="success">
+            <td>1</td>
+            <td>John</td>
+            <td>1000</td>
+          </tr>
+          <tr class="warning">
+            <td>2</td>
+            <td>Walter</td>
+            <td>950</td>
+          </tr>
+          <tr class="warning">
+            <td>3</td>
+            <td>Internet147</td>
+            <td>950</td>
+          </tr>
+          <tr class="warning">
+            <td>4</td>
+            <td>Spiderman</td>
+            <td>800</td>
+          </tr>
+          <tr class="warning">
+            <td>5</td>
+            <td>Dr-Octopus</td>
+            <td>575</td>
+          </tr>
+          <tr class="danger">
+            <td>6</td>
+            <td>Raul</td>
+            <td>555</td>
+          </tr>
+          <tr class="danger">
+            <td>7</td>
+            <td>PcGamer159</td>
+            <td>500</td>
+          </tr>
+          <tr class="danger">
+            <td>8</td>
+            <td>Studen45</td>
+            <td>320</td>
+          </tr>
+          <tr class="danger">
+            <td>9</td>
+            <td>Kyojin</td>
+            <td>225</td>
+          </tr>
+          <tr class="danger">
+            <td>10</td>
+            <td>santiago-m</td>
+            <td>85</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr>
+    <footer>
+      <p>&copy; OurCompanyName enterprices</p>
+    </footer>
+  </div>
 
-    <center>
-      <br>
-      <h2>Menu Principal</h2>
-
-      <br>
-      <br>
-
-      <div id="container-fluid">
-        <form action="/login" method="GET">
-            <input type="submit" value="Iniciar Sesion" class="btn btn-info"/>
-        </form>
-        <br>
-
-        <form action="/register" method="GET">
-            <input type="submit" value="Registrarse" class="btn btn-info"/>
-        </form>
-        <br>
-      </div>
-    </center>
-
-    <script type="text/javascript" src="js/jquery-3.2.1.js"></script>
-    <script type="text/javascript" src="js/popper.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js" ></script>
-  </body>
-</html>
+  <script type="text/javascript" src="js/main.js"></script>
+</body>

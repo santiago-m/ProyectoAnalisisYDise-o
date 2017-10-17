@@ -7,35 +7,48 @@ import java.util.*;
 import java.util.concurrent.*;
 
 @WebSocket
-public class edicionPreguntas {
+public class espera {
 
     private String sender, msg;
 
     @OnWebSocketConnect
     public void onConnect(Session session) {
-        System.out.println("Conexion a edicionPreguntas");
+        System.out.println("Conexion a espera");
         //System.out.println("Session= " + session + "<End Session>");
 
         //String username = App.SESSION_NAME;   // <-- SESSION_NAME es privado
 
-        String username = "User" + App.nextUserNumber++;
-        App.concurr.put(session, username);
+        //String username = "User" + App.nextUserNumber++;
+        //App.concurr.put(session, username);
         //System.out.println("Session: " + session + "username" + username);
     }
 
     @OnWebSocketClose
     public void onClose(Session session, int statusCode, String reason) {
         //sessions.remove(session);
-        System.out.println("Desconexion de edicionPreguntas");
+        System.out.println("Desconexion de espera");
+
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String buscar) throws IOException {
+    public void onMessage(Session session, String msg) throws IOException {
+        //System.out.println(msg);
+        //String aux =  msg;
+        //String aux2 = 'borrar';
+        //System.out.println("-" + aux + "- y la 2 -" + aux2 + "-");
 
+        if ( msg.equals("borrar")) {
+            System.out.println("borrada");
+        } else {
+            System.out.println("espera respuesta de jugada");
+        }
+        /*
         try{
-            App.sendQuestions(sender = App.concurr.get(session), msg = buscar);
+            App.sendQuestions(sender = App.concurr.get(session), msg = mensaje);
         }catch(IOException e){
             e.printStackTrace();
-        }
+        }*/
     }
+
+
 }
