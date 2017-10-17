@@ -13,9 +13,9 @@ id("cambiar").addEventListener("keypress", function (e) {
 /*id("volver").addEventListener("click", function() {
 	location.href ="http://127.0.0.1:4567/adminMenu";
 });*/
-id("button").addEventListener("click", function() {
+/*id("button").addEventListener("click", function() {
 	loadDoc();
-});
+});*/
 
 function loadDoc() {
   var xhttp = new XMLHttpRequest();
@@ -43,7 +43,11 @@ function insert(targetId, message) {
 //Update the chat-panel, and the list of connected users
 function upDate(msg) {
     var data = JSON.parse(msg.data);	// lo convertimos a objeto de js
-    console.log(data);			
+    console.log(data);
+    /*var primero = data.datos;
+    console.log(primero);
+    var segundo = primero[0];
+    console.log(segundo);*/
 
     // ahora acceder al arreglo con los indices
     var primero = data.pregunta[0];
