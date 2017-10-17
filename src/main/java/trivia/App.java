@@ -617,7 +617,9 @@ public class App
             request.session().attribute("sessionCookies", request.cookies());
             openSessions.add(request.session());
 
+            response.cookie("username", usuario.getUsername());
             response.redirect("/");
+            
             return null;
           }
           else {

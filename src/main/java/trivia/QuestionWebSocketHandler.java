@@ -32,9 +32,27 @@ public class QuestionWebSocketHandler {
 
     @OnWebSocketMessage
     public void onMessage(Session user, String message) {
-        System.out.println("mensaje recibido");
-        System.out.println(message);
-        sendMessage(user);
+        spark.Session sparkSession;
+        if (message.startsWith("username: ") {
+            System.out.println(message.lastIndexOf("username: "));
+
+            for (spark.Session s : App.openSessions) {
+                if (s.attribute(SESSION_NAME.equals(message.substring(message.lastIndexOf("username: "))))) { 
+                    s.attribute("endPoint", user.getRemote())
+                    sparkSession = s;
+                }
+            }
+        }
+        else {
+            for (spark.Session s : App.openSessions) {
+                if (s.attribute("endPoint").equals(user.getRemote())) {
+                    sparkSession = s;
+                }
+            }
+            System.out.println("mensaje recibido");
+            System.out.println(message);
+            sendMessage(user);
+        }
     }
 
     public void sendMessage(Session sesion) {
