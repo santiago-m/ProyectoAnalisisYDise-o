@@ -15,8 +15,8 @@ import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 
 import org.eclipse.jetty.websocket.api.*;
-//import static j2html.TagCreator.*;
 import org.json.JSONObject;
+import com.google.gson.Gson;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,6 +35,7 @@ public class App
     private static Map hostUser = new HashMap();
     private static Map hosts = new HashMap();
 
+    // Por ahora, lugar donde esta el usuario al que le vamos a retornar cosas
     static Map<Session, String> concurr = new ConcurrentHashMap<>();
     static int nextUserNumber = 1;
 
@@ -58,9 +59,8 @@ public class App
       //Se selecciona la carpeta en la cual se guardaran los archivos estaticos, como css o json.
       staticFileLocation("/public");
 
-      //webSocket("/preguntas", preguntas.class);
-      //webSocket("/hi", WebSocketHandler.class);
-      //webSocket("/ho", WebSocketHandler2.class);
+      // Se inician los servicios de webSocket
+      webSocket("/search", busqueda.class);
       webSocket("/wait", espera.class);
       webSocket("/edicionPreguntas", edicionPreguntas.class);
       //se reinicia el servidor con los datos actualizados
@@ -240,6 +240,8 @@ public class App
           String crearFila = "";
           if ((int) hosts.get("cantidadHosts") > 0) {            
             script = "function tableCreate() { var body = document.getElementsByTagName('div')[0]; var tbl = document.createElement('table'); tbl.style.width = '100%'; tbl.setAttribute('border', '1'); var tbdy = document.createElement('tbody'); ";
+            
+
             for (int i = 0; i < (int) hosts.get("cantidadHosts"); i++) {
               crearFila = crearFila+"var tr = document.createElement('tr'); ";
               for (int j = 0; j < 2; j++) {
@@ -253,6 +255,7 @@ public class App
             }
           }
           crearFila = crearFila+" } document.getElementById(\"hosts\").innerHTML = tableCreate();";
+
           script = script+crearFila;
           hosts.put("script", script);
 
@@ -267,7 +270,7 @@ public class App
         );
 
 
-        post ("/adminQuestions", (request, response) -> {
+        /*post ("/adminQuestions", (request, response) -> {
 
 
             openDB();
@@ -289,7 +292,7 @@ public class App
 
             response.redirect("./adminMenu");
             return null;
-        }); 
+        }); */
 
 
         post ("/changeQuestion", (request, response) -> {
@@ -812,27 +815,30 @@ public class App
       }
     }
 
-
-    public static void sendQuestions (String sender, String message) throws java.io.IOException{
+    // funcion que hace una consulta a la base de datos en base al pedido y 
+    // devuelve una lista con las preguntas y sus respectivos ID
+    public static void editQuestions (String sender, String message) throws java.io.IOException{
 
       openDB();
       List<Question> cambiar = Question.where("pregunta like '%"+message+"%'");
-
+      
       List<Integer> id = new ArrayList<Integer>();
       List<String> preguntas = new ArrayList<String>();
+      /*  Aun no implementado como quiero
       List<String> correcta = new ArrayList<String>();
       List<String> mal1 = new ArrayList<String>();
       List<String> mal2 = new ArrayList<String>();
       List<String> mal3 = new ArrayList<String>();
-      List<String> activa = new ArrayList<String>();
+      List<String> activa = new ArrayList<String>();*/
 
       cambiar.stream().forEach(p -> { id.add(p.getInteger("id"));
                                       preguntas.add(p.getString("pregunta"));
-                                      correcta.add(p.getString("respuestaCorrecta"))
+                                      /*  Aun no implementado como quiero
+                                      correcta.add(p.getString("respuestaCorrecta"));
                                       mal1.add(p.getString("wrong1"));
                                       mal2.add(p.getString("wrong2"));
                                       mal3.add(p.getString("wrong3"));
-                                      activa.add(p.getString("active"));
+                                      activa.add(p.getString("active"));*/
                                     });
       
       Session destino = (Session) getKeyFromValue(concurr, sender);
@@ -840,14 +846,14 @@ public class App
       try {
 
         destino.getRemote()
-               .sendString(String.valueOf(new JSONObject()/*.put("datos", cambiar)*/
-                                                          .put("id", id)
+               .sendString(String.valueOf(new JSONObject().put("id", id)
                                                           .put("pregunta", preguntas)
+                                                          /*  Aun no implementado como quiero
                                                           .put("correcta", correcta)
                                                           .put("mal1", mal1)
                                                           .put("mal2", mal2)
                                                           .put("mal3", mal3)
-                                                          .put("activa", activa)
+                                                          .put("activa", activa)*/
                                                           ));
   
       } catch (Exception r){
@@ -858,27 +864,6 @@ public class App
 
 
     }
-
-    /*
-    public static String pasar (Question l) {
-      return l.getString("pregunta");
-    }
-
-    public static String createHtml(List pasar) {
-      return article( input().withType("radio")//pasar.each(p -> input().withType("radio"))
-                    ).render();
-    }
-    */
-
-    /*
-    public static <T, E> Set<T> getKeysByValue(Map<T, E> map, E value) {
-      return map.entrySet()
-              .stream()
-              .filter(entry -> Objects.equals(entry.getValue(), value))
-              .map(Map.Entry::getKey)
-              .collect(Collectors.toSet());
-    }
-    */
 
     public static Object getKeyFromValue(Map hm, Object value) {
             for (Object o : hm.keySet()) {

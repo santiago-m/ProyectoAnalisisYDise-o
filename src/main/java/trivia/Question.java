@@ -2,12 +2,16 @@ package trivia;
 
 import org.javalite.activejdbc.Model;
 
+import org.json.JSONObject;
+import com.google.gson.Gson;
+
 /**
   * Clase Question que representa una pregunta en la base de datos.
   * @author Maria, Santiago Jose; Rivero, Matias.
 */
 public class Question extends Model {
 	private int cantOpciones = 1;
+  /*private static Gson gson = new Gson();*/
 
 	static{
     	validatePresenceOf("pregunta").message("Please, provide a question");
@@ -23,6 +27,11 @@ public class Question extends Model {
   			return true;
   		}
   	}
+
+    /*public static String toJson (Question q) {
+      System.out.println(q.get(attributes));
+      return gson.toJson(q.get(attributes));
+    }*/
 
   	public void check() {
   		this.set("leido", 1);

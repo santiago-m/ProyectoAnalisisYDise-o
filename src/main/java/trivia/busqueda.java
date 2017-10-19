@@ -7,20 +7,13 @@ import java.util.*;
 import java.util.concurrent.*;
 
 @WebSocket
-public class espera {
+public class busqueda {
 
     private String sender, msg;
 
     @OnWebSocketConnect
     public void onConnect(Session session) {
-        System.out.println("Conexion a espera");
-        //System.out.println("Session= " + session + "<End Session>");
-
-        //String username = App.SESSION_NAME;   // <-- SESSION_NAME es privado
-
-        //String username = "User" + App.nextUserNumber++;
-        //App.concurr.put(session, username);
-        //System.out.println("Session: " + session + "username" + username);
+        System.out.println("Conexion a busqueda");
     }
 
     @OnWebSocketClose
@@ -32,13 +25,7 @@ public class espera {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws IOException {
-
-        if ( msg.equals("borrar")) {
-            System.out.println("borrada");
-        } else {
-            System.out.println("espera respuesta de jugada (crear host)");
-        }
-
+        
     }
 
 

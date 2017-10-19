@@ -1,21 +1,20 @@
 //Establish the WebSocket connection and set up event handlers
-var webSocket1 = new WebSocket("ws://" + location.hostname + ":" + location.port + "/wait");
-webSocket1.onmessage = function (msg) { redireccion(msg) };
-webSocket1.onclose = function () {  };
+var webSocket2 = new WebSocket("ws://" + location.hostname + ":" + location.port + "/search");
+webSocket2.onmessage = function () { procesar() };
+webSocket2.onclose = function () {  };
 
-id("volver").addEventListener("click", function (e) {
-	webSocket1.send("borrar")//borrar sala
-	location.href= "http://"+ location.hostname + ":"+ location.port +"/menuHost"
-});
-
-function redireccion(msg) {
-  if (msg.localeCompare("partida_encontrada") ) {
+function procesar() {
+  //if (msg.localeCompare("")) {
+    websocket1.send("partida_encontrada");
     location.href= "http://"+ location.hostname + ":"+ location.port +"/playTwoPlayers"
-  } /*else if (msg == "") {
 
-  }*/
-  
+  //} else if (msg.localeCompare("listarHost")) {
+
+
+  //}
 }
+
+
 
 function del(targetId) {
     id(targetId).innerHTML = "";
