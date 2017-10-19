@@ -33,7 +33,7 @@ public class espera {
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws IOException {
 
-        if ( msg.equals("borrar")) {
+        if ( msg.equals("partida_encontrada")) {
             System.out.println("borrada");
         } else {
             System.out.println("espera respuesta de jugada (crear host)");

@@ -14,6 +14,8 @@ public class busqueda {
     @OnWebSocketConnect
     public void onConnect(Session session) {
         System.out.println("Conexion a busqueda");
+        //pedir a host_creado // hosts
+
     }
 
     @OnWebSocketClose
