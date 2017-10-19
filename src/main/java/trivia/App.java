@@ -269,32 +269,6 @@ public class App
         }, new MustacheTemplateEngine()
         );
 
-
-        /*post ("/adminQuestions", (request, response) -> {
-
-
-            openDB();
-            List<Question> cambiar = Question.where("id = "+ Integer.parseInt(request.queryParams("opciones")));
-
-            Question pregunta = cambiar.get(0);
-
-            preguntas.put("ID", pregunta.getInteger("id"));
-            preguntas.put("pregunta", pregunta.get("pregunta"));
-            preguntas.put("opcion 1", pregunta.getString("respuestaCorrecta"));
-            preguntas.put("opcion 2", pregunta.getString("wrong1"));
-            preguntas.put("opcion 3", pregunta.getString("wrong2"));
-            preguntas.put("opcion 4", pregunta.getString("wrong3"));
-            preguntas.put("activada", pregunta.getString("active"));
-
-            closeDB();
-
-            response.redirect("./changeQuestion");
-
-            response.redirect("./adminMenu");
-            return null;
-        }); */
-
-
         post ("/changeQuestion", (request, response) -> {
 
           openDB();
