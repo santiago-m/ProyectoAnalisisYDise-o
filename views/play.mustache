@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="css/style.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <div id="goBack">
     <form action="/" method="get">
@@ -12,21 +13,18 @@
 	<br>
 
 	<div id="mydiv">
-
 		<p> 
-			<STRONG> {{pregunta}} </STRONG> 
+			<STRONG id="questionPlace"></STRONG> 
 		</p>
 		<br>
-
-		<form action="/play" method="post">
-  			<p> <input type="radio" name="question" value="option1"> {{opcion 1}}  </p>
-			<p> <input type="radio" name="question" value="option1"> {{opcion 2}}  </p>
-			<p> <input type="radio" name="question" value="option1"> {{opcion 3}}  </p>
-			<p> <input type="radio" name="question" value="option1"> {{opcion 4}}  </p>
-			<br>
-			<input type="submit" value="Siguiente Pregunta"
-        		name="next_btn" id="next_btn" />
-		</form>
+		<div id="answersPlace">
+  		</div>
+		<br>
+			
+		<button id="sendAnswer" value="Siguiente Pregunta"
+        		name="next_btn" id="next_btn" onclick="javascript:sendAnswer()">Siguiente Pregunta</button>
 	</div>
 
+	</div>
+	<script src="json/playing.js"></script>
 </center>
