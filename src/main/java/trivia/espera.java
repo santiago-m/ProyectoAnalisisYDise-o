@@ -32,22 +32,13 @@ public class espera {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws IOException {
-        //System.out.println(msg);
-        //String aux =  msg;
-        //String aux2 = 'borrar';
-        //System.out.println("-" + aux + "- y la 2 -" + aux2 + "-");
 
         if ( msg.equals("borrar")) {
             System.out.println("borrada");
         } else {
-            System.out.println("espera respuesta de jugada");
+            System.out.println("espera respuesta de jugada (crear host)");
         }
-        /*
-        try{
-            App.sendQuestions(sender = App.concurr.get(session), msg = mensaje);
-        }catch(IOException e){
-            e.printStackTrace();
-        }*/
+
     }
 
 
