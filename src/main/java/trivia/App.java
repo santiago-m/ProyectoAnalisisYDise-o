@@ -21,6 +21,7 @@ import spark.template.mustache.MustacheTemplateEngine;
 import org.eclipse.jetty.websocket.api.*;
 
 import java.util.Random;
+import com.google.gson.Gson;
 
 
 /**
@@ -133,7 +134,13 @@ public class App
         //Funcion anonima utilizada para mostrar las preguntas al usuario en modo Single Player.
         get("/play", (req, res) -> {
         String templateRoute = "./views/play.mustache";
-        int indexOfGame = req.session().attribute("gameIndex");
+        /*int indexOfGame = req.session().attribute("gameIndex");
+
+
+
+        System.out.println("IndexOfGame= "+indexOfGame);
+        
+
 
         if (games.get(indexOfGame).getCantUsuarios() == 1) {
           preguntas.put("puntajeUsuario", (( (User) req.session().attribute("user"))).getPoints() );
@@ -145,11 +152,11 @@ public class App
           preguntas.put("hp", ((User) req.session().attribute("user")).getHP());
           preguntas.put("redireccion", "/playTwoPlayers");
         }
-        else {
+        /*else {
           res.redirect("/login");
-        }
+        }*/
 
-        if (preguntas.get("opcion 4").equals("")) {
+        /*if (preguntas.get("opcion 4").equals("")) {
           if (preguntas.get("opcion 3").equals("")) {
             templateRoute = "./views/1wrong.mustache";
           }
@@ -160,8 +167,8 @@ public class App
         else {
           templateRoute = "./views/3wrong.mustache";
         }
-
-        return new ModelAndView(preguntas, templateRoute);
+      */
+        return new ModelAndView(new HashMap(), templateRoute);
       }, new MustacheTemplateEngine()
       );
 
@@ -313,7 +320,7 @@ public class App
 
             Game newGame = new Game();
 
-            Game.initGame(newGame, (int) hosts.get(hostName), (User) hostUser.get(hostName), (User) request.session().attribute("user"),(Session) request.session().attribute("jettySession"), (Session) request.session().attribute("jettySession"));
+            Game.initGame(newGame, (int) hosts.get(hostName), (User) hostUser.get(hostName), (User) request.session().attribute("user"),(spark.Session) request.session(), (spark.Session) request.session());
 
             games.add(newGame);
             request.session().attribute("gameIndex", games.size()-1);
@@ -455,7 +462,7 @@ public class App
         post("/singlePlayerGame", (request, response) -> {
           Game aux = new Game();
 
-          Game.initGame(aux, request.session().attribute("user"), (Session) request.session().attribute("jettySession"));
+          Game.initGame(aux, request.session().attribute("user"), (spark.Session) request.session());
 
           games.add(aux);
           request.session().attribute("gameIndex", games.size()-1);
@@ -471,12 +478,12 @@ public class App
           User usuarioActual = request.session().attribute("user");
 
             if (usuarioActual == null) {
-          response.redirect("/login");
+              response.redirect("/login");
             }
             else {
               if (request.session().attribute("gameIndex") == null) {
                 Game aux = new Game();
-                Game.initGame(aux, (User) request.session().attribute("user"), (Session) request.session().attribute("jettySession"));
+                Game.initGame(aux, (User) request.session().attribute("user"), (spark.Session) request.session());
                 games.add(aux);
 
                 request.session().attribute("gameIndex", games.size()-1);
@@ -485,13 +492,13 @@ public class App
                 games.remove(request.session().attribute("gameIndex"));
                 closeHost(request.session().attribute(SESSION_NAME));
                 Game aux = new Game();
-                Game.initGame(aux, (User) request.session().attribute("user"), (Session) request.session().attribute("jettySession"));
+                Game.initGame(aux, (User) request.session().attribute("user"), (spark.Session) request.session());
                 games.add(aux);
 
                 request.session().attribute("gameIndex", games.size()-1);
               }
               int indexOfGame = request.session().attribute("gameIndex");
-            String respuestaDada = request.queryParams("answer");
+              String respuestaDada = request.queryParams("answer");
               if (respuestaDada != null) {
                 openDB();
                 String respuestaCorrecta = (Question.where("id = "+preguntas.get("ID"))).get(0).getString("respuestaCorrecta");
@@ -518,7 +525,9 @@ public class App
                   preguntas.put("ID", preguntaObtenida.get("ID"));
                   preguntas.put("cantPreguntasDisponibles", preguntaObtenida.get("cantPreguntasDisponibles"));
 
-                  response.redirect("/play");
+                  System.out.println(preguntas.get("pregunta"));
+
+                  return new Gson().toJson(preguntas);
               }
             }
             return null;

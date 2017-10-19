@@ -1,7 +1,6 @@
 package trivia;
 import org.javalite.activejdbc.Model;
-import org.eclipse.jetty.websocket.api.Session;
-
+import static spark.Spark.*;
 import trivia.Respondida;
 
 import java.util.HashMap;
@@ -21,7 +20,7 @@ public class Game extends Model{
       validatePresenceOf("ganador").message("It must be a winner");
     }
 
-    private Session sessionP1, sessionP2;
+    private spark.Session sessionP1, sessionP2;
     private User player1, player2;
     private int cantPreguntas;
  	  private int cantJugadoresConectados;
@@ -149,7 +148,7 @@ public class Game extends Model{
     * @param game Juego que se desea inicializar.
     * @param user Usuario que busca jugar Multi-Player.
   */
-  public static void initGame(Game game, User user, Session userSession) {
+  public static void initGame(Game game, User user, spark.Session userSession) {
     App.openDB();
     game.set("jugador1", user.getInteger("id"));
     game.set("jugador2", -1);
@@ -177,7 +176,7 @@ public class Game extends Model{
     * @param user1 Jugador 1 de la partida.
     * @param user2 Jugador 2 de la partida.
   */
-  public static void initGame(Game game, int cantPreguntas, User user1, User user2, Session user1Session, Session user2Session) {
+  public static void initGame(Game game, int cantPreguntas, User user1, User user2, spark.Session user1Session, spark.Session user2Session) {
     App.openDB();
     game.set("jugador1", user1.getInteger("id"));
     game.set("jugador2", user2.getInteger("id"));
@@ -331,7 +330,7 @@ public class Game extends Model{
     this.cantPreguntas = cantPreguntas;
   }
 
-  private void setSession(int sessionNum, Session session) {
+  private void setSession(int sessionNum, spark.Session session) {
     if (sessionNum > 2 || sessionNum < 1) {
       throw new IllegalArgumentException("The only possible values for sessionNum is 1 or 2");
     }

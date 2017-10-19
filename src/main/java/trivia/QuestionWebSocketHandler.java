@@ -30,7 +30,7 @@ public class QuestionWebSocketHandler {
     public void onMessage(Session user, String message) {
         spark.Session sparkSession;
         String ipClient = (user.getLocalAddress().toString()).substring(user.getLocalAddress().toString().indexOf(":"));
-
+/*
         if (message.startsWith("username: ")) {
             System.out.println(message.lastIndexOf("username: "));
 
@@ -48,11 +48,11 @@ public class QuestionWebSocketHandler {
                     sparkSession = s;
                     break;
                 }
-            }
+            }*/
             System.out.println("mensaje recibido");
             System.out.println(message);
             sendMessage(user);
-        }
+        //}
     }
 
     public void sendMessage(Session sesion) {
