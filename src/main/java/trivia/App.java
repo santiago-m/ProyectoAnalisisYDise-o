@@ -34,10 +34,11 @@ public class App {
     private static final String SESSION_NAME = "username";
     private static ArrayList<Game> games = new ArrayList<Game>();
     private static Map hostUser = new HashMap();
-    private static Map hosts = new HashMap();
+    /*private*/ static Map hosts = new HashMap();
 
     // Por ahora, lugar donde esta el usuario al que le vamos a retornar cosas
     static Map<Session, String> concurr = new ConcurrentHashMap<>();
+    static Map<Session, String> hostCreado = new ConcurrentHashMap<>();
     static int nextUserNumber = 1;
 
     public static void main( String[] args ) { 
@@ -256,9 +257,8 @@ public class App {
         }, new MustacheTemplateEngine()
         );
 
-        // Funcion que basada en la pregunta que se quiere editar, la busca con sus respectivas opciones
         post ("/adminQuestions", (request, response) -> {
-          
+
           openDB();
           List<Question> cambiar = Question.where("id = "+ Integer.parseInt(request.queryParams("opciones")));
 
@@ -274,15 +274,16 @@ public class App {
 
           closeDB();
 
-          response.redirect("/changeQuestion");
-          
+          response.redirect("./changeQuestion");
+
+          response.redirect("./adminMenu");
           return null;
-       });
+        });
 
        // Funcion que hace efectivos los cambios de la pregunta en la base de datos
         post ("/changeQuestion", (request, response) -> {
 
-         openDB();
+          openDB();
 
          List<Question> cambiar = Question.where("id = "+ (Integer) preguntas.get("ID"));
          Question pregunta = cambiar.get(0);
@@ -307,7 +308,9 @@ public class App {
 
         //Funcion anonima tipo POST que inicializa un juego entre el usuario y el creador de la partida que ha elegido.
         post("/selectHost", (request, response) -> {
-            String hostName = request.queryParams("hostName");
+
+            //hosts.get("Host "+(i+1))
+            String hostName = request.queryParams("hostName");  // "hostName" form oculto que tiene el nombre del host
 
             Game newGame = new Game();
 
@@ -866,7 +869,7 @@ public class App {
                                     });
       
       Session destino = (Session) getKeyFromValue(concurr, sender);
-
+      System.out.println("llamada al get: " + concurr.get(sender) + "-- llamada al otro " + destino );
       try {
 
         destino.getRemote()
