@@ -3,66 +3,39 @@ var webSocket4 = new WebSocket("ws://" + location.hostname + ":" + location.port
 webSocket4.onmessage = function (msg) { upDate(msg) };
 webSocket4.onclose = function () { };
 
+
+// Helper function for send the content for searching
 id("cambiar").addEventListener("keypress", function (e) {
-	if (e.keyCode === 13){
-		//del("bloque");
+	if (e.keyCode === 13) {
 		webSocket4.send(e.target.value);
 	}
 });
 
-/*id("volver").addEventListener("click", function() {
-	location.href ="http://127.0.0.1:4567/adminMenu";
-});*/
-/*id("button").addEventListener("click", function() {
-	loadDoc();
-});*/
+// Update the options to display
+function upDate(msg) {
+    var data = JSON.parse(msg.data);
+    toHtml(data.id, data.pregunta);
+}
 
-function loadDoc() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    	del("demo");
-    	insert("demo", this.responseText)
-    	//document.getElementById("demo").innerHTML = this.responseText;
+// Creates an html content from the lists
+function toHtml (id, pregunta/*, correcta, mal1, mal2, mal3, activa*/){ // <-- Comments for future ((paused ATM))
+    for (var i = id.length - 1; i >= 0; i--) {
+        insert("bloque", ("<input type=\"radio\" name=\"opciones\" value=\"" + id[i] + "\"/>"+ pregunta[i] + "<br>") );
     }
-  };
-  xhttp.open("GET", "ajax_info.txt", true);
-  xhttp.send();
+    insert("bloque", ("<input id=\"submit\" name=\"submit\" type=\"submit\" class=\"btn btn-default\" value=\"Cambiar\" />"));
 }
 
-function del(targetId) {
-    id(targetId).innerHTML = "";
+// Helper function for selecting element by id ((From chat example))
+function id(id) {
+    return document.getElementById(id);
 }
 
-
-//Helper function for inserting HTML as the first child of an element
+// Helper function for inserting HTML as the first child of an element ((From chat example))
 function insert(targetId, message) {
     id(targetId).insertAdjacentHTML("beforeend", message);
 }
 
-//Update the chat-panel, and the list of connected users
-function upDate(msg) {
-    var data = JSON.parse(msg.data);	// lo convertimos a objeto de js
-    console.log(data);
-    /*var primero = data.datos;
-    console.log(primero);
-    var segundo = primero[0];
-    console.log(segundo);*/
-
-    // ahora acceder al arreglo con los indices
-    var primero = data.pregunta[0];
-    var prim = data.id[0];
-    var segundo = data.pregunta[1];
-    var seg = data.id[1];
-
-    console.log(primero);
-    console.log(segundo);
-
-    insert("bloque", ("<input type=\"radio\" name=\"opciones\" value=\"" + prim + "\"/>"+ primero + "<br>"));
-    insert("bloque", ("<input type=\"radio\" name=\"opciones\" value=\"" + seg + "\"/>"+ segundo + "<br>"));
-}
-
-//Helper function for selecting element by id
-function id(id) {
-    return document.getElementById(id);
+//Helper function for cleaning HTML
+function del(targetId) {
+    id(targetId).innerHTML = "";
 }
