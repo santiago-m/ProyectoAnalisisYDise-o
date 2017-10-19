@@ -256,6 +256,7 @@ public class App {
 
         // Funcion que basada en la pregunta que se quiere editar, la busca con sus respectivas opciones
         post ("/adminQuestions", (request, response) -> {
+          
           openDB();
           List<Question> cambiar = Question.where("id = "+ Integer.parseInt(request.queryParams("opciones")));
 

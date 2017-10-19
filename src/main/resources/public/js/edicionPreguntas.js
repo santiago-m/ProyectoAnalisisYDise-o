@@ -4,25 +4,39 @@ webSocket4.onmessage = function (msg) { upDate(msg) };
 webSocket4.onclose = function () { };
 
 
-// Helper function for send the content for searching
+// Helper function for send the content for searching ((From chat example))
 id("cambiar").addEventListener("keypress", function (e) {
 	if (e.keyCode === 13) {
 		webSocket4.send(e.target.value);
 	}
 });
 
+// Send message if "cambiar_boton" is clicked ((From chat example))
+id("cambiar_boton").addEventListener("click", function () {
+    webSocket4.send(id("cambiar").value);
+});
+
 // Update the options to display
 function upDate(msg) {
     var data = JSON.parse(msg.data);
+    del("bloque");
     toHtml(data.id, data.pregunta);
 }
 
 // Creates an html content from the lists
 function toHtml (id, pregunta/*, correcta, mal1, mal2, mal3, activa*/){ // <-- Comments for future ((paused ATM))
-    for (var i = id.length - 1; i >= 0; i--) {
-        insert("bloque", ("<input type=\"radio\" name=\"opciones\" value=\"" + id[i] + "\"/>"+ pregunta[i] + "<br>") );
+
+    if (id.length >0) {
+
+        for (var i = id.length - 1; i >= 0; i--) {
+            insert("bloque", ("<input type=\"radio\" name=\"opciones\" value=\"" + id[i] + "\"/>"+ pregunta[i] + "<br>") );
+        }
+
+        insert("bloque", ("<input id=\"submit\" name=\"submit\" type=\"submit\" class=\"btn btn-default\" value=\"Cambiar\" />"));
+
+    } else {
+        insert("bloque", ("<strong>No se encontro nada :(</strong> <br> </strong>Intentalo de nuevo</strong>"))
     }
-    insert("bloque", ("<input id=\"submit\" name=\"submit\" type=\"submit\" class=\"btn btn-default\" value=\"Cambiar\" />"));
 }
 
 // Helper function for selecting element by id ((From chat example))
