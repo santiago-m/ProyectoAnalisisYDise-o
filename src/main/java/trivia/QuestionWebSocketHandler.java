@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import org.json.JSONObject;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 
 @WebSocket
@@ -16,8 +18,6 @@ public class QuestionWebSocketHandler {
     public void onConnect(Session user) throws Exception {
         sessions.add(user);
         System.out.println("WebSocket iniciado en: "+user.getLocalAddress().toString());
-
-        //sendMessage(user);
     }
 
     @OnWebSocketClose
@@ -30,6 +30,50 @@ public class QuestionWebSocketHandler {
     public void onMessage(Session user, String message) {
         spark.Session sparkSession;
         String ipClient = (user.getLocalAddress().toString()).substring(user.getLocalAddress().toString().indexOf(":"));
+
+        Map data = new Gson().fromJson(message, Map.class);
+
+        System.out.println(data.get("username"));
+        System.out.println(data.get("idPregunta"));
+        System.out.println(data.get("answer"));
+
+        for (spark.Session s : App.openSessions) {
+            try {
+                if (s.attribute("clientAddress").equals(ipClient)) {
+                    sparkSession = s;
+                    System.out.println(sparkSession);
+
+                    if (Game.esCorrecta((Integer) data.get("idPregunta"), (String) data.get("answer"))) {
+                        System.out.println("Es correcta!");
+                    }
+                    else {
+                        System.out.println("No es Correcta!");
+                    }
+
+                    break;
+                }
+            }
+            catch(Exception e) {
+                if (s.attribute(App.SESSION_NAME).equals(data.get("username"))) { 
+                    s.attribute("clientAddress", ipClient);
+                    sparkSession = s;
+
+                    System.out.println(sparkSession);
+
+                    if (Game.esCorrecta((Integer) data.get("idPregunta"), (String) data.get("answer"))) {
+                        System.out.println("Es correcta!");
+                    }
+                    else {
+                        System.out.println("No es Correcta!");
+                    }
+
+                    break;
+                }    
+            }
+
+            
+        }
+
 /*
         if (message.startsWith("username: ")) {
             System.out.println(message.lastIndexOf("username: "));
@@ -46,13 +90,16 @@ public class QuestionWebSocketHandler {
             for (spark.Session s : App.openSessions) {
                 if (s.attribute("clientAddress").equals(ipClient)) {
                     sparkSession = s;
+                    System.out.println(sparkSession);
                     break;
                 }
-            }*/
+                else {
+                    System.out.println((String) s.attribute("username"));
+                }
+            }
             System.out.println("mensaje recibido");
             System.out.println(message);
-            sendMessage(user);
-        //}
+        }*/
     }
 
     public void sendMessage(Session sesion) {

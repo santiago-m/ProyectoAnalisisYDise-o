@@ -261,6 +261,16 @@ public class Game extends Model{
       return (HashMap) preguntas;
   }
 
+  public static boolean esCorrecta(int idPregunta, String respuestaDada) {
+    List<Question> questions = Question.where("id = "+idPregunta+" and respuestaCorrecta = "+respuestaDada);
+    if (questions.isEmpty()) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
   /**
     * Metodo que actualiza los datos del juego cada vez que un usuario responde correctamente.
     * @author Maria, Santiago; Rivero, Matias.
