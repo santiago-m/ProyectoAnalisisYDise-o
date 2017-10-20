@@ -527,8 +527,6 @@ public class App
 
                   preguntas.put("player", request.session().attribute(SESSION_NAME));
 
-                  System.out.println(preguntas.get("player"));
-
                   return new Gson().toJson(preguntas);
               }
             }

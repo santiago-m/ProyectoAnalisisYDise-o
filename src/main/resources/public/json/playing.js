@@ -23,7 +23,7 @@ window.onload = function() {
      		console.log(data);
 
      		username = data["player"];
-     		idPregunta = data["id"];
+     		idPregunta = data["ID"];
 
      		pregunta = data["pregunta"];
 			answer1 = data["opcion 1"];
@@ -108,7 +108,7 @@ function sendAnswer() {
 
 			webSocket.send(JSON.stringify({
   				username: username,
-  				idPregunta: idPregunta;
+  				idPregunta: idPregunta,
   				answer: actual.val()
 			}));
 		}
