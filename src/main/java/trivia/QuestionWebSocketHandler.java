@@ -33,17 +33,16 @@ public class QuestionWebSocketHandler {
 
         Map data = new Gson().fromJson(message, Map.class);
 
-        System.out.println(data.get("username"));
-        System.out.println(data.get("idPregunta"));
-        System.out.println(data.get("answer"));
+        String clientUsername = (String) data.get("username");
+        Double questionID = (Double) data.get("idPregunta");
+        String answer = (String) data.get("answer");
 
         for (spark.Session s : App.openSessions) {
             try {
                 if (s.attribute("clientAddress").equals(ipClient)) {
                     sparkSession = s;
-                    System.out.println(sparkSession);
 
-                    if (Game.esCorrecta((Integer) data.get("idPregunta"), (String) data.get("answer"))) {
+                    if (Game.esCorrecta(questionID.intValue(), answer)) {
                         System.out.println("Es correcta!");
                     }
                     else {
@@ -54,13 +53,11 @@ public class QuestionWebSocketHandler {
                 }
             }
             catch(Exception e) {
-                if (s.attribute(App.SESSION_NAME).equals(data.get("username"))) { 
+                if (s.attribute(App.SESSION_NAME).equals(clientUsername)) { 
                     s.attribute("clientAddress", ipClient);
                     sparkSession = s;
 
-                    System.out.println(sparkSession);
-
-                    if (Game.esCorrecta((Integer) data.get("idPregunta"), (String) data.get("answer"))) {
+                    if (Game.esCorrecta(questionID.intValue(), answer)) {
                         System.out.println("Es correcta!");
                     }
                     else {
