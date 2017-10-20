@@ -1,7 +1,8 @@
-console.log("HOLA!");
 var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/game");
 webSocket.onmessage = function (msg) { refreshQuestion(msg) };
 webSocket.onclose = function () { };
+var username;
+var idPregunta;
 
 window.onload = function() {
 	var pregunta;
@@ -17,7 +18,13 @@ window.onload = function() {
      	dataType: "json",
      	async:false,
 
-     	success: function(data) {   
+     	success: function(data) {  
+
+     		console.log(data);
+
+     		username = data["player"];
+     		idPregunta = data["id"];
+
      		pregunta = data["pregunta"];
 			answer1 = data["opcion 1"];
 			answer2 = data["opcion 2"];
@@ -97,7 +104,13 @@ function sendAnswer() {
 	for (var i = 0; i < radioAnswers.length; i++) {
 		actual = $('#answer'+i);
 		if (actual.is(':checked')) {
-			webSocket.send(actual.val());
+			console.log(actual);
+
+			webSocket.send(JSON.stringify({
+  				username: username,
+  				idPregunta: idPregunta;
+  				answer: actual.val()
+			}));
 		}
 	}
 }

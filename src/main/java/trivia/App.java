@@ -525,7 +525,9 @@ public class App
                   preguntas.put("ID", preguntaObtenida.get("ID"));
                   preguntas.put("cantPreguntasDisponibles", preguntaObtenida.get("cantPreguntasDisponibles"));
 
-                  System.out.println(preguntas.get("pregunta"));
+                  preguntas.put("player", request.session().attribute(SESSION_NAME));
+
+                  System.out.println(preguntas.get("player"));
 
                   return new Gson().toJson(preguntas);
               }
