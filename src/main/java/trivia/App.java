@@ -14,6 +14,10 @@ import static spark.Spark.*;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 
+import org.eclipse.jetty.websocket.api.*;
+import org.json.JSONObject;
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.Random;
 
 /**
@@ -28,10 +32,14 @@ public class App
     private static ArrayList<Game> games = new ArrayList<Game>();
     private static Map hostUser = new HashMap();
     private static Map hosts = new HashMap();
-    
+
+    // Por ahora, lugar donde esta el usuario al que le vamos a retornar cosas
+    static Map<Session, String> concurr = new ConcurrentHashMap<>();
+    static int nextUserNumber = 1;
+
     public static void main( String[] args )
     {
-        /* 
+        /*
         before((request, response) -> {
           boolean authenticated;
           // ... check if authenticated
@@ -48,6 +56,10 @@ public class App
 
       //Se selecciona la carpeta en la cual se guardaran los archivos estaticos, como css o json.
       staticFileLocation("/public");
+
+      //WebSocket usado para la edicion de preguntas
+      webSocket("/edicionPreguntas", edicionPreguntas.class);
+
       //se reinicia el servidor con los datos actualizados
       init();
 
@@ -81,7 +93,7 @@ public class App
               }
           }
           else {
-              return new ModelAndView(new HashMap(), "./views/mainpage.mustache");  
+              return new ModelAndView(new HashMap(), "./views/mainpage.mustache");
           }
         }, new MustacheTemplateEngine()
       );
@@ -163,19 +175,32 @@ public class App
         get("/createQuestion", (req, res) -> {
           return new ModelAndView(mensajes, "./views/createQuestion.mustache");
         }, new MustacheTemplateEngine()
-        );       
+        );
 
         //Funcion anonima que permite a un administrador administrar las preguntas existentes en la base de datos.
         get("/adminQuestions", (req, res) -> {
-          return new ModelAndView(new HashMap(), "./views/adminQuestions.mustache");
+          String username = req.session().attribute(SESSION_NAME);
+          String category = req.session().attribute("category");
+
+          if ((username != null) && (category != null)) {
+              if (category.equals("user")) {
+                res.redirect("/gameMenu");
+                return null;
+              }
+              else {
+                return new ModelAndView(new HashMap(), "./views/adminQuestions.mustache");
+              }
+          }
+
+          return new ModelAndView(new HashMap(), "./views/mainpage.mustache");
         }, new MustacheTemplateEngine()
-        );       
+        );
 
         //Funcion anonima que crea un bucle hasta que se conecta un segundo jugador para crear una partida multiplayer.
         get("/waiting", (req, res) -> {
           return new ModelAndView(new HashMap(), "./views/WFP.mustache");
         }, new MustacheTemplateEngine()
-        );   
+        );
 
         //Funcion anonima que permite a dos usuarios responder preguntas de manera simultanea.
         get("/playTwoPlayers", (request, response) -> {
@@ -208,13 +233,13 @@ public class App
         get("/listarHosts", (req, res) -> {
           String script = "";
           String crearFila = "";
-          if ((int) hosts.get("cantidadHosts") > 0) {            
+          if ((int) hosts.get("cantidadHosts") > 0) {
             script = "function tableCreate() { var body = document.getElementsByTagName('div')[0]; var tbl = document.createElement('table'); tbl.style.width = '100%'; tbl.setAttribute('border', '1'); var tbdy = document.createElement('tbody'); ";
             for (int i = 0; i < (int) hosts.get("cantidadHosts"); i++) {
               crearFila = crearFila+"var tr = document.createElement('tr'); ";
               for (int j = 0; j < 2; j++) {
                 if (j == 0) {
-                  crearFila = crearFila+"var td = document.createElement('td'); var form = document.createElement('form'); form.action = \"/selectHost\"; form.method = \"POST\"; var hidden = document.createElement('input'); hidden.type = \"hidden\"; hidden.name = \"hostName\"; hidden.value = \""+hosts.get("Host "+(i+1))+"\"; var btn = document.createElement('input'); btn.type = \"submit\"; btn.className = \"btn\"; btn.value = \""+hosts.get("Host "+(i+1))+"\"; form.appendChild(hidden); form.appendChild(btn); td.appendChild(form); tr.appendChild(td); ";  
+                  crearFila = crearFila+"var td = document.createElement('td'); var form = document.createElement('form'); form.action = \"/selectHost\"; form.method = \"POST\"; var hidden = document.createElement('input'); hidden.type = \"hidden\"; hidden.name = \"hostName\"; hidden.value = \""+hosts.get("Host "+(i+1))+"\"; var btn = document.createElement('input'); btn.type = \"submit\"; btn.className = \"btn\"; btn.value = \""+hosts.get("Host "+(i+1))+"\"; form.appendChild(hidden); form.appendChild(btn); td.appendChild(form); tr.appendChild(td); ";
                 }
                 else if (j == 1) {
                   crearFila = crearFila+"var td = document.createElement('td'); td.appendChild(document.createTextNode('"+((User) hostUser.get((String) hosts.get("Host "+(i+1)))).getUsername()+"')); tr.appendChild(td); tbdy.appendChild(tr); tbl.appendChild(tbdy); body.appendChild(tbl);";
@@ -230,64 +255,63 @@ public class App
         }, new MustacheTemplateEngine()
         );
 
-        get ("/changeQuestion", (request, response) -> {          
-            return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
-        }, new MustacheTemplateEngine()
-        );
+        get ("/changeQuestion", (request, response) -> {
+           return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
+       }, new MustacheTemplateEngine()
+       );
 
+       post ("/adminQuestions", (request, response) -> {
 
-        post ("/adminQuestions", (request, response) -> {
+         openDB();
+         List<Question> cambiar = Question.where("id = "+ Integer.parseInt(request.queryParams("opciones")));
 
-            openDB();
-            List<Question> cambiar = Question.where("id = "+ Integer.parseInt(request.queryParams("id_question")));
+         Question pregunta = cambiar.get(0);
 
-            Question pregunta = cambiar.get(0);
+         preguntas.put("ID", pregunta.getInteger("id"));
+         preguntas.put("pregunta", pregunta.get("pregunta"));
+         preguntas.put("opcion 1", pregunta.getString("respuestaCorrecta"));
+         preguntas.put("opcion 2", pregunta.getString("wrong1"));
+         preguntas.put("opcion 3", pregunta.getString("wrong2"));
+         preguntas.put("opcion 4", pregunta.getString("wrong3"));
+         preguntas.put("activada", pregunta.getString("active"));
 
-            preguntas.put("ID", pregunta.getInteger("id"));
-            preguntas.put("pregunta", pregunta.get("pregunta"));
-            preguntas.put("opcion 1", pregunta.getString("respuestaCorrecta"));
-            preguntas.put("opcion 2", pregunta.getString("wrong1"));
-            preguntas.put("opcion 3", pregunta.getString("wrong2"));
-            preguntas.put("opcion 4", pregunta.getString("wrong3"));
-            preguntas.put("activada", pregunta.getString("active"));
+         closeDB();
 
-            closeDB();
+         response.redirect("./changeQuestion");
 
-            response.redirect("./changeQuestion");
+         response.redirect("./adminMenu");
+         return null;
+       });
 
-            return null;
-        }); 
+       post ("/changeQuestion", (request, response) -> {
 
-        post ("/changeQuestion", (request, response) -> {
+         openDB();
 
-          openDB();
+         List<Question> cambiar = Question.where("id = "+ (Integer) preguntas.get("ID"));
+         Question pregunta = cambiar.get(0);
 
-          List<Question> cambiar = Question.where("id = "+ (Integer) preguntas.get("ID"));
-          Question pregunta = cambiar.get(0);
+         pregunta.set("pregunta", request.queryParams("cambiar0")).saveIt();
+         pregunta.set("respuestaCorrecta", request.queryParams("cambiar1")).saveIt();
+         pregunta.set("wrong1", request.queryParams("cambiar2")).saveIt();
+         if (request.queryParams("cambiar3") != null) {
+           pregunta.set("wrong2", request.queryParams("cambiar3")).saveIt();
 
-          pregunta.set("pregunta", request.queryParams("cambiar0")).saveIt();
-          pregunta.set("respuestaCorrecta", request.queryParams("cambiar1")).saveIt();
-          pregunta.set("wrong1", request.queryParams("cambiar2")).saveIt();
-          if (request.queryParams("cambiar3") != null) {
-            pregunta.set("wrong2", request.queryParams("cambiar3")).saveIt();
+           if (request.queryParams("cambiar4") != null) {
+             pregunta.set("wrong3", request.queryParams("cambiar4")).saveIt();
+           }
+         }
 
-            if (request.queryParams("cambiar4") != null) {
-              pregunta.set("wrong3", request.queryParams("cambiar4")).saveIt();
-            }
-          }
+         if (request.queryParams("cb-activa") != null) {
+           pregunta.set("active", 1).saveIt();
+         } else {
+           pregunta.set("active", 0).saveIt();
+         }
 
-          if (request.queryParams("cb-activa") != null) {
-            pregunta.set("active", 1).saveIt();
-          } else {
-            pregunta.set("active", 0).saveIt();
-          }
+         closeDB();
+         response.redirect("./adminMenu");
 
-          closeDB();
-
-          response.redirect("./adminMenu");
-
-          return null;
-        });
+         return null;
+       });
 
         //Funcion anonima tipo POST que inicializa un juego entre el usuario y el creador de la partida que ha elegido.
         post("/selectHost", (request, response) -> {
@@ -319,7 +343,7 @@ public class App
             response.redirect("/hostLAN");
             return null;
           }
-          
+
 
           if (!existeHost(hostName)) {
 
@@ -334,7 +358,7 @@ public class App
           }
           closeDB();
 
-            mensajes.put("estadoHost", "");            
+            mensajes.put("estadoHost", "");
 
             hostUser.put(hostName, (User) request.session().attribute("user"));
             hostUser.put(request.session().attribute(SESSION_NAME), "Host "+hosts.size());
@@ -366,10 +390,10 @@ public class App
             response.redirect("/playTwoPlayers");
           }
           else {
-            response.redirect("/waiting");  
+            response.redirect("/waiting");
           }
           return null;
-        });    
+        });
 
 
         //Funcion anonima tipo post que administra la obtencion de una pregunta que sera respondida por el usuario que corresponda en modo multiplayer.
@@ -398,7 +422,7 @@ public class App
                       int correctasSeguidas = (Integer) jugadorRespuesta.get(((User) request.session().attribute("user")).getString("username"));
                       games.get((int) request.session().attribute("gameIndex")).respondioCorrectamente(actual, correctasSeguidas);
                     }
-                }             
+                }
               }
 
                 Map preguntaObtenida = new HashMap();
@@ -406,8 +430,8 @@ public class App
 
                 if ( (preguntaObtenida.get("pregunta").equals("")) || (games.get(indexOfGame).getPlayer1().getHP() == 0) || (games.get(indexOfGame).getPlayer2().getHP() == 0)) {
                   if (preguntaObtenida.get("pregunta").equals("")) {
-                    mensajes.put("cantAnswer", "Lo siento, uno de los jugadores no tiene mas preguntas disponibles para responder."); 
-                  }                 
+                    mensajes.put("cantAnswer", "Lo siento, uno de los jugadores no tiene mas preguntas disponibles para responder.");
+                  }
 
                   HashMap aux = games.get(indexOfGame).closeGame();
                   winnerLoser.put("ganador", aux.get("ganador"));
@@ -432,7 +456,7 @@ public class App
             }
             return null;
         });
-        
+
         //Funcion anonima tipo POST que inicializa un juego single player y procede a redirigir al juego.
         post("/singlePlayerGame", (request, response) -> {
           Game aux = new Game();
@@ -444,14 +468,14 @@ public class App
 
           response.redirect("/play");
           return null;
-          
+
         });
 
 
         //Funcion anonima tipo post que administra la obtencion de preguntas que responde el usuario en modo Single Player
         post("/play", (request, response) -> {
           User usuarioActual = request.session().attribute("user");
-          
+
             if (usuarioActual == null) {
           response.redirect("/login");
             }
@@ -508,9 +532,9 @@ public class App
 
         //Funcion anonima tipo post que obtiene los datos ingresados por el usuario e intenta registrar al usuario en la base de datos.
         post("/register", (request, response) -> {
-          
+
           openDB();
-          User usuario = new User(request.queryParams("txt_username"), request.queryParams("txt_password"));     
+          User usuario = new User(request.queryParams("txt_username"), request.queryParams("txt_password"));
           closeDB();
 
           if (registrar(usuario)) {
@@ -547,13 +571,13 @@ public class App
             pregunta.set("pregunta", preguntaString);
             pregunta.set("respuestaCorrecta", correctAnswer);
             pregunta.set("wrong1", incorrectAnswer);
-        
+
             if (request.queryParams("wrong1") != null) {
               pregunta.set("wrong2", request.queryParams("txt_incorrect2"));
             } else {
               pregunta.set("wrong2", null);
             }
-        
+
             if (request.queryParams("wrong2") != null) {
               pregunta.set("wrong3", request.queryParams("txt_incorrect3"));
             } else {
@@ -561,7 +585,7 @@ public class App
             }
 
             User creador = request.session().attribute("user");
-            pregunta.set("creador", creador.getString("username"));  
+            pregunta.set("creador", creador.getString("username"));
 
             pregunta.set("active", 0);
             pregunta.saveIt();
@@ -571,15 +595,15 @@ public class App
             response.redirect("/adminMenu");
           }
           return null;
-        });    
-      
+        });
+
         //Funcion anonima tipo post que intenta iniciar sesion con los datos ingresados por el usuario en el menu de logueo.
         post("/login", (request, response) -> {
-          
+
           openDB();
           User usuario = new User (request.queryParams("txt_username"), request.queryParams("txt_password"));
           closeDB();
-        
+
           request.session().attribute(SESSION_NAME, usuario.getUsername());
 
           String sessionUsername = request.session().attribute(SESSION_NAME);
@@ -600,7 +624,7 @@ public class App
             mensajes.put("estadoLogin", "Usuario o contraseña incorrecto.-");
             response.redirect("/login");
             return null;
-          }      
+          }
         });
 
         //Funcion anonima tipo post que cierra una sesion abierta.
@@ -615,12 +639,12 @@ public class App
         //Funcion anonima tipo post que permite volver al menu anterior al actual. Segun sea administrador o usuario.
         post ("/goBack", (request, response) -> {
           if (request.session().attribute("category").equals("user")) {
-            response.redirect("/gameMenu");  
+            response.redirect("/gameMenu");
           }
           else {
-            response.redirect("/adminMenu");   
+            response.redirect("/adminMenu");
           }
-        
+
           return null;
         });
 
@@ -726,10 +750,10 @@ public class App
     */
     public static void openDB() {
       try {
-        Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/sparkTest", "root", "root");  
+        Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/sparkTest", "root", "root");
       } catch(DBException e) {
         System.out.println("Existe una conexion abierta a la base de datos.");
-      }  
+      }
     }
 
     /**
@@ -771,7 +795,64 @@ public class App
         hosts.remove(hostNumber);
         hosts.put("cantidadHosts", ( (int) hosts.get("cantidadHosts") ) - 1);
         hostUser.remove(usuarioCreador);
-        hostUser.remove(hostName);  
+        hostUser.remove(hostName);
       }
+    }
+
+    // funcion que hace una consulta a la base de datos en base al pedido y
+    // devuelve una lista con las preguntas y sus respectivos ID
+    public static void editQuestions (String sender, String message) throws java.io.IOException{
+
+      openDB();
+      List<Question> cambiar = Question.where("pregunta like '%"+message+"%'");
+
+      List<Integer> id = new ArrayList<Integer>();
+      List<String> preguntas = new ArrayList<String>();
+      /*  Aun no implementado como quiero
+      List<String> correcta = new ArrayList<String>();
+      List<String> mal1 = new ArrayList<String>();
+      List<String> mal2 = new ArrayList<String>();
+      List<String> mal3 = new ArrayList<String>();
+      List<String> activa = new ArrayList<String>();*/
+
+      cambiar.stream().forEach(p -> { id.add(p.getInteger("id"));
+                                      preguntas.add(p.getString("pregunta"));
+                                      /*  Aun no implementado como quiero
+                                      correcta.add(p.getString("respuestaCorrecta"));
+                                      mal1.add(p.getString("wrong1"));
+                                      mal2.add(p.getString("wrong2"));
+                                      mal3.add(p.getString("wrong3"));
+                                      activa.add(p.getString("active"));*/
+                                    });
+
+      Session destino = (Session) getKeyFromValue(concurr, sender);
+      System.out.println("llamada al get: " + concurr.get(sender) + "-- llamada al otro " + destino );
+      try {
+
+        destino.getRemote()
+               .sendString(String.valueOf(new JSONObject().put("id", id)
+                                                          .put("pregunta", preguntas)
+                                                          /*  Aun no implementado como quiero
+                                                          .put("correcta", correcta)
+                                                          .put("mal1", mal1)
+                                                          .put("mal2", mal2)
+                                                          .put("mal3", mal3)
+                                                          .put("activa", activa)*/
+                                                          ));
+
+      } catch (Exception r){
+        r.printStackTrace();
+      }
+
+      closeDB();
+    }
+
+    public static Object getKeyFromValue(Map hm, Object value) {
+      for (Object o : hm.keySet()) {
+        if (hm.get(o).equals(value)) {
+          return o;
+        }
+      }
+      return null;
     }
 }
