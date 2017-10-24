@@ -1,0 +1,46 @@
+APH(Admin) = 3
+APH(User) = 2
+APH(Game) = 2
+APH(Question) = 2
+APH(Respondida) = 2
+
+NDD(Model) = 4
+NDD(User) = 1
+NDD(Other) = 0
+
+ACO(App) = 1
+ACO(Game) = 2
+ACO(User) = 2
+ACO(Admin) = 2
+ACO(Question) = 4
+
+TC(App) : atrib = 3
+		  oper = 7
+
+TC(Game) : atrib = 6
+		   oper = 17
+
+TC(Question) : atrib = 1
+			   oper = 5
+
+TC(User) : atrib = 4
+		   oper = 10
+
+TC(Admin) : atrib = 4
+			oper = 10
+
+TC(Respondida) = 0
+
+NOA(App) = 0
+NOA(Game) = 0
+NOA(User) = 0
+NOA(Question) = 0
+NOA(Admin) = 10
+
+NOR(App) = 0
+NOR(Game) = 0
+NOR(User) = 0
+NOR(Question) = 0
+NOR(Admin) = 0
+
+NPmedia = 14/6 =~2.3
