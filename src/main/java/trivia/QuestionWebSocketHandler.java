@@ -28,75 +28,54 @@ public class QuestionWebSocketHandler {
 
     @OnWebSocketMessage
     public void onMessage(Session user, String message) {
-        spark.Session sparkSession;
+        Map data = new Gson().fromJson(message, Map.class);
         String ipClient = (user.getLocalAddress().toString()).substring(user.getLocalAddress().toString().indexOf(":"));
 
-        Map data = new Gson().fromJson(message, Map.class);
-
         String clientUsername = (String) data.get("username");
-        Double questionID = (Double) data.get("idPregunta");
-        String answer = (String) data.get("answer");
 
         for (spark.Session s : App.openSessions) {
             try {
                 if (s.attribute("clientAddress").equals(ipClient)) {
-                    sparkSession = s;
-
-                    if (Game.esCorrecta(questionID.intValue(), answer)) {
-                        System.out.println("Es correcta!");
-                    }
-                    else {
-                        System.out.println("No es Correcta!");
-                    }
-
-                    break;
+                    manageAnswer(user, s, data);
                 }
+                break;
             }
             catch(Exception e) {
                 if (s.attribute(App.SESSION_NAME).equals(clientUsername)) { 
                     s.attribute("clientAddress", ipClient);
-                    sparkSession = s;
-
-                    if (Game.esCorrecta(questionID.intValue(), answer)) {
-                        System.out.println("Es correcta!");
-                    }
-                    else {
-                        System.out.println("No es Correcta!");
-                    }
-
+                    manageAnswer(user, s, data);
                     break;
                 }    
             }
 
             
         }
+    }
 
-/*
-        if (message.startsWith("username: ")) {
-            System.out.println(message.lastIndexOf("username: "));
+    public void manageAnswer(Session client, spark.Session sess, Map message) {
+        String username = (String) message.get("username");
+        Double questionID = (Double) message.get("idPregunta");
+        String answer = (String) message.get("answer");
+        spark.Session sparkSession;
 
-            for (spark.Session s : App.openSessions) {
-                if ((s.attribute(App.SESSION_NAME).equals(message.substring(message.lastIndexOf("username: "))))) { 
-                    s.attribute("clientAddress", ipClient);
-                    sparkSession = s;
-                    break;
-                }
+        sparkSession = sess;
+
+        System.out.println(answer);
+
+        if (Game.esCorrecta(questionID.intValue(), answer)) {
+            Map nextQuestion = User.obtenerPregunta(username);
+            //nextQuestion.put("player", username);
+            try {
+                client.getRemote().sendString(String.valueOf(new Gson().toJson(nextQuestion)));    
             }
+            catch(java.io.IOException e) {
+                System.out.println("Unable to send message. Error: "+e);
+            }
+            
         }
         else {
-            for (spark.Session s : App.openSessions) {
-                if (s.attribute("clientAddress").equals(ipClient)) {
-                    sparkSession = s;
-                    System.out.println(sparkSession);
-                    break;
-                }
-                else {
-                    System.out.println((String) s.attribute("username"));
-                }
-            }
-            System.out.println("mensaje recibido");
-            System.out.println(message);
-        }*/
+            System.out.println("No es Correcta!");
+        }
     }
 
     public void sendMessage(Session sesion) {
@@ -110,7 +89,6 @@ public class QuestionWebSocketHandler {
             catch(Exception e) {
                 System.out.println("error: "+e);
             }
-            
         }
         else {
             System.out.println("Sesion cerrada!");

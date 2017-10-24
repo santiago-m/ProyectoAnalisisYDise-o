@@ -59,7 +59,10 @@ window.onload = function() {
 
 }
 
-function refreshQuestion(data) {
+function refreshQuestion(msg) {
+
+	var data = JSON.parse(msg["data"]);
+
 	var answers;
 	var answer1;
 	var answer2;
@@ -88,14 +91,18 @@ function refreshQuestion(data) {
 		cantOpciones++;
 	}
 
-	$('#questionPlace').html(pregunta);
 	$('#questionPlace').html("");
+	$('#questionPlace').html(pregunta);
+
+	$('#answersPlace').html("");	
 
 	for (var i = 0; i < answers.length; i++) {
 		if (answers[i] != '') {
 			$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
 		}
 	}
+
+	console.log(data);
 }
 
 function sendAnswer() {
