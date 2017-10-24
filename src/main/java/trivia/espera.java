@@ -34,7 +34,8 @@ public class espera {
     public void onMessage(Session session, String msg) throws IOException {
 
         if ( msg.equals("partida_encontrada")) {
-            System.out.println("borrada");
+            System.out.println("llamada a metodo que ");
+            //App.startGame();
         } else {
             System.out.println("espera respuesta de jugada (crear host)");
         }

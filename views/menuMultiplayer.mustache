@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="css/style.css">
 
 <div id="goBack">
-    <form action="/" method="get">
+    <form action="/" method="GET">
         <input type="submit" value="Menu Principal" name="mainMenu_btn" id="mainMenu_btn" />
     </form>
 </div>
@@ -12,13 +12,16 @@
 	<br>
 	
 	<div id="mydiv">
+
 		<form action="/hostLAN" method="GET">
 			<input id="btn_host" name="btn_host" type="submit" class="btn btn-default" value="Crear Partida" />
 		</form>
 		<br>
-
+		<br>
+		
 		<form action="/listarHosts" method="GET">
 			<input id="btn_join" name="btn_join" type="submit" class="btn btn-default" value="Unirse a una Partida" />
 		</form>
 	</div>
+
 </center>

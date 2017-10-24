@@ -1,0 +1,22 @@
+cliente1 crea partida (inicia sesion websocket1)
+	servidor espera a partida para mandar mensaje 
+		cliente2 elige partida (websocket2) y manda mensaje a websocket1
+
+
+
+hosts -> tiene
+
+listo		"cantidadHost",	Int
+borrado		"script",	String
+
+listo		"Host #",	String
+				((hostName))
+listo		"hostName",	Int
+				((cant preguntas))
+
+
+
+
+
+tr => fila
+td => columna

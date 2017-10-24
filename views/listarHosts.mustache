@@ -1,51 +1,46 @@
 <head>
-<link rel="stylesheet" href="css/style.css">
-<style>
-table, td {
-    border: 1px solid black;
-}
-</style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <script src="js/jquery-3.2.1.js"></script>
 
 <center><h2>Select Host</h2></center>
   <br>
   <br>
 
-  <div id="mydiv">
+  <!--<div id="mydiv">
 
-    <!-- action="/selectHost" method="POST" -->
+    action="/selectHost" method="POST"
 
     <br>
+  </div> -->
+
+  <center>
+    <button id="refresh">Refrescar Lista</button>
+    <span>{{prueba}}</span>
+    <br>
+    <br>
+    <table id="partidas">
+    </table>
+  </center>
+  
+  <br>
+  <br>
+  <br>
+
+  <div id="goback2">
+      <form action="/" method="GET">
+          <input type="submit" value="Menu Principal" name="mainMenu_btn" id="mainMenu_btn" />
+      </form>
   </div>
 
-  <div>
-    <tr>
-      <td id="usuario">
-        <form id="partida" action="/selectHost" method="POST">
-          <!--  <input name="hostName" value="rr" type="hidden">
-                <input class="btn" value="rr" type="submit">-->
-        </form>
-      </td>
-      <!--
-      <td>asd</td>
-      -->
-    </tr>
-  </div>
-
-
-<div id="goBack">
-    <form action="/" method="get">
-        <input type="submit" value="Menu Principal" name="mainMenu_btn" id="mainMenu_btn" />
-    </form>
-</div>
-
-
+<!--
 <script>
   {{{script}}}
   
-</script>
+</script>-->
 
 <script src="js/busqueda.js"></script>
+
 
 </body>
