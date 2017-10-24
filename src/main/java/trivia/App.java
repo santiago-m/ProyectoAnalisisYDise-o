@@ -880,8 +880,6 @@ public class App {
       }
 
       closeDB();
-
-
     }
 
     public static Object getKeyFromValue(Map hm, Object value) {
