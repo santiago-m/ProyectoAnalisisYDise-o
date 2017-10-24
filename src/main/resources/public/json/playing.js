@@ -1,8 +1,18 @@
 var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/game");
-webSocket.onmessage = function (msg) { refreshQuestion(msg) };
+webSocket.onmessage = function (msg) { 
+	if (msg['data'] == 'true') {
+		nextQuestion();
+	}
+	else {
+		if (cantPlayers == 2) {
+			waitForTurn();
+		}
+	}};
+
 webSocket.onclose = function () { };
 var username;
 var idPregunta;
+var cantPlayers;
 
 window.onload = function() {
 	var pregunta;
@@ -25,27 +35,29 @@ window.onload = function() {
      		username = data["player"];
      		idPregunta = data["ID"];
 
+     		cantPlayers = data["game_"+username];
+
      		pregunta = data["pregunta"];
-			answer1 = data["opcion 1"];
-			answer2 = data["opcion 2"];
-			answer3 = data["opcion 3"];
-			answer4 = data["opcion 4"];
+				answer1 = data["opcion 1"];
+				answer2 = data["opcion 2"];
+				answer3 = data["opcion 3"];
+				answer4 = data["opcion 4"];
 
-			answers = [answer1, answer2, answer3, answer4];
+				answers = [answer1, answer2, answer3, answer4];
 
-			cantOpciones = 0;
-			if (answer1 != "") {
-				cantOpciones++;
-			}
-			if (answer2 != "") {
-				cantOpciones++;
-			}
-			if (answer3 != "") {
-				cantOpciones++;
-			}
-			if (answer4 != "") {
-				cantOpciones++;
-			}
+				cantOpciones = 0;
+				if (answer1 != "") {
+					cantOpciones++;
+				}
+				if (answer2 != "") {
+					cantOpciones++;
+				}
+				if (answer3 != "") {
+					cantOpciones++;
+				}
+				if (answer4 != "") {
+					cantOpciones++;
+				}
      	}
 	});
 
@@ -57,6 +69,69 @@ window.onload = function() {
 		}
 	}
 
+}
+
+function waitForTurn() {
+	$('#questionPlace').html('');
+	$('#questionPlace').html('Espere por su turno.');
+
+	$('#answersPlace').html('');
+}
+
+function nextQuestion() {
+	var pregunta;
+	var answers;
+	var answer1;
+	var answer2;
+	var answer3;
+	var answer4;
+
+	$.ajax({                                            
+     	url: '/play',    
+     	type: 'POST',
+     	dataType: "json",
+     	async:false,
+
+     	success: function(data) {  
+
+     		console.log(data);
+
+     		username = data["player"];
+     		idPregunta = data["ID"];
+
+     		pregunta = data["pregunta"];
+				answer1 = data["opcion 1"];
+				answer2 = data["opcion 2"];
+				answer3 = data["opcion 3"];
+				answer4 = data["opcion 4"];
+
+				answers = [answer1, answer2, answer3, answer4];
+
+				cantOpciones = 0;
+				if (answer1 != "") {
+					cantOpciones++;
+				}
+				if (answer2 != "") {
+					cantOpciones++;
+				}
+				if (answer3 != "") {
+					cantOpciones++;
+				}
+				if (answer4 != "") {
+					cantOpciones++;
+				}
+     	}
+	});
+
+	$('#questionPlace').html('');
+	$('#questionPlace').html(pregunta);
+
+	$('#answersPlace').html('');
+	for (var i = 0; i < answers.length; i++) {
+		if (answers[i] != '') {
+			$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
+		}
+	}
 }
 
 function refreshQuestion(msg) {

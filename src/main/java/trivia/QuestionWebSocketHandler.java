@@ -66,7 +66,8 @@ public class QuestionWebSocketHandler {
             Map nextQuestion = User.obtenerPregunta(username);
             //nextQuestion.put("player", username);
             try {
-                client.getRemote().sendString(String.valueOf(new Gson().toJson(nextQuestion)));    
+                //client.getRemote().sendString(String.valueOf(new Gson().toJson(nextQuestion)));
+                client.getRemote().sendString(String.valueOf(true));
             }
             catch(java.io.IOException e) {
                 System.out.println("Unable to send message. Error: "+e);
@@ -74,7 +75,12 @@ public class QuestionWebSocketHandler {
             
         }
         else {
-            System.out.println("No es Correcta!");
+            try {
+                client.getRemote().sendString(String.valueOf(false));
+            }
+            catch(java.io.IOException e) {
+                System.out.println("Unable to send message. Error: "+e);
+            }
         }
     }
 
