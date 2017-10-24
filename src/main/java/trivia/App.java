@@ -72,14 +72,6 @@ public class App
         get("/", (req, res) -> {
 
           String cookies = req.cookies().toString();
-          
-          //PRUEBA COOKIES!
-          System.out.println("App");
-          System.out.println("App");
-          System.out.println(cookies);
-          System.out.println("App");
-          System.out.println("App");
-          //PRUEBA COOKIES!
 
           String username = req.session().attribute(SESSION_NAME);
           String category = req.session().attribute("category");
@@ -135,40 +127,7 @@ public class App
         //Funcion anonima utilizada para mostrar las preguntas al usuario en modo Single Player.
         get("/play", (req, res) -> {
         String templateRoute = "./views/play.mustache";
-        /*int indexOfGame = req.session().attribute("gameIndex");
 
-
-
-        System.out.println("IndexOfGame= "+indexOfGame);
-        
-
-
-        if (games.get(indexOfGame).getCantUsuarios() == 1) {
-          preguntas.put("puntajeUsuario", (( (User) req.session().attribute("user"))).getPoints() );
-          preguntas.put("hp", "");
-          preguntas.put("redireccion", "/play");
-        }
-        else if (games.get(indexOfGame).getCantUsuarios() == 2) {
-          preguntas.put("puntajeUsuario", "");
-          preguntas.put("hp", ((User) req.session().attribute("user")).getHP());
-          preguntas.put("redireccion", "/playTwoPlayers");
-        }
-        /*else {
-          res.redirect("/login");
-        }*/
-
-        /*if (preguntas.get("opcion 4").equals("")) {
-          if (preguntas.get("opcion 3").equals("")) {
-            templateRoute = "./views/1wrong.mustache";
-          }
-          else {
-            templateRoute = "./views/2wrong.mustache";
-          }
-        }
-        else {
-          templateRoute = "./views/3wrong.mustache";
-        }
-      */
         return new ModelAndView(new HashMap(), templateRoute);
       }, new MustacheTemplateEngine()
       );
@@ -332,7 +291,12 @@ public class App
 
             jugadorRespuesta.put( ((User) request.session().attribute("user")).getString("username"), 0);
             jugadorRespuesta.put( ((User) hostUser.get(hostName)).getString("username"), 0);
-            response.redirect("/playTwoPlayers");
+
+            int cantJugadores = newGame.getCantUsuarios();
+            preguntas.put("game_"+(String) request.session().attribute(SESSION_NAME), cantJugadores);
+            preguntas.put("game_"+newGame.getPlayer1().getUsername(), cantJugadores);
+
+            response.redirect("/play");
             return null;
         });
 
@@ -343,16 +307,15 @@ public class App
           int cantPreguntas = 0;
           try {
             cantPreguntas = Integer.parseInt(request.queryParams("cantPreguntas"));
-          } catch (NumberFormatException e) {
+          } 
+          catch (NumberFormatException e) {
             System.out.println("Error en el formato del numero.");
             mensajes.put("estadoHost", "Debe ingresar una cantidad de preguntas");
             response.redirect("/hostLAN");
             return null;
           }
 
-
           if (!existeHost(hostName)) {
-
 
           openDB();
           List<Question> questions = Question.where("active = 1 and creador != '"+((User) request.session().attribute("user")).getUsername()+"' and ('"+((User) request.session().attribute("user")).getInteger("id")+"', id) not in (SELECT * from respondidas) ");
@@ -393,7 +356,7 @@ public class App
             }
           }
           if (request.session().attribute("gameIndex") != null) {
-            response.redirect("/playTwoPlayers");
+            response.redirect("/play");
           }
           else {
             response.redirect("/waiting");
@@ -486,7 +449,7 @@ public class App
               response.redirect("/login");
             }
             else {
-              if (request.session().attribute("gameIndex") == null) {
+              /*if (request.session().attribute("gameIndex") == null) {
                 Game aux = new Game();
                 Game.initGame(aux, (User) request.session().attribute("user"), (spark.Session) request.session());
                 games.add(aux);
@@ -512,7 +475,20 @@ public class App
                 if ((respuestaDada != null) && (respuestaDada.equals(respuestaCorrecta))) {
                     games.get(indexOfGame).respondioCorrectamente(usuarioActual, 0);
                 }
+              }*/
+
+              if (preguntas.get("game_"+(String) request.session().attribute(SESSION_NAME)) == null) {
+                Game aux = new Game();
+                Game.initGame(aux, (User) request.session().attribute("user"), (spark.Session) request.session());
+                games.add(aux);
+
+                request.session().attribute("gameIndex", games.size()-1);
+
+                int cantJugadores = aux.getCantUsuarios();
+                preguntas.put("game_"+((String) request.session().attribute(SESSION_NAME)), cantJugadores);
               }
+              int indexOfGame = request.session().attribute("gameIndex");
+
               Map preguntaObtenida = new HashMap();
               preguntaObtenida = games.get(indexOfGame).obtenerPregunta(usuarioActual);
 
@@ -520,7 +496,7 @@ public class App
                   mensajes.put("cantAnswer", "Lo siento, no tiene mas preguntas disponibles para responder.");
                   response.redirect("/");
               }
-              else {
+              //else {
                   mensajes.put("cantAnswer", "");
                   preguntas.put("pregunta", preguntaObtenida.get("pregunta"));
                   preguntas.put("opcion 1", preguntaObtenida.get("opcion 1"));
@@ -532,8 +508,9 @@ public class App
 
                   preguntas.put("player", request.session().attribute(SESSION_NAME));
 
+                  
                   return new Gson().toJson(preguntas);
-              }
+              //}
             }
             return null;
         });
