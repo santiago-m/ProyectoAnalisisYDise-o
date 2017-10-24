@@ -262,13 +262,6 @@ public class Game extends Model{
   }
 
   public static boolean esCorrecta(int idPregunta, String respuestaDada) {
-
-    System.out.println("Llegue hasta aca!");
-    System.out.println("Llegue hasta aca!");
-    System.out.println("Llegue hasta aca!");
-    System.out.println("Llegue hasta aca!");
-    System.out.println("Llegue hasta aca!");
-
     App.openDB();
     List<Question> questions = Question.where("id = "+idPregunta+" and respuestaCorrecta = '"+respuestaDada+"'");
     if (questions.isEmpty()) {
