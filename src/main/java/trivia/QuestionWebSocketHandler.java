@@ -29,7 +29,7 @@ public class QuestionWebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(Session user, String message) {
         Map data = new Gson().fromJson(message, Map.class);
-        String ipClient = (user.getLocalAddress().toString()).substring(user.getLocalAddress().toString().indexOf(":"));
+        String ipClient = (user.getLocalAddress().toString()).substring(0, user.getLocalAddress().toString().indexOf(":"));
 
         String clientUsername = (String) data.get("username");
 
@@ -43,6 +43,9 @@ public class QuestionWebSocketHandler {
             catch(Exception e) {
                 if (s.attribute(App.SESSION_NAME).equals(clientUsername)) { 
                     s.attribute("clientAddress", ipClient);
+
+                    System.out.println("\n\nip: "+ipClient+"\n\n");
+
                     manageAnswer(user, s, data);
                     break;
                 }    
@@ -54,32 +57,76 @@ public class QuestionWebSocketHandler {
 
     public void manageAnswer(Session client, spark.Session sess, Map message) {
         String username = (String) message.get("username");
-        Double questionID = (Double) message.get("idPregunta");
-        String answer = (String) message.get("answer");
-        spark.Session sparkSession;
 
-        sparkSession = sess;
+        if (message.get("answer") != null) {
+            Double questionID = (Double) message.get("idPregunta");
+            String answer = (String) message.get("answer");
+            spark.Session sparkSession;
 
-        System.out.println(answer);
+            sparkSession = sess;
 
-        if (Game.esCorrecta(questionID.intValue(), answer)) {
-            Map nextQuestion = User.obtenerPregunta(username);
-            //nextQuestion.put("player", username);
-            try {
-                //client.getRemote().sendString(String.valueOf(new Gson().toJson(nextQuestion)));
-                client.getRemote().sendString(String.valueOf(true));
+            if (Game.esCorrecta(questionID.intValue(), answer)) {
+                Map nextQuestion = User.obtenerPregunta(username);
+                //nextQuestion.put("player", username);
+                try {
+                    //client.getRemote().sendString(String.valueOf(new Gson().toJson(nextQuestion)));
+                    client.getRemote().sendString(String.valueOf(true));
+                }
+                catch(java.io.IOException e) {
+                    System.out.println("Unable to send message. Error: "+e);
+                }
             }
-            catch(java.io.IOException e) {
-                System.out.println("Unable to send message. Error: "+e);
-            }
-            
-        }
-        else {
-            try {
-                client.getRemote().sendString(String.valueOf(false));
-            }
-            catch(java.io.IOException e) {
-                System.out.println("Unable to send message. Error: "+e);
+            else {
+                try {
+                    client.getRemote().sendString(String.valueOf(false));
+
+                    for (Game g : App.games) {
+                        if (g.isPlaying(username)) {
+
+                            System.out.println(username+" is playing the game");
+
+                            if (g.getPlayer2() != null) {
+                                System.out.println("Player2 is not null");
+                                String ipRespuesta;
+
+                                if (username.equals(g.getPlayer1().getUsername())) {
+                                    //El jugador 1 respondio mal. Es turno del jugador 2
+                                    System.out.println("Le toca a 2\n"+(App.openSessions.get(g.getPlayer2().getSessionPos())));
+
+                                    ipRespuesta = (App.openSessions.get(g.getPlayer2().getSessionPos())).attribute("clientAddress");
+                                   System.out.println(ipRespuesta);                                
+                                }
+                                else {
+                                    //El jugador 2 respondio mal. Es turno del jugador 1
+                                    System.out.println("Le toca a 1");
+                                    ipRespuesta = (App.openSessions.get(g.getPlayer1().getSessionPos())).attribute("clientAddress");
+                                    System.out.println(ipRespuesta);
+                                }
+
+                                Session target = client;
+
+                                System.out.println(ipRespuesta);
+                                
+                                for (Session s : sessions) {
+                                    if (ipRespuesta.equals((s.getLocalAddress().toString()).substring(0, s.getLocalAddress().toString().indexOf(":")))) {
+                                        target = s;
+                                        break;
+                                    }
+                                }
+                                try {
+                                    target.getRemote().sendString(String.valueOf(true));
+                                }
+                                catch(Exception e) {
+                                    System.out.println("target is not initialized");
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                catch(java.io.IOException e) {
+                    System.out.println("Unable to send message. Error: "+e);
+                }   
             }
         }
     }

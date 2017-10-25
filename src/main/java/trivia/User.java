@@ -10,6 +10,7 @@ import java.util.List;
   * @author Maria, Santiago Jose; Rivero, Matias.
 */
 public class User extends Model {
+	private int sessionPos;
 	private String username;
 	private String password;
 	private int points;
@@ -25,6 +26,14 @@ public class User extends Model {
 		password = pass;
 		points = 0;
 		life = 100;
+	}
+
+	public void setSession(int pos) {
+		sessionPos = pos;
+	}
+
+	public int getSessionPos() {
+		return sessionPos;
 	}
 
 	public static Map obtenerPregunta(String username) {

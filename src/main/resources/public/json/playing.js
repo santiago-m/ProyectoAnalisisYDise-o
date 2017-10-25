@@ -1,15 +1,18 @@
 var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/game");
 webSocket.onmessage = function (msg) { 
 	if (msg['data'] == 'true') {
+		status = 'ready';
 		nextQuestion();
 	}
 	else {
 		if (cantPlayers == 2) {
+			status = 'waiting';
 			waitForTurn();
 		}
 	}};
 
 webSocket.onclose = function () { };
+
 var username;
 var idPregunta;
 var cantPlayers;
@@ -64,6 +67,10 @@ window.onload = function() {
      	}
 	});
 
+	webSocket.send(JSON.stringify({
+  				username: username
+  			}));
+
 	if (status == "waiting") {
 		waitForTurn();
 	}
@@ -83,6 +90,7 @@ window.onload = function() {
 }
 
 function waitForTurn() {
+
 	$('#questionPlace').html('');
 	$('#questionPlace').html('Espere por su turno.');
 
