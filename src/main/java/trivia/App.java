@@ -279,7 +279,7 @@ public class App
 
             Game newGame = new Game();
 
-            Game.initGame(newGame, (int) hosts.get(hostName), (User) hostUser.get(hostName), (User) request.session().attribute("user"),(spark.Session) request.session(), (spark.Session) request.session());
+            Game.initGame(newGame, (int) hosts.get(hostName), (User) hostUser.get(hostName), (User) request.session().attribute("user"));
 
             games.add(newGame);
             request.session().attribute("gameIndex", games.size()-1);
@@ -427,7 +427,7 @@ public class App
         post("/singlePlayerGame", (request, response) -> {
           Game aux = new Game();
 
-          Game.initGame(aux, request.session().attribute("user"), (spark.Session) request.session());
+          Game.initGame(aux, request.session().attribute("user"));
 
           games.add(aux);
           request.session().attribute("gameIndex", games.size()-1);
@@ -476,7 +476,7 @@ public class App
 
               if (preguntas.get("game_"+(String) request.session().attribute(SESSION_NAME)) == null) {
                 Game aux = new Game();
-                Game.initGame(aux, (User) request.session().attribute("user"), (spark.Session) request.session());
+                Game.initGame(aux, (User) request.session().attribute("user"));
                 games.add(aux);
 
                 request.session().attribute("gameIndex", games.size()-1);
@@ -605,6 +605,7 @@ public class App
             //Luego añade la sesion a la lista de sesiones abiertas. 
             request.session().attribute("sessionCookies", request.cookies());
             openSessions.add(request.session());
+            usuario.setSession(openSessions.size()-1);
 
             response.cookie("username", usuario.getUsername());
             response.redirect("/");

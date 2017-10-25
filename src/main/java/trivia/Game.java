@@ -148,7 +148,7 @@ public class Game extends Model{
     * @param game Juego que se desea inicializar.
     * @param user Usuario que busca jugar Multi-Player.
   */
-  public static void initGame(Game game, User user, spark.Session userSession) {
+  public static void initGame(Game game, User user) {
     App.openDB();
     game.set("jugador1", user.getInteger("id"));
     game.set("jugador2", -1);
@@ -157,10 +157,10 @@ public class Game extends Model{
     game.saveIt();
 
 
-    game.setSession(1, userSession);
+//    game.setSession(1, userSession);
     game.setPlayer1(user);
 
-    game.setSession(2, null);
+//    game.setSession(2, null);
     game.setPlayer2(null);
 
     game.setCantUsuarios(1);
@@ -176,7 +176,7 @@ public class Game extends Model{
     * @param user1 Jugador 1 de la partida.
     * @param user2 Jugador 2 de la partida.
   */
-  public static void initGame(Game game, int cantPreguntas, User user1, User user2, spark.Session user1Session, spark.Session user2Session) {
+  public static void initGame(Game game, int cantPreguntas, User user1, User user2) {
     App.openDB();
     game.set("jugador1", user1.getInteger("id"));
     game.set("jugador2", user2.getInteger("id"));
@@ -184,10 +184,10 @@ public class Game extends Model{
     game.set("estado", "activo");
     game.saveIt();
 
-    game.setSession(1, user1Session);
+//    game.setSession(1, user1Session);
     game.setPlayer1(user1);
 
-    game.setSession(2, user2Session);
+//    game.setSession(2, user2Session);
     game.setPlayer2(user2);
 
     game.setCantUsuarios(2);
@@ -312,6 +312,22 @@ public class Game extends Model{
     player2.initializeToPlay();
   }
 
+  public boolean isPlaying(String username) {
+    System.out.println(player1.getUsername());
+    System.out.println(player2.getUsername());
+
+
+    if (username.equals(player1.getUsername())) {
+      return true;
+    }
+    else if (username.equals(player2.getUsername())) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
 
   //Metodos get y set de los atributos
 
@@ -339,11 +355,11 @@ public class Game extends Model{
     cantJugadoresConectados = cantidad;
   }
 
-  private void setCantPreguntas(int cantPreguntas) {
+  public void setCantPreguntas(int cantPreguntas) {
     this.cantPreguntas = cantPreguntas;
   }
 
-  private void setSession(int sessionNum, spark.Session session) {
+  public void setSession(int sessionNum, spark.Session session) {
     if (sessionNum > 2 || sessionNum < 1) {
       throw new IllegalArgumentException("The only possible values for sessionNum is 1 or 2");
     }
@@ -353,6 +369,13 @@ public class Game extends Model{
     else {
       sessionP2 = session;
     }
+  }
+
+  public spark.Session getSessionP1() {
+    return sessionP1;
+  }
+  public spark.Session getSessionP2() {
+    return sessionP2;
   }
 
 }
