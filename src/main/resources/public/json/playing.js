@@ -13,14 +13,16 @@ webSocket.onclose = function () { };
 var username;
 var idPregunta;
 var cantPlayers;
+var status;
+
+var pregunta;
+var answers;
+var answer1;
+var answer2;
+var answer3;
+var answer4;
 
 window.onload = function() {
-	var pregunta;
-	var answers;
-	var answer1;
-	var answer2;
-	var answer3;
-	var answer4;
 
 	$.ajax({                                            
      	url: '/play',    
@@ -36,6 +38,7 @@ window.onload = function() {
      		idPregunta = data["ID"];
 
      		cantPlayers = data["game_"+username];
+     		status = data["status_"+username];
 
      		pregunta = data["pregunta"];
 				answer1 = data["opcion 1"];
@@ -61,11 +64,19 @@ window.onload = function() {
      	}
 	});
 
-	$('#questionPlace').html(pregunta);
+	if (status == "waiting") {
+		waitForTurn();
+	}
+	else {
 
-	for (var i = 0; i < answers.length; i++) {
-		if (answers[i] != '') {
-			$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
+		$('#questionPlace').html('');
+		$('#questionPlace').html(pregunta);
+
+		$('#answersPlace').html('');
+		for (var i = 0; i < answers.length; i++) {
+			if (answers[i] != '') {
+				$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
+			}
 		}
 	}
 
@@ -79,14 +90,19 @@ function waitForTurn() {
 }
 
 function nextQuestion() {
-	var pregunta;
-	var answers;
-	var answer1;
-	var answer2;
-	var answer3;
-	var answer4;
+	if (pregunta != null && pregunta != '') {
+		$('#questionPlace').html('');
+		$('#questionPlace').html(pregunta);
 
-	$.ajax({                                            
+		$('#answersPlace').html('');
+		for (var i = 0; i < answers.length; i++) {
+			if (answers[i] != '') {
+				$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
+			}
+		}
+	}
+	else {
+		$.ajax({                                            
      	url: '/play',    
      	type: 'POST',
      	dataType: "json",
@@ -120,17 +136,18 @@ function nextQuestion() {
 				if (answer4 != "") {
 					cantOpciones++;
 				}
-     	}
-	});
+     		}
+		});
 
-	$('#questionPlace').html('');
-	$('#questionPlace').html(pregunta);
+		$('#questionPlace').html('');
+		$('#questionPlace').html(pregunta);
 
-	$('#answersPlace').html('');
-	for (var i = 0; i < answers.length; i++) {
-		if (answers[i] != '') {
-			$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
-		}
+		$('#answersPlace').html('');
+		for (var i = 0; i < answers.length; i++) {
+			if (answers[i] != '') {
+				$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
+			}
+		}	
 	}
 }
 

@@ -290,6 +290,8 @@ public class App
             int cantJugadores = newGame.getCantUsuarios();
             preguntas.put("game_"+(String) request.session().attribute(SESSION_NAME), cantJugadores);
             preguntas.put("game_"+newGame.getPlayer1().getUsername(), cantJugadores);
+            preguntas.put("status_"+(String) request.session().attribute(SESSION_NAME), "waiting");
+            preguntas.put("status_"+newGame.getPlayer1().getUsername(), "ready");
 
             response.redirect("/play");
             return null;
@@ -481,6 +483,7 @@ public class App
 
                 int cantJugadores = aux.getCantUsuarios();
                 preguntas.put("game_"+((String) request.session().attribute(SESSION_NAME)), cantJugadores);
+                preguntas.put("status_"+(String) request.session().attribute(SESSION_NAME), "ready");
               }
               int indexOfGame = request.session().attribute("gameIndex");
 
