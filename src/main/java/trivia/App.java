@@ -33,8 +33,8 @@ public class App {
 
     private static final String SESSION_NAME = "username";
     private static ArrayList<Game> games = new ArrayList<Game>();
-    private static Map hostUser = new HashMap();
-    /*private*/ static Map hosts = new HashMap();
+    public static Map hostUser = new HashMap();
+    public static Map hosts = new HashMap();
 
     // Por ahora, lugar donde esta el usuario al que le vamos a retornar cosas
     static Map<Session, String> concurr = new ConcurrentHashMap<>();
@@ -43,16 +43,7 @@ public class App {
 
     public static void main( String[] args ) { 
 
-      private static final String SESSION_NAME = "username";
-      private static ArrayList<Game> games = new ArrayList<Game>();
-      private static Map hostUser = new HashMap();
-      private static Map hosts = new HashMap();
-
-      static Map<Session, String> concurr = new ConcurrentHashMap<>();
-      static int nextUserNumber = 1;
-
       public static List<spark.Session> openSessions = new ArrayList<>();
-
       
       //Se selecciona la carpeta en la cual se guardaran los archivos estaticos, como css o json.
       staticFileLocation("/public");
@@ -224,35 +215,12 @@ public class App {
         //Funcion anonima que muestra una tabla con las partidas creadas por otros usuarios, permitiendo al usuario conectarse a alguna.
         //Crea un script que carga la tabla del tamaño necesario para mostrar todas las partidas creadas.
         get("/listarHosts", (req, res) -> {
-          String script = "";
-          String crearFila = "";
-          if ((int) hosts.get("cantidadHosts") > 0) {
-            script = "function tableCreate() { var body = document.getElementsByTagName('div')[0]; var tbl = document.createElement('table'); tbl.style.width = '100%'; tbl.setAttribute('border', '1'); var tbdy = document.createElement('tbody'); ";
-            
-
-            for (int i = 0; i < (int) hosts.get("cantidadHosts"); i++) {
-              crearFila = crearFila+"var tr = document.createElement('tr'); ";
-              for (int j = 0; j < 2; j++) {
-                if (j == 0) {
-                  crearFila = crearFila+"var td = document.createElement('td'); var form = document.createElement('form'); form.action = \"/selectHost\"; form.method = \"POST\"; var hidden = document.createElement('input'); hidden.type = \"hidden\"; hidden.name = \"hostName\"; hidden.value = \""+hosts.get("Host "+(i+1))+"\"; var btn = document.createElement('input'); btn.type = \"submit\"; btn.className = \"btn\"; btn.value = \""+hosts.get("Host "+(i+1))+"\"; form.appendChild(hidden); form.appendChild(btn); td.appendChild(form); tr.appendChild(td); ";
-                }
-                else if (j == 1) {
-                  crearFila = crearFila+"var td = document.createElement('td'); td.appendChild(document.createTextNode('"+((User) hostUser.get((String) hosts.get("Host "+(i+1)))).getUsername()+"')); tr.appendChild(td); tbdy.appendChild(tr); tbl.appendChild(tbdy); body.appendChild(tbl);";
-                }
-              }
-            }
-          }
-          crearFila = crearFila+" } document.getElementById(\"hosts\").innerHTML = tableCreate();";
-
-          script = script+crearFila;
-          hosts.put("script", script);
-
           return new ModelAndView(hosts, "./views/listarHosts.mustache");
         }, new MustacheTemplateEngine()
         );
 
         // Funcion que expone los datos actuales de una pregunta para proceder a la edicion
-        get ("/changeQuestion", (request, response) -> {          
+        get ("/changeQuestion", (request, response) -> {
             return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
         }, new MustacheTemplateEngine()
         );
@@ -842,13 +810,13 @@ public class App {
       }
     }
 
-    // funcion que hace una consulta a la base de datos en base al pedido y 
+    // funcion que hace una consulta a la base de datos en base al pedido y
     // devuelve una lista con las preguntas y sus respectivos ID
     public static void editQuestions (String sender, String message) throws java.io.IOException{
 
       openDB();
       List<Question> cambiar = Question.where("pregunta like '%"+message+"%'");
-      
+
       List<Integer> id = new ArrayList<Integer>();
       List<String> preguntas = new ArrayList<String>();
       /*  Aun no implementado como quiero
@@ -867,7 +835,7 @@ public class App {
                                       mal3.add(p.getString("wrong3"));
                                       activa.add(p.getString("active"));*/
                                     });
-      
+
       Session destino = (Session) getKeyFromValue(concurr, sender);
       System.out.println("llamada al get: " + concurr.get(sender) + "-- llamada al otro " + destino );
       try {
@@ -882,7 +850,7 @@ public class App {
                                                           .put("mal3", mal3)
                                                           .put("activa", activa)*/
                                                           ));
-  
+
       } catch (Exception r){
         r.printStackTrace();
       }
@@ -891,11 +859,58 @@ public class App {
     }
 
     public static Object getKeyFromValue(Map hm, Object value) {
-            for (Object o : hm.keySet()) {
-              if (hm.get(o).equals(value)) {
-                return o;
-              }
-            }
-            return null;
-          }
+      for (Object o : hm.keySet()) {
+        if (hm.get(o).equals(value)) {
+          return o;
+        }
+      }
+      return null;
+    }
+
+    /*public static void sendGames(String sender) {
+      Session destino = (Session) getKeyFromValue(concurr, sender);
+
+      int juegos_totales = (int) hosts.get("cantidadHosts");
+      List<String> usuario = new ArrayList<String>();
+      List<String> nombre_partida = new ArrayList<String>();
+      List<Integer> cPreguntas = new ArrayList<>();
+      String aux;
+
+      for (int i= 1; i<(juegos_totales+1) ; i++ ) {
+        aux = (String)hosts.get("Host "+ (i));
+
+        nombre_partida.add(aux);
+        usuario.add(((User)hostUser.get(aux)).getUsername());
+        cPreguntas.add((int)hosts.get(aux));
+      }
+      try {
+
+        destino.getRemote()
+               .sendString(String.valueOf(new JSONObject().put("usuario", usuario)
+                                                          .put("nombre_partida", nombre_partida)
+                                                          .put("cPreguntas", cPreguntas)
+                                                          ));
+
+      } catch (Exception r){
+        r.printStackTrace();
+      }
+
+    }*/
+
+    /*public static void startGame (String session, String msg) {
+      openDB();
+      List<User> listUsers = User.where("username = '"+session+"'");
+      User aux = listUsers.get(0);
+      Game newGame = new Game();
+      Game.initGame(newGame, (int) hosts.get(msg), (User) hostUser.get(msg), (User) aux);
+
+      games.add(newGame);
+      //request.session().attribute("gameIndex", games.size()-1);
+
+      jugadorRespuesta.put( (User) aux, 0);
+      jugadorRespuesta.put( ((User) hostUser.get(msg)).getString("username"), 0);
+      closeDB();
+      //response.redirect("/playTwoPlayers");
+    }*/
+
 }
