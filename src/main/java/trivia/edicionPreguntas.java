@@ -9,8 +9,6 @@ import java.util.concurrent.*;
 @WebSocket
 public class edicionPreguntas {
 
-    private String sender, msg;
-
     @OnWebSocketConnect
     public void onConnect(Session session) {
         //System.out.println("Conexion a edicionPreguntas");    // debug
@@ -28,7 +26,7 @@ public class edicionPreguntas {
     public void onMessage(Session session, String buscar) throws IOException {
 
         try{
-            App.editQuestions(sender = App.concurr.get(session), msg = buscar);
+            App.editQuestions(App.concurr.get(session),buscar);
         }catch(IOException e){
             e.printStackTrace();
         }
