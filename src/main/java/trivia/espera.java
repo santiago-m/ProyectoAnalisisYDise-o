@@ -13,7 +13,7 @@ public class espera {
 
     @OnWebSocketConnect
     public void onConnect(Session session) {
-        System.out.println("Conexion a espera");
+        System.out.println("\n ---> Connected to espera <--- \n");
         //System.out.println("Session= " + session + "<End Session>");
 
         //String username = App.SESSION_NAME;   // <-- SESSION_NAME es privado
@@ -26,7 +26,7 @@ public class espera {
     @OnWebSocketClose
     public void onClose(Session session, int statusCode, String reason) {
         //sessions.remove(session);
-        System.out.println("Desconexion de espera");
+        System.out.println("\n ---> Disconnected from espera <--- \n");
 
     }
 

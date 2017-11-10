@@ -33,8 +33,8 @@ public class App {
 
     private static final String SESSION_NAME = "username";
     private static ArrayList<Game> games = new ArrayList<Game>();
-    private static Map hostUser = new HashMap();
-    /*private*/ static Map hosts = new HashMap();
+    public static Map hostUser = new HashMap();
+    public static Map hosts = new HashMap();
 
     // Por ahora, lugar donde esta el usuario al que le vamos a retornar cosas
     static Map<Session, String> concurr = new ConcurrentHashMap<>();
@@ -44,14 +44,6 @@ public class App {
     public static List<spark.Session> openSessions = new ArrayList<>();
 
     public static void main( String[] args ) { 
-
-      private static final String SESSION_NAME = "username";
-      private static ArrayList<Game> games = new ArrayList<Game>();
-      private static Map hostUser = new HashMap();
-      private static Map hosts = new HashMap();
-
-      static Map<Session, String> concurr = new ConcurrentHashMap<>();
-      static int nextUserNumber = 1;
 
       public static List<spark.Session> openSessions = new ArrayList<>();
 
@@ -222,35 +214,12 @@ public class App {
 
         //Funcion anonima que muestra una tabla con las partidas creadas por otros usuarios, permitiendo al usuario conectarse a alguna.
         get("/listarHosts", (req, res) -> {
-          String script = "";
-          String crearFila = "";
-          if ((int) hosts.get("cantidadHosts") > 0) {
-            script = "function tableCreate() { var body = document.getElementsByTagName('div')[0]; var tbl = document.createElement('table'); tbl.style.width = '100%'; tbl.setAttribute('border', '1'); var tbdy = document.createElement('tbody'); ";
-            
-
-            for (int i = 0; i < (int) hosts.get("cantidadHosts"); i++) {
-              crearFila = crearFila+"var tr = document.createElement('tr'); ";
-              for (int j = 0; j < 2; j++) {
-                if (j == 0) {
-                  crearFila = crearFila+"var td = document.createElement('td'); var form = document.createElement('form'); form.action = \"/selectHost\"; form.method = \"POST\"; var hidden = document.createElement('input'); hidden.type = \"hidden\"; hidden.name = \"hostName\"; hidden.value = \""+hosts.get("Host "+(i+1))+"\"; var btn = document.createElement('input'); btn.type = \"submit\"; btn.className = \"btn\"; btn.value = \""+hosts.get("Host "+(i+1))+"\"; form.appendChild(hidden); form.appendChild(btn); td.appendChild(form); tr.appendChild(td); ";
-                }
-                else if (j == 1) {
-                  crearFila = crearFila+"var td = document.createElement('td'); td.appendChild(document.createTextNode('"+((User) hostUser.get((String) hosts.get("Host "+(i+1)))).getUsername()+"')); tr.appendChild(td); tbdy.appendChild(tr); tbl.appendChild(tbdy); body.appendChild(tbl);";
-                }
-              }
-            }
-          }
-          crearFila = crearFila+" } document.getElementById(\"hosts\").innerHTML = tableCreate();";
-
-          script = script+crearFila;
-          hosts.put("script", script);
-
           return new ModelAndView(hosts, "./views/listarHosts.mustache");
         }, new MustacheTemplateEngine()
         );
 
         // Funcion que expone los datos actuales de una pregunta para proceder a la edicion
-        get ("/changeQuestion", (request, response) -> {          
+        get ("/changeQuestion", (request, response) -> {
             return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
         }, new MustacheTemplateEngine()
         );
@@ -485,34 +454,6 @@ public class App {
               response.redirect("/login");
             }
             else {
-              /*if (request.session().attribute("gameIndex") == null) {
-                Game aux = new Game();
-                Game.initGame(aux, (User) request.session().attribute("user"), (spark.Session) request.session());
-                games.add(aux);
-
-                request.session().attribute("gameIndex", games.size()-1);
-              }
-              else if (games.get((int) request.session().attribute("gameIndex")).isClosed()) {
-                games.remove(request.session().attribute("gameIndex"));
-                closeHost(request.session().attribute(SESSION_NAME));
-                Game aux = new Game();
-                Game.initGame(aux, (User) request.session().attribute("user"), (spark.Session) request.session());
-                games.add(aux);
-
-                request.session().attribute("gameIndex", games.size()-1);
-              }
-              int indexOfGame = request.session().attribute("gameIndex");
-              String respuestaDada = request.queryParams("answer");
-              if (respuestaDada != null) {
-                openDB();
-                String respuestaCorrecta = (Question.where("id = "+preguntas.get("ID"))).get(0).getString("respuestaCorrecta");
-                closeDB();
-
-                if ((respuestaDada != null) && (respuestaDada.equals(respuestaCorrecta))) {
-                    games.get(indexOfGame).respondioCorrectamente(usuarioActual, 0);
-                }
-              }*/
-
               if (preguntas.get("game_"+(String) request.session().attribute(SESSION_NAME)) == null) {
                 Game aux = new Game();
                 Game.initGame(aux, (User) request.session().attribute("user"));
@@ -834,13 +775,13 @@ public class App {
       }
     }
 
-    // funcion que hace una consulta a la base de datos en base al pedido y 
+    // funcion que hace una consulta a la base de datos en base al pedido y
     // devuelve una lista con las preguntas y sus respectivos ID
     public static void editQuestions (String sender, String message) throws java.io.IOException{
 
       openDB();
       List<Question> cambiar = Question.where("pregunta like '%"+message+"%'");
-      
+
       List<Integer> id = new ArrayList<Integer>();
       List<String> preguntas = new ArrayList<String>();
       /*  Aun no implementado como quiero
@@ -859,7 +800,7 @@ public class App {
                                       mal3.add(p.getString("wrong3"));
                                       activa.add(p.getString("active"));*/
                                     });
-      
+
       Session destino = (Session) getKeyFromValue(concurr, sender);
       System.out.println("llamada al get: " + concurr.get(sender) + "-- llamada al otro " + destino );
       try {
@@ -874,7 +815,7 @@ public class App {
                                                           .put("mal3", mal3)
                                                           .put("activa", activa)*/
                                                           ));
-  
+
       } catch (Exception r){
         r.printStackTrace();
       }
@@ -883,11 +824,11 @@ public class App {
     }
 
     public static Object getKeyFromValue(Map hm, Object value) {
-            for (Object o : hm.keySet()) {
-              if (hm.get(o).equals(value)) {
-                return o;
-              }
-            }
-            return null;
-          }
+      for (Object o : hm.keySet()) {
+        if (hm.get(o).equals(value)) {
+          return o;
+        }
+      }
+      return null;
+    }
 }
