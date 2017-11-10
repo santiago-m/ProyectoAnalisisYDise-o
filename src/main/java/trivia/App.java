@@ -15,8 +15,6 @@ import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 
 import org.eclipse.jetty.websocket.api.*;
-import org.json.JSONObject;
-import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.Random;
 
@@ -32,10 +30,6 @@ public class App
     private static ArrayList<Game> games = new ArrayList<Game>();
     private static Map hostUser = new HashMap();
     private static Map hosts = new HashMap();
-
-    // Por ahora, lugar donde esta el usuario al que le vamos a retornar cosas
-    static Map<Session, String> concurr = new ConcurrentHashMap<>();
-    static int nextUserNumber = 1;
 
     public static void main( String[] args )
     {
@@ -177,7 +171,7 @@ public class App
         }, new MustacheTemplateEngine()
         );
 
-        //Funcion anonima que permite a un administrador administrar las preguntas existentes en la base de datos.
+        //Funcion anonima que permite a un administrador modificar las preguntas existentes en la base de datos.
         get("/adminQuestions", (req, res) -> {
           String username = req.session().attribute(SESSION_NAME);
           String category = req.session().attribute("category");
@@ -255,12 +249,14 @@ public class App
         }, new MustacheTemplateEngine()
         );
 
+        // Funcion que expone los datos actuales de una pregunta para proceder a la edicion
         get ("/changeQuestion", (request, response) -> {
            return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
-       }, new MustacheTemplateEngine()
-       );
+        }, new MustacheTemplateEngine()
+        );
 
-       post ("/adminQuestions", (request, response) -> {
+        // Funcion que basada en la pregunta que se quiere editar, la busca con sus respectivas opciones
+        post ("/adminQuestions", (request, response) -> {
 
          openDB();
          List<Question> cambiar = Question.where("id = "+ Integer.parseInt(request.queryParams("opciones")));
@@ -283,6 +279,7 @@ public class App
          return null;
        });
 
+       // Funcion que hace efectivos los cambios de la pregunta en la base de datos
        post ("/changeQuestion", (request, response) -> {
 
          openDB();
@@ -797,64 +794,5 @@ public class App
         hostUser.remove(usuarioCreador);
         hostUser.remove(hostName);
       }
-    }
-
-    // funcion que hace una consulta a la base de datos en base al pedido y
-    // devuelve una lista con las preguntas y sus respectivos ID
-    public static void editQuestions (String sender, String message) throws java.io.IOException{
-
-      openDB();
-      List<Question> cambiar = Question.where("pregunta like '%"+message+"%'");
-
-      List<Integer> id = new ArrayList<Integer>();
-      List<String> preguntas = new ArrayList<String>();
-      /*  Aun no implementado como quiero
-      List<String> correcta = new ArrayList<String>();
-      List<String> mal1 = new ArrayList<String>();
-      List<String> mal2 = new ArrayList<String>();
-      List<String> mal3 = new ArrayList<String>();
-      List<String> activa = new ArrayList<String>();*/
-
-      if (cambiar !=  null) {
-        cambiar.stream().forEach(p -> { id.add(p.getInteger("id"));
-                                        preguntas.add(p.getString("pregunta"));
-                                        /*  Aun no implementado como quiero
-                                        correcta.add(p.getString("respuestaCorrecta"));
-                                        mal1.add(p.getString("wrong1"));
-                                        mal2.add(p.getString("wrong2"));
-                                        mal3.add(p.getString("wrong3"));
-                                        activa.add(p.getString("active"));*/
-                                      });
-      }
-
-      Session destino = (Session) getKeyFromValue(concurr, sender);
-      //System.out.println("llamada al get: " + concurr.get(sender) + "-- llamada al otro " + destino );
-      try {
-
-        destino.getRemote()
-               .sendString(String.valueOf(new JSONObject().put("id", id)
-                                                          .put("pregunta", preguntas)
-                                                          /*  Aun no implementado como quiero
-                                                          .put("correcta", correcta)
-                                                          .put("mal1", mal1)
-                                                          .put("mal2", mal2)
-                                                          .put("mal3", mal3)
-                                                          .put("activa", activa)*/
-                                                          ));
-
-      } catch (Exception r){
-        r.printStackTrace();
-      }
-
-      closeDB();
-    }
-
-    public static Object getKeyFromValue(Map hm, Object value) {
-      for (Object o : hm.keySet()) {
-        if (hm.get(o).equals(value)) {
-          return o;
-        }
-      }
-      return null;
     }
 }
