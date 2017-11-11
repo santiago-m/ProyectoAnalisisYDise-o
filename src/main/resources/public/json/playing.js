@@ -1,10 +1,13 @@
 var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/game");
 webSocket.onmessage = function (msg) { 
 	if (msg['data'] == 'true') {
+		console.log('Recibi true');
+
 		status = 'ready';
 		nextQuestion();
 	}
 	else {
+		console.log('Recibi false');
 		if (cantPlayers == 2) {
 			status = 'waiting';
 			waitForTurn();
@@ -14,6 +17,7 @@ webSocket.onmessage = function (msg) {
 webSocket.onclose = function () { };
 
 var username;
+var opponent;
 var idPregunta;
 var cantPlayers;
 var status;
@@ -38,6 +42,7 @@ window.onload = function() {
      		console.log(data);
 
      		username = data["player"];
+     		opponent = data["opponent"];
      		idPregunta = data["ID"];
 
      		cantPlayers = data["game_"+username];
@@ -215,6 +220,7 @@ function sendAnswer() {
 
 			webSocket.send(JSON.stringify({
   				username: username,
+  				opponent: opponent,
   				idPregunta: idPregunta,
   				answer: actual.val()
 			}));

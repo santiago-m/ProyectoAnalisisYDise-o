@@ -505,7 +505,7 @@ public class App
                   preguntas.put("cantPreguntasDisponibles", preguntaObtenida.get("cantPreguntasDisponibles"));
 
                   preguntas.put("player", request.session().attribute(SESSION_NAME));
-
+                  preguntas.put("opponent", games.get(indexOfGame).getOpponentName(request.session().attribute(SESSION_NAME)));
                   
                   return new Gson().toJson(preguntas);
               //}
