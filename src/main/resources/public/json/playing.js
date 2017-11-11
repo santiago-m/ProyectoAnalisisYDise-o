@@ -220,6 +220,7 @@ function sendAnswer() {
 			console.log(actual);
 
 			webSocket.send(JSON.stringify({
+				cantPlayers: cantPlayers,
   				username: username,
   				opponent: opponent,
   				idPregunta: idPregunta,

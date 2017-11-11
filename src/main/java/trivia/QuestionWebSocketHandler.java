@@ -41,37 +41,41 @@ public class QuestionWebSocketHandler {
             System.out.println("Session de "+clientUsername+" agregada!");
         }
 
-        for (spark.Session s : App.openSessions) {
-            if (s.attribute(App.SESSION_NAME).equals(clientUsername)) { 
-                manageAnswer(user, s, data);
-                break;
-            }    
+        if (data.get("answer") != null) {
+            for (spark.Session s : App.openSessions) {
+                if (s.attribute(App.SESSION_NAME).equals(clientUsername)) { 
+                    manageAnswer(user, s, data);
+                    break;
+                }    
+            }
         }
     }
 
     public void manageAnswer(Session client, spark.Session sess, Map message) {
         String username = (String) message.get("username");
         String opponent = (String) message.get("opponent");
+        Double cantPlayers = (Double) message.get("cantPlayers");
 
-        if (message.get("answer") != null) {
-            Double questionID = (Double) message.get("idPregunta");
-            String answer = (String) message.get("answer");
-            spark.Session sparkSession;
+        Double questionID = (Double) message.get("idPregunta");
+        String answer = (String) message.get("answer");
+        spark.Session sparkSession;
 
-            sparkSession = sess;
+        sparkSession = sess;
 
-            if (Game.esCorrecta(questionID.intValue(), answer)) {
-                //Map nextQuestion = User.obtenerPregunta(username);
-                //nextQuestion.put("player", username);
-                try {
-                    //client.getRemote().sendString(String.valueOf(new Gson().toJson(nextQuestion)));
-                    client.getRemote().sendString(String.valueOf(true));
-                }
-                catch(java.io.IOException e) {
-                    System.out.println("Unable to send message. Error: "+e);
-                }
+        if (Game.esCorrecta(questionID.intValue(), answer)) {
+            //Map nextQuestion = User.obtenerPregunta(username);
+            //nextQuestion.put("player", username);
+            try {
+                //client.getRemote().sendString(String.valueOf(new Gson().toJson(nextQuestion)));
+                client.getRemote().sendString(String.valueOf(true));
             }
-            else {
+            catch(java.io.IOException e) {
+                System.out.println("Unable to send message. Error: "+e);
+            }
+        }
+        else {
+
+            if (cantPlayers.intValue() == 2) {
                 try {
                     client.getRemote().sendString(String.valueOf(false));
                     if (usernameSession.get(opponent) != null) {
@@ -85,6 +89,14 @@ public class QuestionWebSocketHandler {
                 catch(java.io.IOException e) {
                     System.out.println("Unable to send message. Error: "+e);
                 }   
+            }
+            else {
+                try {
+                    client.getRemote().sendString(String.valueOf(true));
+                }
+                catch(java.io.IOException e) {
+                    System.out.println("Unable to send message. Error: "+e);
+                }       
             }
         }
     }
