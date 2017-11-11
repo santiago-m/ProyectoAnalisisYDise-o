@@ -330,8 +330,14 @@ public class Game extends Model{
 
   public String getOpponentName(String playerName) {
     if (playerName.equals(player1.getUsername())) {
-      System.out.println("Oponnent name: "+player2.getUsername());
-      return player2.getUsername();
+
+      if (player2 != null) {
+        System.out.println("Oponnent name: "+player2.getUsername());
+        return player2.getUsername();
+      }
+      else {
+        return playerName;
+      }
     }
     else {
       System.out.println("Oponnent name: "+player1.getUsername());

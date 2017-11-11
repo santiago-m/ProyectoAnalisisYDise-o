@@ -71,8 +71,6 @@ public class App
         //Funcion anonima utilizada para mostrar el menu principal de la aplicacion.
         get("/", (req, res) -> {
 
-          String cookies = req.cookies().toString();
-
           String username = req.session().attribute(SESSION_NAME);
           String category = req.session().attribute("category");
 
@@ -126,9 +124,17 @@ public class App
 
         //Funcion anonima utilizada para mostrar las preguntas al usuario en modo Single Player.
         get("/play", (req, res) -> {
-        String templateRoute = "./views/play.mustache";
 
-        return new ModelAndView(new HashMap(), templateRoute);
+          if (req.session().attribute("gameIndex") == null) {
+            Game aux = new Game();
+            Game.initGame(aux, req.session().attribute("user"));
+            games.add(aux);
+            req.session().attribute("gameIndex", games.size()-1);
+          }
+          
+          String templateRoute = "./views/play.mustache";
+
+          return new ModelAndView(new HashMap(), templateRoute);
       }, new MustacheTemplateEngine()
       );
 
