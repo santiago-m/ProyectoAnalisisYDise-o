@@ -211,6 +211,7 @@ function refreshQuestion(msg) {
 }
 
 function sendAnswer() {
+	pregunta = null;
 	radioAnswers = document.getElementsByName('answer');
 	console.log(radioAnswers);
 	for (var i = 0; i < radioAnswers.length; i++) {
