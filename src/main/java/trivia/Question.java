@@ -58,5 +58,5 @@ public class Question extends Model {
 
   	public int getCantOpciones() {
   		return cantOpciones;
-  	}
+  	}z
 }
