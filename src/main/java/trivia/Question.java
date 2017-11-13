@@ -14,6 +14,7 @@ public class Question extends Model {
   /*private static Gson gson = new Gson();*/
 
 	static{
+      blankToNull("wrong2", "wrong3");
     	validatePresenceOf("pregunta").message("Please, provide a question");
       validatePresenceOf("respuestaCorrecta").message("Please, provide a correct answer");
       validatePresenceOf("wrong1").message("Please, provide at least a wrong answer");
@@ -57,5 +58,5 @@ public class Question extends Model {
 
   	public int getCantOpciones() {
   		return cantOpciones;
-  	}
+  	}z
 }

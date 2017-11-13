@@ -282,13 +282,9 @@ public class App
           pregunta.set("pregunta", request.queryParams("cambiar0")).saveIt();
           pregunta.set("respuestaCorrecta", request.queryParams("cambiar1")).saveIt();
           pregunta.set("wrong1", request.queryParams("cambiar2")).saveIt();
-          if (request.queryParams("cambiar3") != null) {
-            pregunta.set("wrong2", request.queryParams("cambiar3")).saveIt();
-
-            if (request.queryParams("cambiar4") != null) {
-              pregunta.set("wrong3", request.queryParams("cambiar4")).saveIt();
-            }
-          }
+          pregunta.set("wrong2", request.queryParams("cambiar3")).saveIt();
+          pregunta.set("wrong3", request.queryParams("cambiar4")).saveIt();
+                      
 
           if (request.queryParams("cb-activa") != null) {
             pregunta.set("active", 1).saveIt();
