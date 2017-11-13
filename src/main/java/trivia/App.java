@@ -269,8 +269,8 @@ public class App {
          closeDB();
          response.redirect("./adminMenu");
 
-         return null;
-       });
+          return null;
+        });
 
         //Funcion anonima tipo POST que inicializa un juego entre el usuario y el creador de la partida que ha elegido.
         post("/selectHost", (request, response) -> {
