@@ -58,6 +58,10 @@ public class QuestionWebSocketHandler {
 
         Double questionID = (Double) message.get("idPregunta");
         String answer = (String) message.get("answer");
+        Double puntajeObtenido = (Double) message.get("puntaje");
+
+        Map<String, Object> respuesta = new HashMap<String, Object>();
+
         spark.Session sparkSession;
 
         sparkSession = sess;
@@ -67,7 +71,8 @@ public class QuestionWebSocketHandler {
             //nextQuestion.put("player", username);
             try {
                 //client.getRemote().sendString(String.valueOf(new Gson().toJson(nextQuestion)));
-                client.getRemote().sendString(String.valueOf(true));
+                respuesta.put("puedeJugar", true);
+                client.getRemote().sendString(new Gson().toJson(respuesta));
             }
             catch(java.io.IOException e) {
                 System.out.println("Unable to send message. Error: "+e);
@@ -77,14 +82,17 @@ public class QuestionWebSocketHandler {
 
             if (cantPlayers.intValue() == 2) {
                 try {
-                    client.getRemote().sendString(String.valueOf(false));
+                    respuesta.put("puedeJugar", false);
+                    client.getRemote().sendString(new Gson().toJson(respuesta));
                     if (usernameSession.get(opponent) != null) {
                         System.out.println("No es nulo!");
                     }
                     else {
                         System.out.println("Es nulo :(");
                     }
-                    usernameSession.get(opponent).getRemote().sendString(String.valueOf(true));
+                    respuesta.put("puedeJugar", true);
+                    respuesta.put("puntajeOponente", puntajeObtenido);
+                    usernameSession.get(opponent).getRemote().sendString(new Gson().toJson(respuesta));
                 }
                 catch(java.io.IOException e) {
                     System.out.println("Unable to send message. Error: "+e);
@@ -92,7 +100,8 @@ public class QuestionWebSocketHandler {
             }
             else {
                 try {
-                    client.getRemote().sendString(String.valueOf(true));
+                    respuesta.put("puedeJugar", false);
+                    client.getRemote().sendString(new Gson().toJson(respuesta));
                 }
                 catch(java.io.IOException e) {
                     System.out.println("Unable to send message. Error: "+e);

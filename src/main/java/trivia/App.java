@@ -517,6 +517,9 @@ public class App
 
                   preguntas.put("player", request.session().attribute(SESSION_NAME));
                   preguntas.put("opponent", games.get(indexOfGame).getOpponentName(request.session().attribute(SESSION_NAME)));
+
+                  preguntas.put("puntaje_" + (String) request.session().attribute(SESSION_NAME), 0);
+                  preguntas.put("puntaje_" + games.get(indexOfGame).getOpponentName(request.session().attribute(SESSION_NAME)), 0);
                   
                   return new Gson().toJson(preguntas);
               //}

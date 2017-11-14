@@ -1,7 +1,17 @@
 var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/game");
-webSocket.onmessage = function (msg) { 
-	if (msg['data'] == 'true') {
+webSocket.onmessage = function (msg) {
+	var message = JSON.parse(msg['data']);
+	console.log(message['puedeJugar']);
+	console.log(message['puntajeOponente']);
+
+	if (message['puedeJugar'] == true) {
 		console.log('Recibi true');
+		if (typeof(message['puntajeOponente']) == 'undefined') {
+			puntaje += 5;
+		}
+		else {
+			puntajeOponente = message["puntajeOponente"];
+		}
 
 		status = 'ready';
 		nextQuestion();
@@ -12,6 +22,9 @@ webSocket.onmessage = function (msg) {
 			status = 'waiting';
 			waitForTurn();
 		}
+		else {
+			nextQuestion();
+		}
 	}};
 
 webSocket.onclose = function () { };
@@ -21,6 +34,8 @@ var opponent;
 var idPregunta;
 var cantPlayers;
 var status;
+var puntaje;
+var puntajeOponente;
 
 var pregunta;
 var answers;
@@ -47,6 +62,9 @@ window.onload = function() {
 
      		cantPlayers = data["game_"+username];
      		status = data["status_"+username];
+
+     		puntaje = data["puntaje_"+username];
+     		puntajeOponente = data["puntaje_"+opponent];
 
      		pregunta = data["pregunta"];
 				answer1 = data["opcion 1"];
@@ -80,6 +98,8 @@ window.onload = function() {
 		waitForTurn();
 	}
 	else {
+		$('#pointsPlace').html('');
+		$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);
 
 		$('#questionPlace').html('');
 		$('#questionPlace').html(pregunta);
@@ -223,6 +243,7 @@ function sendAnswer() {
 				cantPlayers: cantPlayers,
   				username: username,
   				opponent: opponent,
+  				puntaje: puntaje,
   				idPregunta: idPregunta,
   				answer: actual.val()
 			}));
