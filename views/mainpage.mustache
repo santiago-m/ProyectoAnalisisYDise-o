@@ -1,21 +1,72 @@
-<link rel="stylesheet" href="css/style.css">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Menu Principal</title>
 
-<center>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
 
-    <h2>Menu Principal</h2><br>
-    <br>
+    <style>
+      body {
+        background-color: #e2e2e2;
 
-    <div id="mydiv">
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Pregunta2</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/"> Menu Principal <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <span class="nav-link disabled"> Un jugador </span>
+          </li>
+          <li class="nav-item">
+            <span class="nav-link disabled"> Multi-Jugador </span>
+          </li>
+          <li class="nav-item">
+            <span class="nav-link disabled"> Perfil </span>
+          </li>
+          <li class="nav-item">
+            <span class="nav-link disabled"> Cerrar Session </span>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+
+    <center>
+      <br>
+      <h2>Menu Principal</h2>
+
+      <br>
+      <br>
+
+      <div id="container-fluid">
         <form action="/login" method="get">
-            <input type="submit" value="Iniciar Sesion" 
-                name="login_btn" id="login_btn" />
+            <input type="submit" value="Iniciar Sesion" class="btn btn-info"/>
         </form>
         <br>
 
         <form action="/register" method="get">
-            <input type="submit" value="Registrarse" 
-                name="register_btn" id="register_btn" />
+            <input type="submit" value="Registrarse" class="btn btn-info"/>
         </form>
         <br>
-    </div>
-</center>
+      </div>
+    </center>
+
+    <script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js" ></script>
+  </body>
+</html>
