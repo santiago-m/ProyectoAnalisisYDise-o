@@ -28,8 +28,8 @@ public class App
 {
     private static final String SESSION_NAME = "username";
     private static ArrayList<Game> games = new ArrayList<Game>();
-    private static Map hostUser = new HashMap();
-    private static Map hosts = new HashMap();
+    public static Map hostUser = new HashMap();
+    public static Map hosts = new HashMap();
 
     public static void main( String[] args )
     {
@@ -53,7 +53,8 @@ public class App
 
       //WebSocket usado para la edicion de preguntas
       webSocket("/edicionPreguntas", edicionPreguntas.class);
-
+      // Se inician los servicios WebSocket
+      webSocket("/search", busqueda.class);
       //se reinicia el servidor con los datos actualizados
       init();
 
@@ -223,7 +224,6 @@ public class App
         );
 
         //Funcion anonima que muestra una tabla con las partidas creadas por otros usuarios, permitiendo al usuario conectarse a alguna.
-        //Crea un script que carga la tabla del tamaño necesario para mostrar todas las partidas creadas.
         get("/listarHosts", (req, res) -> {
           String script = "";
           String crearFila = "";
@@ -249,9 +249,8 @@ public class App
         }, new MustacheTemplateEngine()
         );
 
-        // Funcion que expone los datos actuales de una pregunta para proceder a la edicion
         get ("/changeQuestion", (request, response) -> {
-           return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
+            return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
         }, new MustacheTemplateEngine()
         );
 
@@ -271,13 +270,11 @@ public class App
          preguntas.put("opcion 4", pregunta.getString("wrong3"));
          preguntas.put("activada", pregunta.getString("active"));
 
-         closeDB();
+          closeDB();
 
-         response.redirect("./changeQuestion");
-
-         response.redirect("./adminMenu");
-         return null;
-       });
+          response.redirect("./changeQuestion");
+          return null;
+        });
 
        // Funcion que hace efectivos los cambios de la pregunta en la base de datos
        post ("/changeQuestion", (request, response) -> {
