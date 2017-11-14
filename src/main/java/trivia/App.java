@@ -26,12 +26,12 @@ public class App
 {
     private static final String SESSION_NAME = "username";
     private static ArrayList<Game> games = new ArrayList<Game>();
-    private static Map hostUser = new HashMap();
-    private static Map hosts = new HashMap();
-    
+    public static Map hostUser = new HashMap();
+    public static Map hosts = new HashMap();
+
     public static void main( String[] args )
     {
-        /* 
+        /*
         before((request, response) -> {
           boolean authenticated;
           // ... check if authenticated
@@ -48,6 +48,9 @@ public class App
 
       //Se selecciona la carpeta en la cual se guardaran los archivos estaticos, como css o json.
       staticFileLocation("/public");
+
+      // Se inician los servicios WebSocket
+      webSocket("/search", busqueda.class);
       //se reinicia el servidor con los datos actualizados
       init();
 
@@ -81,7 +84,7 @@ public class App
               }
           }
           else {
-              return new ModelAndView(new HashMap(), "./views/mainpage.mustache");  
+              return new ModelAndView(new HashMap(), "./views/mainpage.mustache");
           }
         }, new MustacheTemplateEngine()
       );
@@ -163,19 +166,19 @@ public class App
         get("/createQuestion", (req, res) -> {
           return new ModelAndView(mensajes, "./views/createQuestion.mustache");
         }, new MustacheTemplateEngine()
-        );       
+        );
 
         //Funcion anonima que permite a un administrador administrar las preguntas existentes en la base de datos.
         get("/adminQuestions", (req, res) -> {
           return new ModelAndView(new HashMap(), "./views/adminQuestions.mustache");
         }, new MustacheTemplateEngine()
-        );       
+        );
 
         //Funcion anonima que crea un bucle hasta que se conecta un segundo jugador para crear una partida multiplayer.
         get("/waiting", (req, res) -> {
           return new ModelAndView(new HashMap(), "./views/WFP.mustache");
         }, new MustacheTemplateEngine()
-        );   
+        );
 
         //Funcion anonima que permite a dos usuarios responder preguntas de manera simultanea.
         get("/playTwoPlayers", (request, response) -> {
@@ -204,33 +207,12 @@ public class App
         );
 
         //Funcion anonima que muestra una tabla con las partidas creadas por otros usuarios, permitiendo al usuario conectarse a alguna.
-        //Crea un script que carga la tabla del tamaño necesario para mostrar todas las partidas creadas.
         get("/listarHosts", (req, res) -> {
-          String script = "";
-          String crearFila = "";
-          if ((int) hosts.get("cantidadHosts") > 0) {            
-            script = "function tableCreate() { var body = document.getElementsByTagName('div')[0]; var tbl = document.createElement('table'); tbl.style.width = '100%'; tbl.setAttribute('border', '1'); var tbdy = document.createElement('tbody'); ";
-            for (int i = 0; i < (int) hosts.get("cantidadHosts"); i++) {
-              crearFila = crearFila+"var tr = document.createElement('tr'); ";
-              for (int j = 0; j < 2; j++) {
-                if (j == 0) {
-                  crearFila = crearFila+"var td = document.createElement('td'); var form = document.createElement('form'); form.action = \"/selectHost\"; form.method = \"POST\"; var hidden = document.createElement('input'); hidden.type = \"hidden\"; hidden.name = \"hostName\"; hidden.value = \""+hosts.get("Host "+(i+1))+"\"; var btn = document.createElement('input'); btn.type = \"submit\"; btn.className = \"btn\"; btn.value = \""+hosts.get("Host "+(i+1))+"\"; form.appendChild(hidden); form.appendChild(btn); td.appendChild(form); tr.appendChild(td); ";  
-                }
-                else if (j == 1) {
-                  crearFila = crearFila+"var td = document.createElement('td'); td.appendChild(document.createTextNode('"+((User) hostUser.get((String) hosts.get("Host "+(i+1)))).getUsername()+"')); tr.appendChild(td); tbdy.appendChild(tr); tbl.appendChild(tbdy); body.appendChild(tbl);";
-                }
-              }
-            }
-          }
-          crearFila = crearFila+" } document.getElementById(\"hosts\").innerHTML = tableCreate();";
-          script = script+crearFila;
-          hosts.put("script", script);
-
           return new ModelAndView(hosts, "./views/listarHosts.mustache");
         }, new MustacheTemplateEngine()
         );
 
-        get ("/changeQuestion", (request, response) -> {          
+        get ("/changeQuestion", (request, response) -> {
             return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
         }, new MustacheTemplateEngine()
         );
@@ -256,7 +238,7 @@ public class App
             response.redirect("./changeQuestion");
 
             return null;
-        }); 
+        });
 
         post ("/changeQuestion", (request, response) -> {
 
@@ -319,7 +301,7 @@ public class App
             response.redirect("/hostLAN");
             return null;
           }
-          
+
 
           if (!existeHost(hostName)) {
 
@@ -334,7 +316,7 @@ public class App
           }
           closeDB();
 
-            mensajes.put("estadoHost", "");            
+            mensajes.put("estadoHost", "");
 
             hostUser.put(hostName, (User) request.session().attribute("user"));
             hostUser.put(request.session().attribute(SESSION_NAME), "Host "+hosts.size());
@@ -366,10 +348,10 @@ public class App
             response.redirect("/playTwoPlayers");
           }
           else {
-            response.redirect("/waiting");  
+            response.redirect("/waiting");
           }
           return null;
-        });    
+        });
 
 
         //Funcion anonima tipo post que administra la obtencion de una pregunta que sera respondida por el usuario que corresponda en modo multiplayer.
@@ -398,7 +380,7 @@ public class App
                       int correctasSeguidas = (Integer) jugadorRespuesta.get(((User) request.session().attribute("user")).getString("username"));
                       games.get((int) request.session().attribute("gameIndex")).respondioCorrectamente(actual, correctasSeguidas);
                     }
-                }             
+                }
               }
 
                 Map preguntaObtenida = new HashMap();
@@ -406,8 +388,8 @@ public class App
 
                 if ( (preguntaObtenida.get("pregunta").equals("")) || (games.get(indexOfGame).getPlayer1().getHP() == 0) || (games.get(indexOfGame).getPlayer2().getHP() == 0)) {
                   if (preguntaObtenida.get("pregunta").equals("")) {
-                    mensajes.put("cantAnswer", "Lo siento, uno de los jugadores no tiene mas preguntas disponibles para responder."); 
-                  }                 
+                    mensajes.put("cantAnswer", "Lo siento, uno de los jugadores no tiene mas preguntas disponibles para responder.");
+                  }
 
                   HashMap aux = games.get(indexOfGame).closeGame();
                   winnerLoser.put("ganador", aux.get("ganador"));
@@ -432,7 +414,7 @@ public class App
             }
             return null;
         });
-        
+
         //Funcion anonima tipo POST que inicializa un juego single player y procede a redirigir al juego.
         post("/singlePlayerGame", (request, response) -> {
           Game aux = new Game();
@@ -444,14 +426,14 @@ public class App
 
           response.redirect("/play");
           return null;
-          
+
         });
 
 
         //Funcion anonima tipo post que administra la obtencion de preguntas que responde el usuario en modo Single Player
         post("/play", (request, response) -> {
           User usuarioActual = request.session().attribute("user");
-          
+
             if (usuarioActual == null) {
           response.redirect("/login");
             }
@@ -508,9 +490,9 @@ public class App
 
         //Funcion anonima tipo post que obtiene los datos ingresados por el usuario e intenta registrar al usuario en la base de datos.
         post("/register", (request, response) -> {
-          
+
           openDB();
-          User usuario = new User(request.queryParams("txt_username"), request.queryParams("txt_password"));     
+          User usuario = new User(request.queryParams("txt_username"), request.queryParams("txt_password"));
           closeDB();
 
           if (registrar(usuario)) {
@@ -547,13 +529,13 @@ public class App
             pregunta.set("pregunta", preguntaString);
             pregunta.set("respuestaCorrecta", correctAnswer);
             pregunta.set("wrong1", incorrectAnswer);
-        
+
             if (request.queryParams("wrong1") != null) {
               pregunta.set("wrong2", request.queryParams("txt_incorrect2"));
             } else {
               pregunta.set("wrong2", null);
             }
-        
+
             if (request.queryParams("wrong2") != null) {
               pregunta.set("wrong3", request.queryParams("txt_incorrect3"));
             } else {
@@ -561,7 +543,7 @@ public class App
             }
 
             User creador = request.session().attribute("user");
-            pregunta.set("creador", creador.getString("username"));  
+            pregunta.set("creador", creador.getString("username"));
 
             pregunta.set("active", 0);
             pregunta.saveIt();
@@ -571,15 +553,15 @@ public class App
             response.redirect("/adminMenu");
           }
           return null;
-        });    
-      
+        });
+
         //Funcion anonima tipo post que intenta iniciar sesion con los datos ingresados por el usuario en el menu de logueo.
         post("/login", (request, response) -> {
-          
+
           openDB();
           User usuario = new User (request.queryParams("txt_username"), request.queryParams("txt_password"));
           closeDB();
-        
+
           request.session().attribute(SESSION_NAME, usuario.getUsername());
 
           String sessionUsername = request.session().attribute(SESSION_NAME);
@@ -600,7 +582,7 @@ public class App
             mensajes.put("estadoLogin", "Usuario o contraseña incorrecto.-");
             response.redirect("/login");
             return null;
-          }      
+          }
         });
 
         //Funcion anonima tipo post que cierra una sesion abierta.
@@ -615,12 +597,12 @@ public class App
         //Funcion anonima tipo post que permite volver al menu anterior al actual. Segun sea administrador o usuario.
         post ("/goBack", (request, response) -> {
           if (request.session().attribute("category").equals("user")) {
-            response.redirect("/gameMenu");  
+            response.redirect("/gameMenu");
           }
           else {
-            response.redirect("/adminMenu");   
+            response.redirect("/adminMenu");
           }
-        
+
           return null;
         });
 
@@ -726,10 +708,10 @@ public class App
     */
     public static void openDB() {
       try {
-        Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/sparkTest", "root", "root");  
+        Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/sparkTest", "root", "root");
       } catch(DBException e) {
         System.out.println("Existe una conexion abierta a la base de datos.");
-      }  
+      }
     }
 
     /**
@@ -771,7 +753,7 @@ public class App
         hosts.remove(hostNumber);
         hosts.put("cantidadHosts", ( (int) hosts.get("cantidadHosts") ) - 1);
         hostUser.remove(usuarioCreador);
-        hostUser.remove(hostName);  
+        hostUser.remove(hostName);
       }
     }
 }
