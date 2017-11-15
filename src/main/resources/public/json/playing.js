@@ -1,33 +1,7 @@
-var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/game");
-webSocket.onmessage = function (msg) {
-	var message = JSON.parse(msg['data']);
-	console.log(message['puedeJugar']);
-	console.log(message['puntajeOponente']);
+var webSocket;
 
-	if (message['puedeJugar'] == true) {
-		console.log('Recibi true');
-		if (typeof(message['puntajeOponente']) == 'undefined') {
-			puntaje += 5;
-		}
-		else {
-			puntajeOponente = message["puntajeOponente"];
-		}
-
-		status = 'ready';
-		nextQuestion();
-	}
-	else {
-		console.log('Recibi false');
-		if (cantPlayers == 2) {
-			status = 'waiting';
-			waitForTurn();
-		}
-		else {
-			nextQuestion();
-		}
-	}};
-
-webSocket.onclose = function () { };
+var wsReady;
+var windowLoaded;
 
 var username;
 var opponent;
@@ -44,29 +18,34 @@ var answer2;
 var answer3;
 var answer4;
 
+
 window.onload = function() {
+	 webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/game");
 
-	$.ajax({                                            
-     	url: '/play',    
-     	type: 'POST',
-     	dataType: "json",
-     	async:false,
+	webSocket.onopen = function() {
+		wsReady = true;
 
-     	success: function(data) {  
+		$.ajax({                                            
+    		url: '/play',    
+    		type: 'POST',
+    		dataType: "json",
+    		async:false,
 
-     		console.log(data);
+  			success: function(data) {  
 
-     		username = data["player"];
-     		opponent = data["opponent"];
-     		idPregunta = data["ID"];
+    			console.log(data);
 
-     		cantPlayers = data["game_"+username];
-     		status = data["status_"+username];
+    			username = data["player"];
+    			opponent = data["opponent"];
+    			idPregunta = data["ID"];
 
-     		puntaje = data["puntaje_"+username];
-     		puntajeOponente = data["puntaje_"+opponent];
+    			cantPlayers = data["game_"+username];
+    			status = data["status_"+username];
 
-     		pregunta = data["pregunta"];
+	    		puntaje = data["puntaje_"+username];
+    			puntajeOponente = data["puntaje_"+opponent];
+
+    			pregunta = data["pregunta"];
 				answer1 = data["opcion 1"];
 				answer2 = data["opcion 2"];
 				answer3 = data["opcion 3"];
@@ -87,31 +66,84 @@ window.onload = function() {
 				if (answer4 != "") {
 					cantOpciones++;
 				}
-     	}
-	});
+			}
+		});
 
-	webSocket.send(JSON.stringify({
-  				username: username
-  			}));
+		webSocket.send(JSON.stringify({
+  			username: username
+  		}));
 
-	if (status == "waiting") {
-		waitForTurn();
-	}
-	else {
-		$('#pointsPlace').html('');
-		$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);
+		if (status == "waiting") {
+			waitForTurn();
+		}
+		else {
+			updatePoints();
+			$('#questionPlace').html('');
+			$('#questionPlace').html(pregunta);
 
-		$('#questionPlace').html('');
-		$('#questionPlace').html(pregunta);
-
-		$('#answersPlace').html('');
-		for (var i = 0; i < answers.length; i++) {
-			if (answers[i] != '') {
-				$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
+			$('#answersPlace').html('');
+			for (var i = 0; i < answers.length; i++) {
+				if (answers[i] != '') {
+					$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
+				}
 			}
 		}
 	}
 
+	webSocket.onmessage = function (msg) {
+		var message = JSON.parse(msg['data']);
+		console.log(message['puedeJugar']);
+		console.log(message['puntajeOponente']);
+		console.log(message['puntajeOponente'] == undefined);
+
+		if (message['puedeJugar'] == true) {
+			console.log('Recibi true');
+			if (message['puntajeOponente'] == undefined) {
+				puntaje += 5;
+				updatePoints();
+			}
+			else {
+				puntajeOponente = message["puntajeOponente"];
+			}
+
+			status = 'ready';
+			nextQuestion();
+		}
+		else {
+			console.log('Recibi false');
+			if (cantPlayers == 2) {
+				status = 'waiting';
+				waitForTurn();
+			}
+			else {
+				nextQuestion();
+			}
+		}};
+
+	webSocket.onclose = function () { wsReady = false; };
+}
+
+var iFrequency;
+var myInterval;
+
+// STARTS and Resets the loop if any
+function startLoop() {
+    if(myInterval > 0) clearInterval(myInterval);  // stop
+    myInterval = setInterval( "sendPing()", iFrequency );  // run
+}
+
+function sendPing() {
+    webSocket.send('PING');
+}
+
+function updatePoints() {
+	$('#pointsPlace').html('');
+	if (cantPlayers == 2) {
+		$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);
+	}
+	else {
+		$('#pointsPlace').html(username + ': '+ puntaje);	
+	}
 }
 
 function waitForTurn() {

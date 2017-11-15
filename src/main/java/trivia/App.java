@@ -93,9 +93,15 @@ public class App
         //Funcion anonima utilizada para mostrar el menu del jugador.
         get("/gameMenu", (req, res) -> {
           if (req.session().attribute("gameIndex") != null) {
-            games.remove((int) req.session().attribute("gameIndex"));
+            try {
+              games.remove((int) req.session().attribute("gameIndex"));
+            }
+            catch (Exception e) {
+              System.out.println("El juego ya fue cerrado por el oponente");
+            }
             closeHost((String) req.session().attribute(SESSION_NAME));
             req.session().removeAttribute("gameIndex");
+            preguntas.remove("game_"+(String) req.session().attribute(SESSION_NAME));
           }
 
           return new ModelAndView(mensajes, "./views/gameMenu.mustache");
