@@ -15,6 +15,7 @@ import java.util.HashMap;
 public class QuestionWebSocketHandler {
     public static List<Session> sessions = new ArrayList<>();
     private static Map<String, Session> usernameSession = new HashMap<String, Session>();
+    private static List<String> readyToPlay = new ArrayList<String>();
 
     @OnWebSocketConnect
     public void onConnect(Session user) throws Exception {
@@ -34,11 +35,45 @@ public class QuestionWebSocketHandler {
         Map data = new Gson().fromJson(message, Map.class);
 
         String clientUsername = (String) data.get("username");
+        String clientOpponent = (String) data.get("opponent");
+
+        System.out.println("Recibi mensaje de " + clientUsername + " cuyo oponente es " + clientOpponent);
 
         if (usernameSession.get(clientUsername) == null) {
             usernameSession.put(clientUsername, user);
 
             System.out.println("Session de "+clientUsername+" agregada!");
+
+            readyToPlay.add(clientUsername);
+
+            for (int i = 0; i < readyToPlay.size(); i++) {
+                System.out.println(readyToPlay.get(i));
+            }
+
+            if (readyToPlay.contains(clientOpponent)) {
+                try {
+                    user.getRemote().sendString("opponentReady");
+                }
+                catch (java.io.IOException e) {
+                    System.out.println("Cannot tell " + clientUsername + " that the opponent " + clientOpponent + " is ready");
+                }
+
+                try {
+                    usernameSession.get(clientOpponent).getRemote().sendString("opponentReady");
+                }
+                catch (java.io.IOException e) {
+                    System.out.println("Cannot tell opponent of " + clientUsername + " that the player is ready");
+                }
+            }
+            else {
+                try {
+                    user.getRemote().sendString("opponentNotReadyYet");
+                }
+                catch (java.io.IOException e) {
+                    System.out.println("Cannot tell " + clientUsername + " that the opponent " + clientOpponent + " is not ready yet");
+                }   
+            }
+
         }
 
         if (data.get("answer") != null) {
@@ -118,7 +153,7 @@ public class QuestionWebSocketHandler {
                 ));    
                 System.out.println("La sesion esta abierta");
             }
-            catch(Exception e) {
+            catch(java.io.IOException e) {
                 System.out.println("error: "+e);
             }
         }

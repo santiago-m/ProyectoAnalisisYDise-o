@@ -1,5 +1,48 @@
 var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/game");
 
+webSocket.onopen = function() {
+	console.log('started');
+	wait(function(){return username}, wait(function(){return opponent}, createSession()));
+}
+
+webSocket.onmessage = function (msg) {
+	console.log(msg);
+	var message = msg['data'];
+
+	if (message == 'opponentNotReadyYet') {
+		waitForOpponent();
+	}
+	else if (message == 'opponentReady') {
+		opponentReady();
+	}
+	else{
+		message = JSON.parse(message);
+		if (message['puedeJugar'] == true) {
+			console.log('Recibi true');
+			if (typeof(message['puntajeOponente']) == 'undefined') {
+				puntaje += 5;
+			}
+			else {
+				puntajeOponente = message["puntajeOponente"];
+			}
+
+			status = 'ready';
+			nextQuestion();
+		}
+		else {
+			console.log('Recibi false');
+			if (cantPlayers == 2) {
+				status = 'waiting';
+				waitForTurn();
+			}
+			else {
+				nextQuestion();
+			}
+		}	
+	}};
+
+webSocket.onclose = function () { };
+
 var username;
 var opponent;
 var idPregunta;
@@ -39,6 +82,7 @@ window.onload = function() {
     		puntajeOponente = data["puntaje_"+opponent];
 
     		pregunta = data["pregunta"];
+
 			answer1 = data["opcion 1"];
 			answer2 = data["opcion 2"];
 			answer3 = data["opcion 3"];
@@ -63,37 +107,41 @@ window.onload = function() {
 	});
 }
 
-	webSocket.onmessage = function (msg) {
-		var message = JSON.parse(msg['data']);
-		console.log(message['puedeJugar']);
-		console.log(message['puntajeOponente']);
-		console.log(message['puntajeOponente'] == undefined);
+function createSession() {
+	console.log("user: " + username);
+	console.log("opponent: " + opponent);
+	webSocket.send(JSON.stringify({
+  		username: username,
+  		opponent: opponent
+  	}));
+}
 
-		if (message['puedeJugar'] == true) {
-			console.log('Recibi true');
-			if (message['puntajeOponente'] == undefined) {
-				puntaje += 5;
-				updatePoints();
-			}
-			else {
-				puntajeOponente = message["puntajeOponente"];
-			}
+function wait(condition, callback) {
+    if (typeof condition() !== "undefined") {
+        callback();
+    } else {
+        setTimeout(function () {
+            wait(condition, callback);
+        }, 0)
+    }
+}
 
-			status = 'ready';
-			nextQuestion();
-		}
-		else {
-			console.log('Recibi false');
-			if (cantPlayers == 2) {
-				status = 'waiting';
-				waitForTurn();
-			}
-			else {
-				nextQuestion();
-			}
-		}};
+function waitForOpponent() {
+	$('#pointsPlace').html('');
+	$('#questionPlace').html('');
+	$('#questionPlace').html('Conectando con el oponente...');
 
-	webSocket.onclose = function () { wsReady = false; };
+	$('#answersPlace').html('');
+}
+
+function opponentReady() {
+	if (status == "waiting") {
+		waitForTurn();
+	}
+	else {
+		$('#pointsPlace').html('');
+		$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);
+	}
 }
 
 function updatePoints() {
@@ -243,8 +291,4 @@ function sendAnswer() {
 			}));
 		}
 	}
-}
-
-function sendMessage(msg) {
-	webSocket.send("hello");
 }
