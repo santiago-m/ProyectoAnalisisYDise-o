@@ -11,17 +11,11 @@
                 name="login_btn" id="login_btn" />
         </form>
         <br>
-
         <form action="/register" method="get">
             <input type="submit" value="Registrarse" 
                 name="register_btn" id="register_btn" />
         </form>
-        <br>
-        <button id="botonWebsocket" onclick="javascript:sendMessage()"></button>
     </div>
 </center>
 
-<input type="hidden" id="hdnSession" data-value="@Request.RequestContext.HttpContext.Session['id']" />
-
 <script type="text/javascript" src="json/jquery.js"></script>
-<script type="text/javascript" src="json/websocket.js"></script>
