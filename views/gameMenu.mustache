@@ -52,26 +52,26 @@
 
       <br>
 
-      <div id="mydiv">
+      <div id="container-fluid">
 
           <p id="message">{{cantAnswer}}</p>
-          <form action="/play" method="post">
-              <input type="submit" value="Jugar" class="btn btn-outline-primary" />
+          <form action="/play" method="POST">
+              <input type="submit" value="Jugar Solo" class="btn btn-outline-primary" />
           </form>
           <br>
 
-          <form action="/menuHost" method="get">
-              <input type="submit" value="MultiPlayer" class="btn btn-outline-primary" />
+          <form action="/menuHost" method="GET">
+              <input type="submit" value="Multi-Jugador" class="btn btn-outline-primary" />
           </form>
           <br>
 
-          <form action="/profile" method="get">
+          <form action="/profile" method="GET">
               <input type="submit" value="Ver Perfil" class="btn btn-outline-success" />
           </form>
           <br>
           <br>
 
-          <form action="/logout" method="post">
+          <form action="/logout" method="POST">
               <input type="submit" value="Cerrar Sesion" class="btn btn-outline-danger" />
           </form>
       </div>

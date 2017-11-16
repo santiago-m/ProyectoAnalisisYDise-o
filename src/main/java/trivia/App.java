@@ -625,18 +625,6 @@ public class App
           return null;
         });
 
-        //Funcion anonima tipo post que permite volver al menu anterior al actual. Segun sea administrador o usuario.
-        post ("/goBack", (request, response) -> {
-          if (request.session().attribute("category").equals("user")) {
-            response.redirect("/gameMenu");
-          }
-          else {
-            response.redirect("/adminMenu");
-          }
-
-          return null;
-        });
-
     }
 
     /**
