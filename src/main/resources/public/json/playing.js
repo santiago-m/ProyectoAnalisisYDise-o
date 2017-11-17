@@ -334,6 +334,7 @@ function sendAnswer() {
 
 			webSocket.send(JSON.stringify({
 				finished: finished,
+				alone: suddenDeath,
 				cantPlayers: cantPlayers,
   				username: username,
   				opponent: opponent,

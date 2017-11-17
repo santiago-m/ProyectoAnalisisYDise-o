@@ -105,6 +105,7 @@ public class QuestionWebSocketHandler {
         Double puntajeObtenido = (Double) message.get("puntaje");
 
         boolean finished = (boolean) message.get("finished");
+        boolean playingAlone = (boolean) message.get("alone");
 
         Map<String, Object> respuesta = new HashMap<String, Object>();
 
@@ -138,15 +139,12 @@ public class QuestionWebSocketHandler {
                     try {
                         respuesta.put("puedeJugar", false);
                         client.getRemote().sendString(new Gson().toJson(respuesta));
-                        if (usernameSession.get(opponent) != null) {
-                            System.out.println("No es nulo!");
+
+                        if (!playingAlone) {
+                            respuesta.put("puedeJugar", true);
+                            respuesta.put("puntajeOponente", puntajeObtenido);
+                            usernameSession.get(opponent).getRemote().sendString(new Gson().toJson(respuesta));
                         }
-                        else {
-                            System.out.println("Es nulo :(");
-                        }
-                        respuesta.put("puedeJugar", true);
-                        respuesta.put("puntajeOponente", puntajeObtenido);
-                        usernameSession.get(opponent).getRemote().sendString(new Gson().toJson(respuesta));
                     }
                     catch(java.io.IOException e) {
                         System.out.println("Unable to send message. Error: "+e);
@@ -196,6 +194,18 @@ public class QuestionWebSocketHandler {
             catch (java.io.IOException e) {
                 System.out.println("Could not inform winner or loser");
             }
+
+            playersFinished.remove(player);
+            playersFinished.remove(opponent);
+
+            sessions.remove(usernameSession.get(player));
+            sessions.remove(usernameSession.get(opponent));
+
+            usernameSession.remove(player);
+            usernameSession.remove(opponent);
+
+            readyToPlay.remove(player);
+            readyToPlay.remove(opponent);
         }
         else {
             temp.put("playerState", "waitOpponentToFinish");
