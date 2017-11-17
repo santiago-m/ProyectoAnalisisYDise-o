@@ -16,6 +16,7 @@ public class QuestionWebSocketHandler {
     public static List<Session> sessions = new ArrayList<>();
     private static Map<String, Session> usernameSession = new HashMap<String, Session>();
     private static List<String> readyToPlay = new ArrayList<String>();
+    private static Map<String, Integer> playersFinished = new HashMap<String, Integer>();
 
     @OnWebSocketConnect
     public void onConnect(Session user) throws Exception {
@@ -103,6 +104,8 @@ public class QuestionWebSocketHandler {
         String answer = (String) message.get("answer");
         Double puntajeObtenido = (Double) message.get("puntaje");
 
+        boolean finished = (boolean) message.get("finished");
+
         Map<String, Object> respuesta = new HashMap<String, Object>();
 
         spark.Session sparkSession;
@@ -110,63 +113,110 @@ public class QuestionWebSocketHandler {
         sparkSession = sess;
 
         if (Game.esCorrecta(questionID.intValue(), answer)) {
-            //Map nextQuestion = User.obtenerPregunta(username);
-            //nextQuestion.put("player", username);
-            try {
-                //client.getRemote().sendString(String.valueOf(new Gson().toJson(nextQuestion)));
-                respuesta.put("puedeJugar", true);
-                client.getRemote().sendString(new Gson().toJson(respuesta));
-            }
-            catch(java.io.IOException e) {
-                System.out.println("Unable to send message. Error: "+e);
-            }
-        }
-        else {
 
-            if (cantPlayers.intValue() == 2) {
-                try {
-                    respuesta.put("puedeJugar", false);
-                    client.getRemote().sendString(new Gson().toJson(respuesta));
-                    if (usernameSession.get(opponent) != null) {
-                        System.out.println("No es nulo!");
-                    }
-                    else {
-                        System.out.println("Es nulo :(");
-                    }
-                    respuesta.put("puedeJugar", true);
-                    respuesta.put("puntajeOponente", puntajeObtenido);
-                    usernameSession.get(opponent).getRemote().sendString(new Gson().toJson(respuesta));
-                }
-                catch(java.io.IOException e) {
-                    System.out.println("Unable to send message. Error: "+e);
-                }   
+            if (finished) {
+                playersFinished.put(username, puntajeObtenido.intValue() + 5);
+                checkResult(username, opponent);
             }
             else {
                 try {
-                    respuesta.put("puedeJugar", false);
+                    respuesta.put("puedeJugar", true);
                     client.getRemote().sendString(new Gson().toJson(respuesta));
                 }
                 catch(java.io.IOException e) {
                     System.out.println("Unable to send message. Error: "+e);
-                }       
-            }
-        }
-    }
-
-    public void sendMessage(Session sesion) {
-        if (sesion.isOpen()) {
-            try {
-                sesion.getRemote().sendString(String.valueOf(new JSONObject()
-                    .put("sesion", sesion)
-                ));    
-                System.out.println("La sesion esta abierta");
-            }
-            catch(java.io.IOException e) {
-                System.out.println("error: "+e);
+                }
             }
         }
         else {
-            System.out.println("Sesion cerrada!");
+            if (finished) {
+                playersFinished.put(username, puntajeObtenido.intValue());
+                checkResult(username, opponent);
+            }
+            else {
+                if (cantPlayers.intValue() == 2) {
+                    try {
+                        respuesta.put("puedeJugar", false);
+                        client.getRemote().sendString(new Gson().toJson(respuesta));
+                        if (usernameSession.get(opponent) != null) {
+                            System.out.println("No es nulo!");
+                        }
+                        else {
+                            System.out.println("Es nulo :(");
+                        }
+                        respuesta.put("puedeJugar", true);
+                        respuesta.put("puntajeOponente", puntajeObtenido);
+                        usernameSession.get(opponent).getRemote().sendString(new Gson().toJson(respuesta));
+                    }
+                    catch(java.io.IOException e) {
+                        System.out.println("Unable to send message. Error: "+e);
+                    }   
+                }
+                else {
+                    try {
+                        respuesta.put("puedeJugar", false);
+                        client.getRemote().sendString(new Gson().toJson(respuesta));
+                    }
+                    catch(java.io.IOException e) {
+                        System.out.println("Unable to send message. Error: "+e);
+                    }       
+                }
+            }
+            
+        }
+    }
+
+    private void checkResult(String player, String opponent) {
+        Map<String, Object> temp = new HashMap<String, Object>();
+        temp.put("puntaje_" + player, playersFinished.get(player));
+        if (playersFinished.get(opponent) != null) {
+            
+            if (playersFinished.get(player) > playersFinished.get(opponent)) {
+                temp.put("playerState", "winner");
+            }
+            else if (playersFinished.get(player) == playersFinished.get(opponent)) {
+                temp.put("playerState", "draw");
+            }
+            else {
+                temp.put("playerState", "loser");
+            }
+
+            try {
+                usernameSession.get(player).getRemote().sendString(new Gson().toJson(temp));
+
+                if (temp.get("playerState") == "winner") {
+                    temp.put("playerState", "loser");
+                }
+                else if (temp.get("playerState") == "loser") {
+                    temp.put("playerState", "winner");
+                }
+
+                usernameSession.get(opponent).getRemote().sendString(new Gson().toJson(temp));
+            }
+            catch (java.io.IOException e) {
+                System.out.println("Could not inform winner or loser");
+            }
+        }
+        else {
+            temp.put("playerState", "waitOpponentToFinish");
+            try {
+                usernameSession.get(player).getRemote().sendString(new Gson().toJson(temp));
+                System.out.println("Pudo enviar waitOpponentToFinish a " + player);
+            }
+            catch (java.io.IOException e) {
+                System.out.println("Cannot tell " + player + "to wait for " + opponent);
+            }
+
+            temp.remove("playerState");
+            temp.put("playerState", "opponentFinished");
+
+            try {
+                usernameSession.get(opponent).getRemote().sendString(new Gson().toJson(temp));
+                System.out.println("Pudo enviar opponentFinished a " + opponent);
+            }
+            catch (java.io.IOException e) {
+                System.out.println("Cannot tell " + opponent + "that " + player + "has finished playing");
+            }
         }
     }
 
