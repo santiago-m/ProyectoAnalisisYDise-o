@@ -2,7 +2,7 @@ var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port 
 
 webSocket.onopen = function() {
 	console.log('started');
-	wait(function(){return username}, wait(function(){return opponent}, createSession()));
+	wait(function(){return username}, function() {return opponent}, function() {createSession()});
 }
 
 webSocket.onmessage = function (msg) {
@@ -116,12 +116,22 @@ function createSession() {
   	}));
 }
 
-function wait(condition, callback) {
-    if (typeof condition() !== "undefined") {
-        callback();
-    } else {
+function wait(condition1, condition2, callback) {
+	console.log(typeof condition1());
+	console.log(typeof condition2());
+    if (typeof condition1() !== "undefined") {
+    	if (typeof condition2() !== "undefined") {
+        	callback();
+    	}
+    	else {
+        	setTimeout(function () {
+            	wait(condition1, condition2, callback);
+        	}, 0);
+    	}
+    }
+    else {
         setTimeout(function () {
-            wait(condition, callback);
+            wait(condition1, condition2, callback);
         }, 0)
     }
 }
@@ -141,16 +151,6 @@ function opponentReady() {
 	else {
 		$('#pointsPlace').html('');
 		$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);
-	}
-}
-
-function updatePoints() {
-	$('#pointsPlace').html('');
-	if (cantPlayers == 2) {
-		$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);
-	}
-	else {
-		$('#pointsPlace').html(username + ': '+ puntaje);	
 	}
 }
 
