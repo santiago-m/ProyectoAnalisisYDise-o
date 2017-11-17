@@ -96,8 +96,8 @@ public class App
             try {
               games.remove((int) req.session().attribute("gameIndex"));
             }
-            catch (Exception e) {
-              System.out.println("El juego ya fue cerrado por el oponente");
+            catch(IndexOutOfBoundsException e) {
+              System.out.println("El juego ya ha sido eliminado por el contrincante");
             }
             closeHost((String) req.session().attribute(SESSION_NAME));
             req.session().removeAttribute("gameIndex");
@@ -526,7 +526,7 @@ public class App
 
                   preguntas.put("puntaje_" + (String) request.session().attribute(SESSION_NAME), 0);
                   preguntas.put("puntaje_" + games.get(indexOfGame).getOpponentName(request.session().attribute(SESSION_NAME)), 0);
-                  
+
                   return new Gson().toJson(preguntas);
               //}
             }
@@ -791,6 +791,7 @@ public class App
     */
     public static boolean existeHost(String hostName) {
       if (hostUser.get(hostName) != null) {
+        System.out.println("Host Existe: " + hostUser.get(hostName));
         return true;
       }
       else {

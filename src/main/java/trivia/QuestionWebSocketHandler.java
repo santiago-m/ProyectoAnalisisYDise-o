@@ -26,6 +26,14 @@ public class QuestionWebSocketHandler {
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
         sessions.remove(user);
+
+        for (int i = 0; i < readyToPlay.size(); i++) {
+            if (usernameSession.get(readyToPlay.get(i)).equals(user)) {
+                usernameSession.remove(readyToPlay.get(i));
+                readyToPlay.remove(i);
+                break;
+            }
+        }
         System.out.println("closed");
     }
 
