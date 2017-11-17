@@ -304,6 +304,8 @@ public class App
             preguntas.put("game_"+newGame.getPlayer1().getUsername(), cantJugadores);
             preguntas.put("status_"+(String) request.session().attribute(SESSION_NAME), "waiting");
             preguntas.put("status_"+newGame.getPlayer1().getUsername(), "ready");
+            preguntas.put("cantPreguntas_"+(String) request.session().attribute(SESSION_NAME), hosts.get(hostName));
+            preguntas.put("cantPreguntas_"+newGame.getPlayer1().getUsername(), hosts.get(hostName));
 
             response.redirect("/play");
             return null;
@@ -329,7 +331,7 @@ public class App
           openDB();
           List<Question> questions = Question.where("active = 1 and creador != '"+((User) request.session().attribute("user")).getUsername()+"' and ('"+((User) request.session().attribute("user")).getInteger("id")+"', id) not in (SELECT * from respondidas) ");
 
-          if (questions.isEmpty()) {
+          if (questions.isEmpty() || questions.size() < cantPreguntas) {
             mensajes.put("estadoHost", "Lo siento, no tiene preguntas disponibles suficientes.");
             response.redirect("/hostLAN");
             return null;
@@ -496,6 +498,7 @@ public class App
                 int cantJugadores = aux.getCantUsuarios();
                 preguntas.put("game_"+((String) request.session().attribute(SESSION_NAME)), cantJugadores);
                 preguntas.put("status_"+(String) request.session().attribute(SESSION_NAME), "ready");
+                preguntas.put("cantPreguntas_"+(String) request.session().attribute(SESSION_NAME), -1);
               }
               int indexOfGame = request.session().attribute("gameIndex");
 

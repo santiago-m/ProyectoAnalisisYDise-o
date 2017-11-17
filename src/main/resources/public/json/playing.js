@@ -15,30 +15,70 @@ webSocket.onmessage = function (msg) {
 	else if (message == 'opponentReady') {
 		opponentReady();
 	}
-	else{
+	else {
 		message = JSON.parse(message);
-		if (message['puedeJugar'] == true) {
-			console.log('Recibi true');
-			if (typeof(message['puntajeOponente']) == 'undefined') {
-				puntaje += 5;
-			}
-			else {
-				puntajeOponente = message["puntajeOponente"];
-			}
 
-			status = 'ready';
-			nextQuestion();
-		}
-		else {
-			console.log('Recibi false');
-			if (cantPlayers == 2) {
-				status = 'waiting';
-				waitForTurn();
-			}
-			else {
+		console.log(message['playerState']);
+		if (typeof(message['playerState']) == 'undefined') {
+			if (message['puedeJugar'] == true) {
+				console.log('Recibi true');
+				if (typeof(message['puntajeOponente']) == 'undefined') {
+					puntaje += 5;
+				}
+				else {
+					puntajeOponente = message["puntajeOponente"];
+				}
+
+				status = 'ready';
 				nextQuestion();
 			}
-		}	
+			else {
+				console.log('Recibi false');
+				if (cantPlayers == 2) {
+
+					if (suddenDeath) {
+						puntaje -= 5;
+						nextQuestion();
+					}
+					else {
+						status = 'waiting';
+						waitForTurn();
+					}
+				}
+				else {
+					nextQuestion();
+				}
+			}	
+		}
+		else {
+			var state = message['playerState'];
+
+			$('#pointsPlace').html('');
+			$('#questionPlace').html('');
+
+			$('#answersPlace').html('');
+
+
+			if (state == "winner") {
+				alert('You have win the game against ' + opponent);
+			}
+			else if (state == "loser") {
+				alert('You have lost the game against ' + opponent);
+			}
+			else if (state == "draw") {
+				alert('You and ' + opponent + ' had a draw in your game!');
+			}
+			else if (state == "opponentFinished") {
+				suddenDeath = true;
+				puntajeOponente = message['puntaje_' + opponent];
+
+				nextQuestion();
+			}
+			else {
+				$('#questionPlace').html('Haz respondido las ' + cantMaxPreguntas + 'del juego. \n Juega mientras esperas que tu oponente termine.');
+				$('#answersPlace').html('<iframe src="https://funhtml5games.com?embed=spaceinvaders" style="width:800px;height:550px;border:none;" frameborder="0" scrolling="no"></iframe>');				
+			}
+		}
 	}};
 
 webSocket.onclose = function () { };
@@ -50,6 +90,10 @@ var cantPlayers;
 var status;
 var puntaje;
 var puntajeOponente;
+
+var cantMaxPreguntas;
+var cantPreguntasRespondidas = 0;
+var suddenDeath = false;
 
 var pregunta;
 var answers;
@@ -77,6 +121,7 @@ window.onload = function() {
 
     		cantPlayers = data["game_"+username];
     		status = data["status_"+username];
+    		cantMaxPreguntas = data["cantPreguntas_"+username];
 
 	    	puntaje = data["puntaje_"+username];
     		puntajeOponente = data["puntaje_"+opponent];
@@ -222,6 +267,7 @@ function nextQuestion() {
 			}
 		}	
 	}
+	cantPreguntasRespondidas++;
 	$('#pointsPlace').html('');
 	$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);
 }
@@ -274,6 +320,10 @@ function refreshQuestion(msg) {
 
 function sendAnswer() {
 	pregunta = null;
+	var finished = false;
+	if (cantPreguntasRespondidas === cantMaxPreguntas) {
+		finished = true;
+	}
 	radioAnswers = document.getElementsByName('answer');
 	console.log(radioAnswers);
 	for (var i = 0; i < radioAnswers.length; i++) {
@@ -281,7 +331,9 @@ function sendAnswer() {
 		if (actual.is(':checked')) {
 			console.log(actual);
 
+
 			webSocket.send(JSON.stringify({
+				finished: finished,
 				cantPlayers: cantPlayers,
   				username: username,
   				opponent: opponent,
