@@ -1,5 +1,6 @@
 package trivia;
 import org.javalite.activejdbc.Model;
+import static spark.Spark.*;
 import trivia.Respondida;
 
 import java.util.HashMap;
@@ -18,11 +19,13 @@ public class Game extends Model{
       validatePresenceOf("jugador2").message("Please, provide your username");
       validatePresenceOf("ganador").message("It must be a winner");
     }
-	private User player1, player2;
-	private int cantPreguntas;
- 	private int cantJugadoresConectados;
- 	private boolean activo;
- 	private HashMap cantRespondidas = new HashMap();
+
+    private spark.Session sessionP1, sessionP2;
+    private User player1, player2;
+    private int cantPreguntas;
+ 	  private int cantJugadoresConectados;
+ 	  private boolean activo;
+ 	  private HashMap cantRespondidas = new HashMap();
 
     /**
       * Constructor basico de la clase.-
@@ -153,8 +156,13 @@ public class Game extends Model{
     game.set("estado", "activo");
     game.saveIt();
 
+
+//    game.setSession(1, userSession);
     game.setPlayer1(user);
+
+//    game.setSession(2, null);
     game.setPlayer2(null);
+
     game.setCantUsuarios(1);
     App.closeDB();
     game.initRespondidaOnePlayer();
@@ -176,8 +184,12 @@ public class Game extends Model{
     game.set("estado", "activo");
     game.saveIt();
 
+//    game.setSession(1, user1Session);
     game.setPlayer1(user1);
+
+//    game.setSession(2, user2Session);
     game.setPlayer2(user2);
+
     game.setCantUsuarios(2);
     game.initializePlayers();
     game.setCantPreguntas(cantPreguntas);
@@ -249,6 +261,19 @@ public class Game extends Model{
       return (HashMap) preguntas;
   }
 
+  public static boolean esCorrecta(int idPregunta, String respuestaDada) {
+    App.openDB();
+    List<Question> questions = Question.where("id = "+idPregunta+" and respuestaCorrecta = '"+respuestaDada+"'");
+    if (questions.isEmpty()) {
+      App.closeDB();
+      return false;
+    }
+    else {
+      App.closeDB();
+      return true;
+    }
+  }
+
   /**
     * Metodo que actualiza los datos del juego cada vez que un usuario responde correctamente.
     * @author Maria, Santiago; Rivero, Matias.
@@ -287,6 +312,38 @@ public class Game extends Model{
     player2.initializeToPlay();
   }
 
+  public boolean isPlaying(String username) {
+    System.out.println(player1.getUsername());
+    System.out.println(player2.getUsername());
+
+
+    if (username.equals(player1.getUsername())) {
+      return true;
+    }
+    else if (username.equals(player2.getUsername())) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  public String getOpponentName(String playerName) {
+    if (playerName.equals(player1.getUsername())) {
+
+      if (player2 != null) {
+        System.out.println("Oponnent name: "+player2.getUsername());
+        return player2.getUsername();
+      }
+      else {
+        return playerName;
+      }
+    }
+    else {
+      System.out.println("Oponnent name: "+player1.getUsername());
+      return player1.getUsername(); 
+    }
+  }
 
   //Metodos get y set de los atributos
 
@@ -314,8 +371,27 @@ public class Game extends Model{
     cantJugadoresConectados = cantidad;
   }
 
-  private void setCantPreguntas(int cantPreguntas) {
+  public void setCantPreguntas(int cantPreguntas) {
     this.cantPreguntas = cantPreguntas;
+  }
+
+  public void setSession(int sessionNum, spark.Session session) {
+    if (sessionNum > 2 || sessionNum < 1) {
+      throw new IllegalArgumentException("The only possible values for sessionNum is 1 or 2");
+    }
+    else if (sessionNum == 1) {
+      sessionP1 = session;
+    }
+    else {
+      sessionP2 = session;
+    }
+  }
+
+  public spark.Session getSessionP1() {
+    return sessionP1;
+  }
+  public spark.Session getSessionP2() {
+    return sessionP2;
   }
 
 }

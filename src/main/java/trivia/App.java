@@ -1,6 +1,10 @@
 package trivia;
+
+import org.eclipse.jetty.websocket.api.Session;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DBException;
+import org.json.JSONObject;
+
 import trivia.User;
 import trivia.Game;
 
@@ -17,6 +21,8 @@ import spark.template.mustache.MustacheTemplateEngine;
 import org.eclipse.jetty.websocket.api.*;
 
 import java.util.Random;
+import com.google.gson.Gson;
+
 
 /**
   * Clase Principal que administra el juego y sus subprocesos.
@@ -26,33 +32,24 @@ import java.util.Random;
 
 public class App
 {
-    private static final String SESSION_NAME = "username";
-    private static ArrayList<Game> games = new ArrayList<Game>();
+    public static final String SESSION_NAME = "username";
+
+    public static List<spark.Session> openSessions = new ArrayList<>();
+
+    public static ArrayList<Game> games = new ArrayList<Game>();
     private static Map hostUser = new HashMap();
+    
     private static Map hosts = new HashMap();
 
-    public static void main( String[] args )
-    {
-        /*
-        before((request, response) -> {
-          boolean authenticated;
-          // ... check if authenticated
-          if (!authenticated) {
-            halt(401, "You are not welcome here");
-          }
-        });
-
-
-        after((request, response) -> {
-          response.header("foo", "set by after filter");
-        });
-        */
-
+    public static void main( String[] args ) {
+      
       //Se selecciona la carpeta en la cual se guardaran los archivos estaticos, como css o json.
       staticFileLocation("/public");
 
       //WebSocket usado para la edicion de preguntas
       webSocket("/edicionPreguntas", edicionPreguntas.class);
+
+      webSocket("/game", QuestionWebSocketHandler.class);
 
       //se reinicia el servidor con los datos actualizados
       init();
@@ -73,6 +70,7 @@ public class App
 
         //Funcion anonima utilizada para mostrar el menu principal de la aplicacion.
         get("/", (req, res) -> {
+
           String username = req.session().attribute(SESSION_NAME);
           String category = req.session().attribute("category");
 
@@ -95,9 +93,15 @@ public class App
         //Funcion anonima utilizada para mostrar el menu del jugador.
         get("/gameMenu", (req, res) -> {
           if (req.session().attribute("gameIndex") != null) {
-            games.remove((int) req.session().attribute("gameIndex"));
+            try {
+              games.remove((int) req.session().attribute("gameIndex"));
+            }
+            catch(IndexOutOfBoundsException e) {
+              System.out.println("El juego ya ha sido eliminado por el contrincante");
+            }
             closeHost((String) req.session().attribute(SESSION_NAME));
             req.session().removeAttribute("gameIndex");
+            preguntas.remove("game_"+(String) req.session().attribute(SESSION_NAME));
           }
 
           return new ModelAndView(mensajes, "./views/gameMenu.mustache");
@@ -126,36 +130,17 @@ public class App
 
         //Funcion anonima utilizada para mostrar las preguntas al usuario en modo Single Player.
         get("/play", (req, res) -> {
-        String templateRoute = "./views/play.mustache";
-        int indexOfGame = req.session().attribute("gameIndex");
 
-        if (games.get(indexOfGame).getCantUsuarios() == 1) {
-          preguntas.put("puntajeUsuario", (( (User) req.session().attribute("user"))).getPoints() );
-          preguntas.put("hp", "");
-          preguntas.put("redireccion", "/play");
-        }
-        else if (games.get(indexOfGame).getCantUsuarios() == 2) {
-          preguntas.put("puntajeUsuario", "");
-          preguntas.put("hp", ((User) req.session().attribute("user")).getHP());
-          preguntas.put("redireccion", "/playTwoPlayers");
-        }
-        else {
-          res.redirect("/login");
-        }
-
-        if (preguntas.get("opcion 4").equals("")) {
-          if (preguntas.get("opcion 3").equals("")) {
-            templateRoute = "./views/1wrong.mustache";
+          if (req.session().attribute("gameIndex") == null) {
+            Game aux = new Game();
+            Game.initGame(aux, req.session().attribute("user"));
+            games.add(aux);
+            req.session().attribute("gameIndex", games.size()-1);
           }
-          else {
-            templateRoute = "./views/2wrong.mustache";
-          }
-        }
-        else {
-          templateRoute = "./views/3wrong.mustache";
-        }
+          
+          String templateRoute = "./views/play.mustache";
 
-        return new ModelAndView(preguntas, templateRoute);
+          return new ModelAndView(new HashMap(), templateRoute);
       }, new MustacheTemplateEngine()
       );
 
@@ -318,7 +303,16 @@ public class App
 
             jugadorRespuesta.put( ((User) request.session().attribute("user")).getString("username"), 0);
             jugadorRespuesta.put( ((User) hostUser.get(hostName)).getString("username"), 0);
-            response.redirect("/playTwoPlayers");
+
+            int cantJugadores = newGame.getCantUsuarios();
+            preguntas.put("game_"+(String) request.session().attribute(SESSION_NAME), cantJugadores);
+            preguntas.put("game_"+newGame.getPlayer1().getUsername(), cantJugadores);
+            preguntas.put("status_"+(String) request.session().attribute(SESSION_NAME), "waiting");
+            preguntas.put("status_"+newGame.getPlayer1().getUsername(), "ready");
+            preguntas.put("cantPreguntas_"+(String) request.session().attribute(SESSION_NAME), hosts.get(hostName));
+            preguntas.put("cantPreguntas_"+newGame.getPlayer1().getUsername(), hosts.get(hostName));
+
+            response.redirect("/play");
             return null;
         });
 
@@ -329,21 +323,20 @@ public class App
           int cantPreguntas = 0;
           try {
             cantPreguntas = Integer.parseInt(request.queryParams("cantPreguntas"));
-          } catch (NumberFormatException e) {
+          } 
+          catch (NumberFormatException e) {
             System.out.println("Error en el formato del numero.");
             mensajes.put("estadoHost", "Debe ingresar una cantidad de preguntas");
             response.redirect("/hostLAN");
             return null;
           }
 
-
           if (!existeHost(hostName)) {
-
 
           openDB();
           List<Question> questions = Question.where("active = 1 and creador != '"+((User) request.session().attribute("user")).getUsername()+"' and ('"+((User) request.session().attribute("user")).getInteger("id")+"', id) not in (SELECT * from respondidas) ");
 
-          if (questions.isEmpty()) {
+          if (questions.isEmpty() || questions.size() < cantPreguntas) {
             mensajes.put("estadoHost", "Lo siento, no tiene preguntas disponibles suficientes.");
             response.redirect("/hostLAN");
             return null;
@@ -379,7 +372,7 @@ public class App
             }
           }
           if (request.session().attribute("gameIndex") != null) {
-            response.redirect("/playTwoPlayers");
+            response.redirect("/play");
           }
           else {
             response.redirect("/waiting");
@@ -469,12 +462,12 @@ public class App
           User usuarioActual = request.session().attribute("user");
 
             if (usuarioActual == null) {
-          response.redirect("/login");
+              response.redirect("/login");
             }
             else {
-              if (request.session().attribute("gameIndex") == null) {
+              /*if (request.session().attribute("gameIndex") == null) {
                 Game aux = new Game();
-                Game.initGame(aux, (User) request.session().attribute("user"));
+                Game.initGame(aux, (User) request.session().attribute("user"), (spark.Session) request.session());
                 games.add(aux);
 
                 request.session().attribute("gameIndex", games.size()-1);
@@ -483,13 +476,13 @@ public class App
                 games.remove(request.session().attribute("gameIndex"));
                 closeHost(request.session().attribute(SESSION_NAME));
                 Game aux = new Game();
-                Game.initGame(aux, (User) request.session().attribute("user"));
+                Game.initGame(aux, (User) request.session().attribute("user"), (spark.Session) request.session());
                 games.add(aux);
 
                 request.session().attribute("gameIndex", games.size()-1);
               }
               int indexOfGame = request.session().attribute("gameIndex");
-            String respuestaDada = request.queryParams("answer");
+              String respuestaDada = request.queryParams("answer");
               if (respuestaDada != null) {
                 openDB();
                 String respuestaCorrecta = (Question.where("id = "+preguntas.get("ID"))).get(0).getString("respuestaCorrecta");
@@ -498,7 +491,22 @@ public class App
                 if ((respuestaDada != null) && (respuestaDada.equals(respuestaCorrecta))) {
                     games.get(indexOfGame).respondioCorrectamente(usuarioActual, 0);
                 }
+              }*/
+
+              if (preguntas.get("game_"+(String) request.session().attribute(SESSION_NAME)) == null) {
+                Game aux = new Game();
+                Game.initGame(aux, (User) request.session().attribute("user"));
+                games.add(aux);
+
+                request.session().attribute("gameIndex", games.size()-1);
+
+                int cantJugadores = aux.getCantUsuarios();
+                preguntas.put("game_"+((String) request.session().attribute(SESSION_NAME)), cantJugadores);
+                preguntas.put("status_"+(String) request.session().attribute(SESSION_NAME), "ready");
+                preguntas.put("cantPreguntas_"+(String) request.session().attribute(SESSION_NAME), -1);
               }
+              int indexOfGame = request.session().attribute("gameIndex");
+
               Map preguntaObtenida = new HashMap();
               preguntaObtenida = games.get(indexOfGame).obtenerPregunta(usuarioActual);
 
@@ -506,7 +514,7 @@ public class App
                   mensajes.put("cantAnswer", "Lo siento, no tiene mas preguntas disponibles para responder.");
                   response.redirect("/");
               }
-              else {
+              //else {
                   mensajes.put("cantAnswer", "");
                   preguntas.put("pregunta", preguntaObtenida.get("pregunta"));
                   preguntas.put("opcion 1", preguntaObtenida.get("opcion 1"));
@@ -516,8 +524,14 @@ public class App
                   preguntas.put("ID", preguntaObtenida.get("ID"));
                   preguntas.put("cantPreguntasDisponibles", preguntaObtenida.get("cantPreguntasDisponibles"));
 
-                  response.redirect("/play");
-              }
+                  preguntas.put("player", request.session().attribute(SESSION_NAME));
+                  preguntas.put("opponent", games.get(indexOfGame).getOpponentName(request.session().attribute(SESSION_NAME)));
+
+                  preguntas.put("puntaje_" + (String) request.session().attribute(SESSION_NAME), 0);
+                  preguntas.put("puntaje_" + games.get(indexOfGame).getOpponentName(request.session().attribute(SESSION_NAME)), 0);
+
+                  return new Gson().toJson(preguntas);
+              //}
             }
             return null;
         });
@@ -609,7 +623,16 @@ public class App
             request.session().attribute("category", (usuario instanceof Admin)?"admin":"user");
 
             mensajes.put("estadoLogin", "");
+
+            //Antes de loguearse, añade la cookie del cliente como como atributo de la sesion,
+            //Luego añade la sesion a la lista de sesiones abiertas. 
+            request.session().attribute("sessionCookies", request.cookies());
+            openSessions.add(request.session());
+            usuario.setSession(openSessions.size()-1);
+
+            response.cookie("username", usuario.getUsername());
             response.redirect("/");
+            
             return null;
           }
           else {
@@ -638,6 +661,10 @@ public class App
           }
 
           return null;
+        });
+
+         post ("/jSession", (request, response) -> {
+          return "OK!";
         });
 
     }
@@ -767,6 +794,7 @@ public class App
     */
     public static boolean existeHost(String hostName) {
       if (hostUser.get(hostName) != null) {
+        System.out.println("Host Existe: " + hostUser.get(hostName));
         return true;
       }
       else {

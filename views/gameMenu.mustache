@@ -5,29 +5,29 @@
     <br>
     <div id="mydiv">
 
-        <p id="message">{{cantAnswer}}</p>
-        <form action="/play" method="post">
-            <input type="submit" value="Jugar" 
-                name="play_btn" id="play_btn" />
+        <form action="/play" method="get">
+            <button type="submit" value="Play" 
+                name="play_btn" id="play_btn">Play</button>
         </form>
         <br>
-
         <form action="/menuHost" method="get">
-            <input type="submit" value="MultiPlayer" 
-                name="hostMenu_btn" id="hostMenu_btn" />
+            <button type="submit" value="MultiPlayer" 
+                name="hostMenu_btn" id="hostMenu_btn">MultiPlayer</button>
         </form>
         <br>
 
         <form action="/profile" method="get">
-            <input type="submit" value="Ver Perfil" 
-                name="profile_btn" id="profile_btn" />
+            <button type="submit" value="Ver Perfil" 
+                name="profile_btn" id="profile_btn">Ver Perfil</button> 
         </form>
         <br>
         <br>
 
         <form action="/logout" method="post">
-            <input type="submit" value="Cerrar Sesion" 
-                name="logout_btn" id="logout_btn" />
+            <button type="submit" value="Cerrar Sesion" 
+                name="logout_btn" id="logout_btn">Cerrar Sesion</button> 
         </form>
     </div>
 </center>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!--<script src="json/websocket.js"></script>-->
