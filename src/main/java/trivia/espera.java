@@ -6,40 +6,49 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-@WebSocket
-public class espera {
+Map<String, String> hostNameOwner = new HashMap<String, String>();
+Map<String, Session> userSession = new HashMap<String, Session>();
 
-    private String sender, msg;
+@WebSocket
+public class MultiplayerGameHandler {
 
     @OnWebSocketConnect
     public void onConnect(Session session) {
-        System.out.println("\n ---> Connected to espera <--- \n");
-        //System.out.println("Session= " + session + "<End Session>");
-
-        //String username = App.SESSION_NAME;   // <-- SESSION_NAME es privado
-
-        //String username = "User" + App.nextUserNumber++;
-        //App.concurr.put(session, username);
-        //System.out.println("Session: " + session + "username" + username);
+        System.out.println("\n ---> Connected to MultiplayerGameHandler <--- \n");
     }
 
     @OnWebSocketClose
     public void onClose(Session session, int statusCode, String reason) {
         //sessions.remove(session);
-        System.out.println("\n ---> Disconnected from espera <--- \n");
+        System.out.println("\n ---> Disconnected from MultiplayerGameHandler <--- \n");
 
     }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws IOException {
+        Map message = new Gson().fromJson(msg, Map.class);
 
-        if ( msg.equals("partida_encontrada")) {
-            System.out.println("borrada");
-        } else {
-            System.out.println("espera respuesta de jugada (crear host)");
+        String hostOwner = (String) message.get("owner");
+        String hostname = (String) message.get("hostname");
+        
+        if (hostOwner != null) {
+            hostNameOwner.put(hostname, hostOwner);
+            userSession.put(hostOwner, session);
         }
+        else {
+            try {
+                hostOwner = hostNameOwner.get(hostname);
+            }
+            catch (NullPointerException e) {
+                System.out.println("I'm sorry, cannot obtain hostOwner");
+            }
 
+            try {
+                userSession.get(hostOwner).getRemote().sendString("Can_Play");
+            }
+            catch (java.io.IOException e) {
+                System.out.println("Cannot inform hostOwner that can play");
+            }
+        }
     }
-
-
 }
