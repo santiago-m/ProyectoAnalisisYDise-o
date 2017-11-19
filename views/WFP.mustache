@@ -1,16 +1,6 @@
-<head>
-    <!--<script type="text/javascript">
-        window.onload = function() {
-        	document.forms["WaitForUsers"].submit();
-        }
-    </script>-->
-</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <body>
-	<button id="volver">Volver</button>
-	<button id="esperar">Esperar</button>
-	<form name="WaitForUsers" method="post" action="/waitForPlayers">
-	    <h2>Waiting for users...</h2>
-	</form> 
+	<h2>Waiting for users in <label id="username">{{username}}</label> host named <label id="hostname">{{hostname}}</label> </h2>
 
 	<script src="js/espera.js"></script>
 </body>
