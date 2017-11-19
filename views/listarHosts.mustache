@@ -1,31 +1,36 @@
 <head>
-<link rel="stylesheet" href="css/style.css">
-<style>
-table, td {
-    border: 1px solid black;
-}
-</style>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    table, td {
+      border: 1px solid black;
+    }
+  </style>
 </head>
+
 <body>
 
-<center><h2>Select Host</h2></center>
+  <center><h2>Select Host</h2></center>
   <br>
   <br>
 
-  <div id="mydiv">
-
+  <center>
+    <button id="refresh">Refrescar Lista</button>
     <br>
-  </div>
+    <br>
+    <table id="partidas">
+    </table>
+  </center>
 
-<div id="goBack">
+  <br>
+  <br>
+  <br>
+
+  <div id="goBack">
     <form action="/" method="get">
         <input type="submit" value="Menu Principal" name="mainMenu_btn" id="mainMenu_btn" />
     </form>
-</div>
+  </div>
 
-
-<script>
-  {{{script}}}
-</script>
+  <script src="js/busqueda.js"></script>
 
 </body>

@@ -1,12 +1,16 @@
 <head>
-    <script type="text/javascript">
+    <!--<script type="text/javascript">
         window.onload = function() {
-        document.forms["WaitForUsers"].submit();
+        	document.forms["WaitForUsers"].submit();
         }
-    </script>
+    </script>-->
 </head>
 <body>
-<form name="WaitForUsers" method="post" action="/waitForPlayers">
-    <h2>Waiting for users...</h2>
-</form> 
+	<button id="volver">Volver</button>
+	<button id="esperar">Esperar</button>
+	<form name="WaitForUsers" method="post" action="/waitForPlayers">
+	    <h2>Waiting for users...</h2>
+	</form> 
+
+	<script src="js/espera.js"></script>
 </body>
