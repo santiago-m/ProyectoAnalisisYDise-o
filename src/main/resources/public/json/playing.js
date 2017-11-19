@@ -196,6 +196,7 @@ function opponentReady() {
 	else {
 		$('#pointsPlace').html('');
 		$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);
+		nextQuestion();
 	}
 }
 
