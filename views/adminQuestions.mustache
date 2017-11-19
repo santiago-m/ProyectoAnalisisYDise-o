@@ -11,13 +11,19 @@
 	<br>
 	<br>
 
-	<div id="mydiv">
-		<p id="message">{{estadoPregunta}}</p>
-		<form action="/adminQuestions" method="post">
-			<strong>ID de la pregunta a editar: <strong>
-			<input class="form-control" id="id_question" name="id_question" placeholder="Ingrese un el ID de la pregunta" type="text" value="" /><br>
-	
-			<input id="btn_submit" name="btn_submit" type="submit" class="btn btn-default" value="Buscar" />
+	<div id ="dialogo">
+		<strong>Ingrese una pregunta para editar:</strong>
+		<br>
+	</div>
+
+	<div id="mydiv3">
+
+		<input type="placeholder" id="cambiar"/>
+		<button id="cambiar_boton">Buscar</button>
+		<form id="preguntas" action="/adminQuestions" method="post">
+
 		</form>
 	</div>
+
+	<script src="json/edicionPreguntas.js"></script>
 </center>
