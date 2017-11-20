@@ -9,16 +9,15 @@ import org.json.JSONObject;
 @WebSocket
 public class busqueda {
 
-    @OnWebSocketConnect
-    public void onConnect(Session session) {
-        System.out.println("\n ---> Connected to busqueda <--- \n");
-    }
+  @OnWebSocketConnect
+  public void onConnect(Session session) {
+      System.out.println("\n ---> Connected to busqueda <--- \n");
+  }
 
-    @OnWebSocketClose
-    public void onClose(Session session, int statusCode, String reason) {
-        System.out.println("\n ---> Disconnected from busqueda <--- \n");
-
-    }
+  @OnWebSocketClose
+  public void onClose(Session session, int statusCode, String reason) {
+      System.out.println("\n ---> Disconnected from busqueda <--- \n");
+  }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws IOException {
