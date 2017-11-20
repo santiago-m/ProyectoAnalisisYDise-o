@@ -1,33 +1,88 @@
-<link rel="stylesheet" href="css/style.css">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Menu Principal</title>
 
-<center>
-    <h2>Menu Juego</h2><br>
-    <br>
-    <div id="mydiv">
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
 
-        <form action="/play" method="get">
-            <button type="submit" value="Play" 
-                name="play_btn" id="play_btn">Play</button>
-        </form>
-        <br>
-        <form action="/menuHost" method="get">
-            <button type="submit" value="MultiPlayer" 
-                name="hostMenu_btn" id="hostMenu_btn">MultiPlayer</button>
-        </form>
-        <br>
+    <style>
+    body {
+        background-color: #e2e2e2;
 
-        <form action="/profile" method="get">
-            <button type="submit" value="Ver Perfil" 
-                name="profile_btn" id="profile_btn">Ver Perfil</button> 
-        </form>
-        <br>
-        <br>
+    }
+    .container {
+      width: 30% ;
+      min-width: 175px;
+    }
+    </style>
+  </head>
 
-        <form action="/logout" method="post">
-            <button type="submit" value="Cerrar Sesion" 
-                name="logout_btn" id="logout_btn">Cerrar Sesion</button> 
-        </form>
-    </div>
-</center>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!--<script src="json/websocket.js"></script>-->
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Pregunta2</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+              <a class="nav-link" href="/"> Menu Principal <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+              <form action="/play" method="GET" id="jugar"></form>
+              <a class="nav-link" href="/play" onclick="document.getElementById('jugar').submit(); return false;"> Un jugador </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/menuHost"> Multi-Jugador </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/profile"> Perfil </a>
+          </li>
+          <li class="nav-item">
+              <form action="/logout" method="POST" id="salir"></form>
+              <a class="nav-link" href="/logout" onclick="document.getElementById('salir').submit(); return false;"> Cerrar Sesion </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <center>
+      <br>
+      <h2>Menu Principal</h2>
+
+      <br>
+
+      <div class="container">
+
+          <p id="message">{{cantAnswer}}</p>
+          <form action="/play" method="GET">
+              <input type="submit" value="Jugar Solo" class="btn btn-outline-primary btn-block" />
+          </form>
+          <br>
+
+          <form action="/menuHost" method="GET">
+              <input type="submit" value="Multi-Jugador" class="btn btn-outline-primary btn-block" />
+          </form>
+          <br>
+
+          <form action="/profile" method="GET">
+              <input type="submit" value="Ver Perfil" class="btn btn-outline-success btn-block" />
+          </form>
+          <br>
+          <br>
+
+          <form action="/logout" method="POST">
+              <input type="submit" value="Cerrar Sesion" class="btn btn-outline-danger" />
+          </form>
+      </div>
+    </center>
+
+    <script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js" ></script>
+  </body>
+</html>
