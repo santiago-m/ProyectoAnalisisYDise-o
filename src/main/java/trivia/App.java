@@ -504,20 +504,20 @@ public class App {
 
         //Funcion anonima tipo post que obtiene los datos ingresados por el usuario e intenta registrar al usuario en la base de datos.
     post("/register", (request, response) -> {
+      openDB();
+      User usuario = new User(request.queryParams("reg_username"), request.queryParams("reg_password"));
+      closeDB();
 
-          openDB();
-          User usuario = new User(request.queryParams("txt_username"), request.queryParams("txt_password"));
-          closeDB();
-
-          if (registrar(usuario)) {
-            mensajes.put("estadoRegistro", "");
-            response.redirect("/");
-            return null;
-          } else {
-            mensajes.put("estadoRegistro", "El usuario ingresado ya existe, pruebe con otro.-");
-            response.redirect("/register");
-            return null;
-          }
+      if (registrar(usuario)) {
+        mensajes.put("estadoRegistro", "");
+        response.redirect("/");
+        return null;
+      }
+      else {
+        mensajes.put("estadoRegistro", "El usuario ingresado ya existe, pruebe con otro.-");
+        response.redirect("/register");
+        return null;
+      }
     });
 
     //Funcion anonima tipo post que obtiene los datos de la pregunta creada por el administrador e intenta guardarla en la base de datos.

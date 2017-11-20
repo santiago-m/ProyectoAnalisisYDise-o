@@ -1,0 +1,37 @@
+<nav id="nav_bar" class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">
+        <span class="glyphicon glyphicon-home"></span><strong> Home</strong>
+      </a>
+    </div>
+        
+    <ul id="leftPart" class="nav navbar-nav">
+      <li><a href="/create">Create Challenge</a></li>
+      <li><a href="/about">About Us</a></li>
+      <li><a href="/help">Help</a></li>
+    </ul>
+
+    <ul id="rightPart" class="nav navbar-nav navbar-right">
+      <li><a id="signInButton" href=""><span class="glyphicon glyphicon-log-in"></span> Sign In</a></li>
+      <li><a id="signUpButton" href=""><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+    </ul>
+  </div>
+</nav>
+
+<script>
+  $(document).ready(function(){
+
+    $("#signInButton").click(function(event) {
+      event.preventDefault();
+      $("#signinModal").modal();
+    });
+
+
+    $("#signUpButton").click(function(event) {
+      event.preventDefault();
+      $("#signupModal").modal();
+    });
+
+  });
+</script>
