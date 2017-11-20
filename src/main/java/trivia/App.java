@@ -50,7 +50,6 @@ public class App {
 
     // Se inician los servicios de webSocket
     webSocket("/search", busqueda.class);
-    webSocket("/wait", espera.class);
     webSocket("/edicionPreguntas", edicionPreguntas.class);
     webSocket("/game", QuestionWebSocketHandler.class);
     webSocket("/multiplayerGame", MultiplayerGameHandler.class);
@@ -183,8 +182,8 @@ public class App {
       Map<String, String> usernameHostname = new HashMap<String, String>();
       
       String username = req.session().attribute(SESSION_NAME);
-      int hostNum = hostUser.get(username);
-      String hostname = hosts.get("Host " + hostNum);
+      String hostNum = (String) hostUser.get(username);
+      String hostname = (String) hosts.get(hostNum);
 
       usernameHostname.put("Username", username);
       usernameHostname.put("Hostname", hostname);

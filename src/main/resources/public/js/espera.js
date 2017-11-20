@@ -1,5 +1,5 @@
 //Establish the WebSocket connection and set up event handlers
-var WebSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/multiplayerGame");
+var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/multiplayerGame");
 
 webSocket.onopen = function() {
 	console.log('started');
@@ -7,8 +7,10 @@ webSocket.onopen = function() {
 }
 
 webSocket.onmessage = function(msg) {
-	if (msg == 'Can_Play') {
-		$.post("/waitForPlayers");
+	console.log(msg['data']);
+	if (msg['data'] == 'Can_Play') {
+		console.log('entro');
+		setTimeout(function(){ $('#connectGame').submit(); }, 3000);
 	}
 }
 webSocket.onclose = function () {  };
