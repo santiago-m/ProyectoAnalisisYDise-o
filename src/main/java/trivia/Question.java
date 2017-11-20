@@ -41,7 +41,7 @@ public class Question extends Model {
 
   	public void unCheck(){
   		this.set("leido", 0);
-  		this.saveIt();	
+  		this.saveIt();
   	}
 
   	public void calcularOpciones() {
@@ -58,5 +58,5 @@ public class Question extends Model {
 
   	public int getCantOpciones() {
   		return cantOpciones;
-  	}z
+  	}
 }
