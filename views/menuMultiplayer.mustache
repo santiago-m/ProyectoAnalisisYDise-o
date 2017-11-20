@@ -12,6 +12,10 @@
         background-color: #e2e2e2;
 
     }
+    .container {
+      width: 30% ;
+      min-width: 175px;
+    }
     </style>
   </head>
 
@@ -52,14 +56,14 @@
 
       <br>
 
-      <div id="container-fluid">
+      <div class="container">
         <form action="/hostLAN" method="GET">
-          <input type="submit" class="btn btn-outline-primary" value="Crear Partida" />
+          <input type="submit" class="btn btn-outline-primary btn-block" value="Crear Partida" />
         </form>
         <br>
 
         <form action="/listarHosts" method="GET">
-          <input type="submit" class="btn btn-outline-primary" value="Unirse a una Partida" />
+          <input type="submit" class="btn btn-outline-primary btn-block" value="Unirse a una Partida" />
         </form>
 
         <br>

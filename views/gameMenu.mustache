@@ -1,33 +1,56 @@
-<link rel="stylesheet" href="css/style.css">
+<head>
+  <title>Preguntados</title>
 
-<center>
-    <h2>Menu Juego</h2><br>
-    <br>
-    <div id="mydiv">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-        <form action="/play" method="get">
-            <button type="submit" value="Play" 
-                name="play_btn" id="play_btn">Play</button>
-        </form>
-        <br>
-        <form action="/menuHost" method="get">
-            <button type="submit" value="MultiPlayer" 
-                name="hostMenu_btn" id="hostMenu_btn">MultiPlayer</button>
-        </form>
-        <br>
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-        <form action="/profile" method="get">
-            <button type="submit" value="Ver Perfil" 
-                name="profile_btn" id="profile_btn">Ver Perfil</button> 
-        </form>
-        <br>
-        <br>
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 
-        <form action="/logout" method="post">
-            <button type="submit" value="Cerrar Sesion" 
-                name="logout_btn" id="logout_btn">Cerrar Sesion</button> 
-        </form>
-    </div>
-</center>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!--<script src="json/websocket.js"></script>-->
+  <!-- Bootstrap Jquery Validator-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>
+
+
+  <!-- Our own css file-->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div id="navBar"></div>
+  <center>
+      <br>
+      <h2>Menu Principal</h2>
+
+      <br>
+
+      <div id="profileDiv" class="container-fluid"></div>
+
+      <div class="container">
+
+          <p id="message">{{cantAnswer}}</p>
+          <form action="/play" method="GET">
+              <input type="submit" value="Jugar Solo" class="btn btn-outline-primary btn-block" />
+          </form>
+          <br>
+
+          <form action="/menuHost" method="GET">
+              <input type="submit" value="Multi-Jugador" class="btn btn-outline-primary btn-block" />
+          </form>
+          <br>
+          
+          <input id="viewProfile" type="submit" value="Ver Perfil" class="btn btn-outline-success btn-block" />
+
+      </div>
+    </center>
+
+    <p id="admin" hidden>{{admin}}</p>
+    <p id="usrname" hidden>{{name}}</p>
+    <p id="puntaje" hidden>{{puntaje}}</p>
+
+
+    <script type="text/javascript" src="js/main.js"></script>
+
+</body>
