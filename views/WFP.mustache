@@ -48,27 +48,16 @@
 
     <center>
 			<br>
-      <h2>Waiting for users...</h2>
+      <h2>Waiting for users in <label id="username">{{Username}}</label> host named <label id="hostname">{{Hostname}}</label> </h2>
 
-      <br>
+	    <form id="connectGame" action="/waitForPlayers" method="post"></form>
 
-      <div id="container-fluid">
-
-
-          <form name="WaitForUsers" method="POST" action="/waitForPlayers">
-
-          </form>
-
-      </div>
+	
     </center>
 
     <script type="text/javascript" src="js/jquery-3.2.1.js"></script>
     <script type="text/javascript" src="js/popper.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js" ></script>
-    <script type="text/javascript">
-        window.onload = function() {
-        	document.forms["WaitForUsers"].submit();
-        }
-    </script>
+    <script src="js/espera.js"></script>
   </body>
 </html>

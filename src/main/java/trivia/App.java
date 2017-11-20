@@ -49,9 +49,9 @@ public class App {
 
     // Se inician los servicios de webSocket
     webSocket("/search", busqueda.class);
-    webSocket("/wait", espera.class);
     webSocket("/edicionPreguntas", edicionPreguntas.class);
     webSocket("/game", QuestionWebSocketHandler.class);
+    webSocket("/multiplayerGame", MultiplayerGameHandler.class);
 
     //se reinicia el servidor con los datos actualizados
     init();
@@ -179,7 +179,17 @@ public class App {
 
     //Funcion anonima que crea un bucle hasta que se conecta un segundo jugador para crear una partida multiplayer.
     get("/waiting", (req, res) -> {
-      return new ModelAndView(new HashMap(), "./views/WFP.mustache");
+
+      Map<String, String> usernameHostname = new HashMap<String, String>();
+      
+      String username = req.session().attribute(SESSION_NAME);
+      String hostNum = (String) hostUser.get(username);
+      String hostname = (String) hosts.get(hostNum);
+
+      usernameHostname.put("Username", username);
+      usernameHostname.put("Hostname", hostname);
+
+      return new ModelAndView(usernameHostname, "./views/WFP.mustache");
     }, new MustacheTemplateEngine()
     );
 
