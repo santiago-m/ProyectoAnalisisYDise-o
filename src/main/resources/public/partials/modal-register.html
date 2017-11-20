@@ -1,0 +1,49 @@
+<div class="modal fade" id="signupModal" role="dialog">
+  <div class="modal-dialog">
+  <!-- Modal content-->
+		<div class="modal-content">
+    	<div class="modal-header" style="padding:35px 50px;">
+      	<button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4><span class="glyphicon glyphicon-lock"></span> Sign Up</h4>
+      </div>
+      
+      <div class="modal-body" style="padding:40px 50px;">
+        <form id="regForm" data-toggle="validator" action="/register" method="POST" role="form">
+          <div class="form-group">
+            <label for="reg_username" class="control-label"><span class="glyphicon glyphicon-user"></span> Username</label>
+            <input class="form-control" id="reg_username" name="reg_username" placeholder="John Smith" type="text" value="" required>
+          </div>
+          <div class="form-group">
+            <label for="reg_password" class="control-label"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+            <input class="form-control" id="reg_password" name="reg_password" placeholder="Password" type="password" data-minlength="6" value="" required>
+            <div class="help-block">Minimum of 6 characters</div>
+          </div>
+          <div class="form-group">
+            <label for="inputPasswordConfirm" class="control-label"><span class="glyphicon glyphicon-eye-open"></span> Confirm Password</label>
+            <input type="password" class="form-control" id="inputPasswordConfirm" data-match="#reg_password" data-match-error="Whoops, these don't match" placeholder="Confirm" required>
+            <div class="help-block with-errors"></div>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" value="" checked>Accept Terms and Conditions</label>
+          </div>
+          <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Register</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+        <p>Are you a member? <a id="alreadyAMember" href="">Sign In</a></p>
+      </div>
+    </div>
+      
+  </div>
+</div> 
+
+<script>
+  $(document).ready(function(){
+    $("#alreadyAMember").click(function(event) {
+      event.preventDefault();
+      $('#signupModal').modal('hide');
+      $("#signinModal").modal();
+    });
+  });
+</script>

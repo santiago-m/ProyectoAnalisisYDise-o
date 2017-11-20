@@ -1,61 +1,10 @@
-#btn {
-  border: 1px solid #777777;
-  background: #6e9e2d;
-  color: white;
-  font: bold 11px 'Trebuchet MS';
-  padding: 4px;
-  cursor: pointer;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
+.modal-header, h4, .close {
+  background-color: #5cb85c;
+  color:white !important;
+  text-align: center;
+  font-size: 30px;
 }
 
-#centeredDiv {
-    margin:auto;
-    position:fixed;
-    top: 50%;
-    left: 50%;
-    width:30em;
-    height:18em;
-    margin-top: -9em; /*set to a negative number 1/2 of your height*/
-    margin-left: -15em; /*set to a negative number 1/2 of your width*/
-    border: 0px solid #ccc;
-    background-color: #FFFFFF;
-    color : white;
-    font-weight: bold;
-    background: rgba(255, 255, 255, 0);
-}
-
-#message {
-    color: red;
-    font-weight: bold;
-}
-
-#goBack {
-    margin: auto;
-    position: fixed;
-    right: 0%;
-    border: 0px solid #ccc;
-    background-color: #FFFFFF;
-    background: rgba(255, 255, 255, 0);
-}
-
-button.link {
-	font-family: "Verdana" sans-serif;
-	font-size: 1em;
-	text-align: left;
-	color: blue;
-	background: none;
-	margin: 0;
-	padding: 0;
-	border: none;
-	cursor: pointer;
-}
-
-h2 {
-    color : white;
-}
-
-body {
-    background-color: #FFFFFF;
-    background-image: url("fondo2.jpg");
+.modal-footer {
+  background-color: #f9f9f9;
 }

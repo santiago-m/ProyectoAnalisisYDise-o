@@ -509,7 +509,7 @@ public class App {
     post("/register", (request, response) -> {
 
       openDB();
-      User usuario = new User(request.queryParams("txt_username"), request.queryParams("txt_password"));
+      User usuario = new User(request.queryParams("reg_username"), request.queryParams("reg_password"));
       closeDB();
 
       if (registrar(usuario)) {
