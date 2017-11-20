@@ -1,6 +1,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <body>
-	<h2>Waiting for users in <label id="username">{{username}}</label> host named <label id="hostname">{{hostname}}</label> </h2>
+	<h2>Waiting for users in <label id="username">{{Username}}</label> host named <label id="hostname">{{Hostname}}</label> </h2>
+
+	<form id="connectGame" action="/waitForPlayers" method="post"></form>
 
 	<script src="js/espera.js"></script>
 </body>

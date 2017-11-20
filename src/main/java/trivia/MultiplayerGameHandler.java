@@ -5,12 +5,13 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
-
-Map<String, String> hostNameOwner = new HashMap<String, String>();
-Map<String, Session> userSession = new HashMap<String, Session>();
+import com.google.gson.Gson;
 
 @WebSocket
 public class MultiplayerGameHandler {
+
+    Map<String, String> hostNameOwner = new HashMap<String, String>();
+    Map<String, Session> userSession = new HashMap<String, Session>();
 
     @OnWebSocketConnect
     public void onConnect(Session session) {
@@ -26,10 +27,14 @@ public class MultiplayerGameHandler {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws IOException {
+        System.out.println(msg);
         Map message = new Gson().fromJson(msg, Map.class);
 
         String hostOwner = (String) message.get("owner");
         String hostname = (String) message.get("hostname");
+
+        System.out.println(hostOwner);
+        System.out.println(hostname);
         
         if (hostOwner != null) {
             hostNameOwner.put(hostname, hostOwner);
@@ -42,6 +47,8 @@ public class MultiplayerGameHandler {
             catch (NullPointerException e) {
                 System.out.println("I'm sorry, cannot obtain hostOwner");
             }
+
+            System.out.println("Obtuve creador del host " + hostname + ". Es " + hostOwner);
 
             try {
                 userSession.get(hostOwner).getRemote().sendString("Can_Play");
