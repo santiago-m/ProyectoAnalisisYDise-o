@@ -12,6 +12,10 @@
         background-color: #e2e2e2;
 
       }
+      .container {
+        width: 30% ;
+        min-width: 175px;
+      }
     </style>
   </head>
 
@@ -46,14 +50,14 @@
       <br>
       <br>
 
-      <div id="container-fluid">
+      <div class="container">
         <form action="/login" method="GET">
-            <input type="submit" value="Iniciar Sesion" class="btn btn-info"/>
+            <input type="submit" value="Iniciar Sesion" class="btn btn-info btn-block"/>
         </form>
         <br>
 
         <form action="/register" method="GET">
-            <input type="submit" value="Registrarse" class="btn btn-info"/>
+            <input type="submit" value="Registrarse" class="btn btn-info btn-block"/>
         </form>
         <br>
       </div>
