@@ -43,7 +43,7 @@ public class App {
   static int nextUserNumber = 1;
 
   public static void main(String[] args ) {
-      
+
     //Se selecciona la carpeta en la cual se guardaran los archivos estaticos, como css o json.
     staticFileLocation("/public");
 
@@ -55,7 +55,7 @@ public class App {
 
     //se reinicia el servidor con los datos actualizados
     init();
-    
+
     //HashMap con los valores del perfil del usuario de la sesion iniciada.
     Map profile = new HashMap();
     //HashMap que permite mostrar mensajes en diferentes fases del juego.
@@ -140,7 +140,7 @@ public class App {
         games.add(aux);
         req.session().attribute("gameIndex", games.size()-1);
       }
-        
+
       String templateRoute = "./views/play.mustache";
 
       return new ModelAndView(new HashMap(), templateRoute);
@@ -172,7 +172,7 @@ public class App {
           return new ModelAndView(new HashMap(), "./views/adminQuestions.mustache");
         }
       }
-      
+
       return new ModelAndView(new HashMap(), "./views/mainpage.mustache");
     }, new MustacheTemplateEngine()
     );
@@ -256,10 +256,10 @@ public class App {
       pregunta.set("wrong1", request.queryParams("cambiar2")).saveIt();
       pregunta.set("wrong2", request.queryParams("cambiar3")).saveIt();
       pregunta.set("wrong3", request.queryParams("cambiar4")).saveIt();
-         
+
       if (request.queryParams("cb-activa") != null) {
         pregunta.set("active", 1).saveIt();
-      } 
+      }
       else {
         pregunta.set("active", 0).saveIt();
       }
@@ -268,7 +268,7 @@ public class App {
       response.redirect("./adminMenu");
       return null;
     });
-      
+
     //Funcion anonima tipo POST que inicializa un juego entre el usuario y el creador de la partida que ha elegido.
     post("/selectHost", (request, response) -> {
 
@@ -305,7 +305,7 @@ public class App {
 
       try {
         cantPreguntas = Integer.parseInt(request.queryParams("cantPreguntas"));
-      } 
+      }
       catch (NumberFormatException e) {
         System.out.println("Error en el formato del numero.");
         mensajes.put("estadoHost", "Debe ingresar una cantidad de preguntas");
@@ -335,7 +335,7 @@ public class App {
 
       response.redirect("/waiting");
 
-      } 
+      }
       else {
         mensajes.put("estadoHost", "Lo siento, el nombre de host ya existe o ya existe un host creado por este usuario.");
         response.redirect("/hostLAN");
@@ -386,7 +386,7 @@ public class App {
             openDB();
             String respuestaCorrecta = (Question.where("id = "+preguntas.get("ID"))).get(0).getString("respuestaCorrecta");
             closeDB();
-               
+
             if ((respuestaDada != null) && (respuestaDada.equals(respuestaCorrecta))) {
               User actual = request.session().attribute("user");
               jugadorRespuesta.put( actual.getString("username"), (Integer) jugadorRespuesta.get(actual.getString("username"))+1);
@@ -449,8 +449,8 @@ public class App {
       if (usuarioActual == null) {
         response.redirect("/login");
       }
-      else {          
-        
+      else {
+
         if (preguntas.get("game_"+(String) request.session().attribute(SESSION_NAME)) == null) {
           Game aux = new Game();
           Game.initGame(aux, (User) request.session().attribute("user"));
@@ -463,7 +463,7 @@ public class App {
           preguntas.put("status_"+(String) request.session().attribute(SESSION_NAME), "ready");
           preguntas.put("cantPreguntas_"+(String) request.session().attribute(SESSION_NAME), -1);
         }
-            
+
         int indexOfGame = request.session().attribute("gameIndex");
 
         Map preguntaObtenida = new HashMap();
@@ -473,7 +473,7 @@ public class App {
           mensajes.put("cantAnswer", "Lo siento, no tiene mas preguntas disponibles para responder.");
           response.redirect("/");
         }
-            
+
 
         mensajes.put("cantAnswer", "");
         preguntas.put("pregunta", preguntaObtenida.get("pregunta"));
@@ -506,7 +506,7 @@ public class App {
         mensajes.put("estadoRegistro", "");
         response.redirect("/");
         return null;
-      } 
+      }
       else {
         mensajes.put("estadoRegistro", "El usuario ingresado ya existe, pruebe con otro.-");
         response.redirect("/register");
@@ -540,14 +540,14 @@ public class App {
 
         if (request.queryParams("wrong1") != null) {
           pregunta.set("wrong2", request.queryParams("txt_incorrect2"));
-        } 
+        }
         else {
           pregunta.set("wrong2", null);
         }
 
         if (request.queryParams("wrong2") != null) {
           pregunta.set("wrong3", request.queryParams("txt_incorrect3"));
-        } 
+        }
         else {
           pregunta.set("wrong3", null);
         }
@@ -586,14 +586,14 @@ public class App {
         mensajes.put("estadoLogin", "");
 
         //Antes de loguearse, añade la cookie del cliente como como atributo de la sesion,
-        //Luego añade la sesion a la lista de sesiones abiertas. 
+        //Luego añade la sesion a la lista de sesiones abiertas.
         request.session().attribute("sessionCookies", request.cookies());
         openSessions.add(request.session());
         usuario.setSession(openSessions.size()-1);
 
         response.cookie("username", usuario.getUsername());
         response.redirect("/");
-            
+
         return null;
       }
       else {
@@ -609,18 +609,6 @@ public class App {
       request.session().attribute("user", null);
       mensajes.put("cantAnswer", "");
       response.redirect("/");
-      return null;
-    });
-
-    //Funcion anonima tipo post que permite volver al menu anterior al actual. Segun sea administrador o usuario.
-    post ("/goBack", (request, response) -> {
-      if (request.session().attribute("category").equals("user")) {
-        response.redirect("/gameMenu");
-      }
-      else {
-        response.redirect("/adminMenu");
-      }
-
       return null;
     });
 
