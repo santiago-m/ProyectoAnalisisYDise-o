@@ -601,14 +601,16 @@ public class App {
 
         if (request.session().attribute("category").equals("admin"))
           mensajes.put("admin", true);
-          mensajes.put("name", request.session().attribute(SESSION_NAME));
+        mensajes.put("name", request.session().attribute(SESSION_NAME));
+        mensajes.put("puntaje", ((User) request.session().attribute("user")).getInteger("puntaje"));
         response.redirect("/");
-            
+        
         return null;
       }
       else {
         mensajes.put("estadoLogin", "Usuario o contraseña incorrecto.-");
-        response.redirect("/login");
+        mensajes.put("estadoRegistro", "");
+        response.redirect("/");
         return null;
       }
     });
