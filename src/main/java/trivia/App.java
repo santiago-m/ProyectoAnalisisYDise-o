@@ -505,7 +505,7 @@ public class App {
         //Funcion anonima tipo post que obtiene los datos ingresados por el usuario e intenta registrar al usuario en la base de datos.
     post("/register", (request, response) -> {
       openDB();
-      User usuario = new User(request.queryParams("reg_username"), request.queryParams("reg_password"));
+      User usuario = new User(request.queryParams("txt_username"), request.queryParams("txt_password"));
       closeDB();
 
       if (registrar(usuario)) {
@@ -570,7 +570,7 @@ public class App {
       return null;
     });
 
-    //Funcion anonima tipo post que intenta iniciar sesion con los datos ingresados por el usuario en el menu de logueo.
+//Funcion anonima tipo post que intenta iniciar sesion con los datos ingresados por el usuario en el menu de logueo.
     post("/login", (request, response) -> {
 
       openDB();
@@ -598,6 +598,10 @@ public class App {
         usuario.setSession(openSessions.size()-1);
 
         response.cookie("username", usuario.getUsername());
+
+        if (request.session().attribute("category").equals("admin"))
+          mensajes.put("admin", true);
+          mensajes.put("name", request.session().attribute(SESSION_NAME));
         response.redirect("/");
             
         return null;

@@ -7,31 +7,61 @@
     </div>
         
     <ul id="leftPart" class="nav navbar-nav">
-      <li><a href="/create">Create Challenge</a></li>
-      <li><a href="/about">About Us</a></li>
-      <li><a href="/help">Help</a></li>
+
     </ul>
 
     <ul id="rightPart" class="nav navbar-nav navbar-right">
-      <li><a id="signInButton" href=""><span class="glyphicon glyphicon-log-in"></span> Sign In</a></li>
-      <li><a id="signUpButton" href=""><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a id="signInButton" href="">
+        <span class="glyphicon glyphicon-log-in"></span> Sign In
+      </a></li> 
+
+      <li><a id="signUpButton" href="">
+        <span class="glyphicon glyphicon-user"></span> Sign Up
+      </a></li>
     </ul>
   </div>
 </nav>
 
 <script>
-  $(document).ready(function(){
+  $(document).ready(function() {
+    var name = getCookie('username');
 
-    $("#signInButton").click(function(event) {
-      event.preventDefault();
-      $("#signinModal").modal();
-    });
+    if (getCookie('admin') == 'true') {
+      $('#leftPart').html('<li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" href="#">Modo<span class="caret"></span> </a> <ul class="dropdown-menu"> <li><a href="#"><button id="adminMode" class="btn btn-primary">Modo Admin</button></a></li> <li><a href="#"><button id="userMode" class="btn btn-primary">Modo User</button></a></li></ul></li>');
+
+      $('#userMode').click(function() {
+        window.location.href='/gameMenu';
+      });
+
+      $('#adminMode').click(function() {
+        window.location.href='/adminMenu';
+      });
+    }
+
+    if (name == 'undefined') {
+      $("#signInButton").click(function(event) {
+        event.preventDefault();
+        $("#signinModal").modal();
+      });
 
 
-    $("#signUpButton").click(function(event) {
-      event.preventDefault();
-      $("#signupModal").modal();
-    });
+      $("#signUpButton").click(function(event) {
+        event.preventDefault();
+        $("#signupModal").modal();
+      });
+    }
+    else {
+      $('#rightPart').html('');
+      $('#rightPart').html('<li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" href="#">'+name+' <span class="caret"></span> </a> <ul class="dropdown-menu"> <li><a href="#"><button id="editProfile" class="btn btn-primary">Editar Perfil</button></a></li> <li><a href="#"> <form action="/logout" method="POST"> <input type="submit" value="Cerrar Sesion" class="btn btn-danger" /></form></a></li></ul></li>');
+    }
 
-  });
+   });
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+
 </script>
