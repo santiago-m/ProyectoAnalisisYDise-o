@@ -27,18 +27,6 @@ public class AdminTest {
         Base.close();
     }
 
-    // @Test
-    // public void validateUniquenessOfUsernames(){
-    //     User user = new User();
-    //     user.set("username", "anakin");
-    //     user.saveIt();
-
-    //     User user2 = new User();
-    //     user.set("username", "anakin");
-
-    //     assertEquals(user2.isValid(), false);
-    // }
-
     @Test
     public void validateUniquenessOfUsernames(){
         User user = new User();

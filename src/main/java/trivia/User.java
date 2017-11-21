@@ -60,14 +60,14 @@ public class User extends Model {
       	if (!questions.isEmpty()) {
           preguntaActual = App.randInt(1, cantPreguntas);
           pregunta = questions.get(preguntaActual-1);
-        
+
         preguntas.put("ID", pregunta.getInteger("id"));
 
         pregunta.calcularOpciones();
         respuestasEnOrden = new String[pregunta.getCantOpciones()];
-          
+
         int posicionRespCorrecta = App.randInt(1, pregunta.getCantOpciones());
-        
+
         for (int i = 1; i <= pregunta.getCantOpciones(); i++) {
 
           if (i > posicionRespCorrecta) {
@@ -82,7 +82,7 @@ public class User extends Model {
         }
         preguntas.put("pregunta", pregunta.get("pregunta"));
         preguntas.put("cantPreguntasDisponibles", questions.size());
-        
+
         Respondida preguntaRespondida = new Respondida();
         preguntaRespondida.set("usuario", player.getInteger("id"));
         preguntaRespondida.set("pregunta", pregunta.getInteger("id"));
@@ -137,6 +137,8 @@ public class User extends Model {
 	}
 
   	static{
+			blankToNull("username", "password");
     	validatePresenceOf("username").message("Please, provide your username");
+			validatePresenceOf("password").message("Please, provide a password");
   	}
 }
