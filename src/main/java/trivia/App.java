@@ -607,12 +607,14 @@ public class App {
           mensajes.put("admin", true);
           mensajes.put("name", request.session().attribute(SESSION_NAME));
         response.redirect("/");
-
+        mensajes.put("puntaje", ((User) request.session().attribute("user")).getInteger("puntaje"));
+            
         return null;
       }
       else {
         mensajes.put("estadoLogin", "Usuario o contraseña incorrecto.-");
-        response.redirect("/login");
+        mensajes.put("estadoRegistro", "");
+        response.redirect("/");
         return null;
       }
     });

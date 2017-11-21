@@ -1,0 +1,35 @@
+<div class="modal fade" id="profileModal" role="dialog">
+  <div class="modal-dialog">
+  <!-- Modal content-->
+		<div class="modal-content">
+    	<div class="modal-header" style="padding:35px 50px;">
+      	<button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4><span class="glyphicon glyphicon-user"></span> Perfil</h4>
+      </div>
+      
+      <div class="modal-body" style="padding:40px 50px;">
+        <strong> Nombre de Usuario: </strong> <div id="profileName"/>
+				<br>
+				<strong> Puntaje: </strong> <div id="profilePoints"/>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Volver</button>
+      </div>
+    </div>
+      
+  </div>
+</div> 
+
+<script>
+	var name = getCookie('username');
+	var puntaje = getCookie('puntaje');
+
+	$('#profileName').html(name);
+	$('#profilePoints').html(puntaje);
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+</script>
