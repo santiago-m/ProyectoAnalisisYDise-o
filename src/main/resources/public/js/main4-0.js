@@ -10,8 +10,6 @@ $(document).ready(function() {
 		document.cookie = "admin=false";
 	}
 
-	$("#modalSignIn").load("partials/modal-login.html");
-	$("#modalSignUp").load("partials/modal-register.html");
-	$("#navBar").load("partials/navBar.html");
+	$("#navBar").load("partials/navBar4-0.html");
 	$("#opcionesCorcho").load("partials/opcionesCorcho.html");
 });
