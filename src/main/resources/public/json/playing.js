@@ -195,7 +195,12 @@ function opponentReady() {
 	}
 	else {
 		$('#pointsPlace').html('');
-		$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);
+		if (cantPlayers > 1) {
+			$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);	
+		}
+		else {
+			$('#pointsPlace').html(username + ': '+ puntaje);
+		}
 		nextQuestion();
 	}
 }
@@ -272,7 +277,12 @@ function nextQuestion() {
 	}
 	cantPreguntasRespondidas++;
 	$('#pointsPlace').html('');
-	$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);
+	if (cantPlayers > 1) {
+		$('#pointsPlace').html(username + ': '+ puntaje + '<br>' + opponent + ': ' + puntajeOponente);	
+	}
+	else {
+		$('#pointsPlace').html(username + ': '+ puntaje);
+	}
 }
 
 function refreshQuestion(msg) {
