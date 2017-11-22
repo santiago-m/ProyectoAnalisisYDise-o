@@ -31,7 +31,7 @@ import com.google.gson.Gson;
 
 public class App {
 
-  private static final String SESSION_NAME = "username";
+  public static final String SESSION_NAME = "username";
   private static ArrayList<Game> games = new ArrayList<Game>();
   public static Map hostUser = new HashMap();
   public static Map hosts = new HashMap();
@@ -465,7 +465,7 @@ public class App {
 
           request.session().attribute("gameIndex", games.size()-1);
 
-          int cantJugadores = aux.selectHostgetCantUsuarios();
+          int cantJugadores = aux.getCantUsuarios();
           preguntas.put("game_"+((String) request.session().attribute(SESSION_NAME)), cantJugadores);
           preguntas.put("status_"+(String) request.session().attribute(SESSION_NAME), "ready");
           preguntas.put("cantPreguntas_"+(String) request.session().attribute(SESSION_NAME), -1);
