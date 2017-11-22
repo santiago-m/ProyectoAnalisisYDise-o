@@ -61,12 +61,25 @@ webSocket.onmessage = function (msg) {
 
 			if (state == "winner") {
 				alert('You have win the game against ' + opponent);
+				$('#quitGame').submit();
 			}
+
+			if (state == "opponentGaveUp") {
+				alert('You have win the game against ' + opponent + ' because he abandoned');
+				$('#quitGame').submit();
+			}
+			if (state == "gaveUp") {
+				alert('You have abandoned the game against ' + opponent + 'You Lost!');
+				$('#quitGame').submit();
+			}
+
 			else if (state == "loser") {
 				alert('You have lost the game against ' + opponent);
+				$('#quitGame').submit();
 			}
 			else if (state == "draw") {
 				alert('You and ' + opponent + ' had a draw in your game!');
+				$('#quitGame').submit();
 			}
 			else if (state == "opponentFinished") {
 				suddenDeath = true;
@@ -331,6 +344,14 @@ function refreshQuestion(msg) {
 	console.log(data);
 }
 
+function giveUp() {
+	webSocket.send(JSON.stringify({
+		IQuit: true,
+		username: username,
+		opponent: opponent
+	}));
+}
+
 function sendAnswer(answerPos) {
 	pregunta = null;
 	var finished = false;
@@ -338,6 +359,7 @@ function sendAnswer(answerPos) {
 		finished = true;
 	}
 	webSocket.send(JSON.stringify({
+		IQuit: false,
 		finished: finished,
 		alone: suddenDeath,
 		cantPlayers: cantPlayers,
