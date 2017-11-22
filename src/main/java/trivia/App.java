@@ -790,21 +790,9 @@ public class App {
 
       List<Integer> id = new ArrayList<Integer>();
       List<String> preguntas = new ArrayList<String>();
-      /*  Aun no implementado como quiero
-      List<String> correcta = new ArrayList<String>();
-      List<String> mal1 = new ArrayList<String>();
-      List<String> mal2 = new ArrayList<String>();
-      List<String> mal3 = new ArrayList<String>();
-      List<String> activa = new ArrayList<String>();*/
 
       cambiar.stream().forEach(p -> { id.add(p.getInteger("id"));
                                       preguntas.add(p.getString("pregunta"));
-                                      /*  Aun no implementado como quiero
-                                      correcta.add(p.getString("respuestaCorrecta"));
-                                      mal1.add(p.getString("wrong1"));
-                                      mal2.add(p.getString("wrong2"));
-                                      mal3.add(p.getString("wrong3"));
-                                      activa.add(p.getString("active"));*/
                                     });
 
       Session destino = (Session) getKeyFromValue(concurr, sender);
@@ -814,12 +802,6 @@ public class App {
         destino.getRemote()
                .sendString(String.valueOf(new JSONObject().put("id", id)
                                                           .put("pregunta", preguntas)
-                                                          /*  Aun no implementado como quiero
-                                                          .put("correcta", correcta)
-                                                          .put("mal1", mal1)
-                                                          .put("mal2", mal2)
-                                                          .put("mal3", mal3)
-                                                          .put("activa", activa)*/
                                                           ));
 
       } catch (Exception r){
