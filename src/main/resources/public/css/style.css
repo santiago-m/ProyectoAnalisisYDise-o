@@ -14,6 +14,11 @@
   min-width: 175px;
 }
 
+.container.listaHosts {
+      width: 65%;
+      width-min: 300px ;
+    }
+
 .btn-outline-primary {
 	color:#007bff;
 	background-color:transparent;
