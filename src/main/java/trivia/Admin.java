@@ -6,6 +6,8 @@ package trivia;
 
 public class Admin extends User {
   static{
+    blankToNull("username", "password");
     validatePresenceOf("username").message("Please, provide your username");
+    validatePresenceOf("password").message("Please, provide a password");
   }
 }

@@ -14,13 +14,13 @@ public class UserTest{
     @Before
     public void before(){
         Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/sparkTest_test", "root", "root");
-        System.out.println("UserTest setup");
+        System.out.println("UserTest DB Connect");
         Base.openTransaction();
     }
 
     @After
     public void after(){
-        System.out.println("UserTest tearDown");
+        System.out.println("UserTest DB Disconnect");
         Base.rollbackTransaction();
         Base.close();
     }

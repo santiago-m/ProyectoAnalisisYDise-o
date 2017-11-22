@@ -11,11 +11,47 @@ import static org.junit.Assert.assertEquals;
 
 
 public class GameTest{
+    @Before
+    public void before(){
+        Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/sparkTest_test", "root", "root");
+        System.out.println("GameTest DB Connect");
+        Base.openTransaction();
 
-  /*static{
-      validatePresenceOf("jugador1").message("Please, provide your username");
-      validatePresenceOf("jugador2").message("Please, provide your username");
-      validatePresenceOf("ganador").message("It must be a winner");
-    }*/
 
+    }
+
+    @After
+    public void after(){
+        System.out.println("GameTest DB Disconnec");
+        Base.rollbackTransaction();
+        Base.close();
+    }
+
+    @Test
+    public void prueba(){
+      App.openDB();
+
+      User usuario = new User();
+      usuario.set("username", "user");
+      usuario.set("password", "pass");
+      usuario.saveIt();
+
+      Game game = new Game();
+
+      game.set("jugador1", usuario.getInteger("id"));
+      game.set("jugador2", -1);
+      game.set("ganador", -1);
+
+      game.set("estado", "activo");
+      game.saveIt();
+
+      game.setPlayer1(usuario);
+      game.setPlayer2(null);
+
+      game.setCantUsuarios(1);
+
+      App.closeDB();
+
+      assertEquals(game.isValid(), true);
+    }
 }
