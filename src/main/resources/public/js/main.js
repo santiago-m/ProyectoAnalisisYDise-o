@@ -29,6 +29,10 @@ $(document).ready(function() {
   });
 });
 
+$(window).on("unload", function(e) {
+    deleteAllCookies();
+});
+
 function getCookie(name) {
   var value = "; " + document.cookie;
   var parts = value.split("; " + name + "=");
@@ -37,4 +41,10 @@ function getCookie(name) {
 
 function delete_cookie( name ) {
   document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function deleteAllCookies() {
+  delete_cookie('username');
+  delete_cookie('puntaje');
+  delete_cookie('admin');
 }
