@@ -509,17 +509,19 @@ public class App {
     post("/register", (request, response) -> {
 
       openDB();
-      User usuario = new User(request.queryParams("txt_username"), request.queryParams("txt_password"));
+      User usuario = new User(request.queryParams("reg_username"), request.queryParams("reg_password"));
       closeDB();
 
       if (registrar(usuario)) {
+        mensajes.put("estadoLogin", "");
         mensajes.put("estadoRegistro", "");
         response.redirect("/");
         return null;
       }
       else {
         mensajes.put("estadoRegistro", "El usuario ingresado ya existe, pruebe con otro.-");
-        response.redirect("/register");
+        mensajes.put("estadoLogin", "");
+        response.redirect("/");
         return null;
       }
     });
@@ -594,6 +596,7 @@ public class App {
         request.session().attribute("category", (usuario instanceof Admin)?"admin":"user");
 
         mensajes.put("estadoLogin", "");
+        mensajes.put("estadoRegistro", "");
 
         //Antes de loguearse, añade la cookie del cliente como como atributo de la sesion,
         //Luego añade la sesion a la lista de sesiones abiertas.
