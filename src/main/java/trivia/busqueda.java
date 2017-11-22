@@ -24,11 +24,6 @@ public class busqueda {
     public void onMessage(Session session, String msg) throws IOException {
         if (msg.equals("p_partidas")){
             sendGames(session);
-        } else {
-            System.out.println("segundo del if"); // "posible implementacion" (que nunca va a llegar (?))
-            //App.startGame(sender = App.concurr.get(session), msg);
-            // aca necesito el usuario correcto.. no User1
-            // msg es el nombre de la partida
         }
     }
 

@@ -786,21 +786,9 @@ public class App {
 
       List<Integer> id = new ArrayList<Integer>();
       List<String> preguntas = new ArrayList<String>();
-      /*  Aun no implementado como quiero
-      List<String> correcta = new ArrayList<String>();
-      List<String> mal1 = new ArrayList<String>();
-      List<String> mal2 = new ArrayList<String>();
-      List<String> mal3 = new ArrayList<String>();
-      List<String> activa = new ArrayList<String>();*/
 
       cambiar.stream().forEach(p -> { id.add(p.getInteger("id"));
                                       preguntas.add(p.getString("pregunta"));
-                                      /*  Aun no implementado como quiero
-                                      correcta.add(p.getString("respuestaCorrecta"));
-                                      mal1.add(p.getString("wrong1"));
-                                      mal2.add(p.getString("wrong2"));
-                                      mal3.add(p.getString("wrong3"));
-                                      activa.add(p.getString("active"));*/
                                     });
 
       Session destino = (Session) getKeyFromValue(concurr, sender);
@@ -810,12 +798,6 @@ public class App {
         destino.getRemote()
                .sendString(String.valueOf(new JSONObject().put("id", id)
                                                           .put("pregunta", preguntas)
-                                                          /*  Aun no implementado como quiero
-                                                          .put("correcta", correcta)
-                                                          .put("mal1", mal1)
-                                                          .put("mal2", mal2)
-                                                          .put("mal3", mal3)
-                                                          .put("activa", activa)*/
                                                           ));
 
       } catch (Exception r){
@@ -833,51 +815,5 @@ public class App {
       }
       return null;
     }
-
-    /*public static void sendGames(String sender) {
-      Session destino = (Session) getKeyFromValue(concurr, sender);
-
-      int juegos_totales = (int) hosts.get("cantidadHosts");
-      List<String> usuario = new ArrayList<String>();
-      List<String> nombre_partida = new ArrayList<String>();
-      List<Integer> cPreguntas = new ArrayList<>();
-      String aux;
-
-      for (int i= 1; i<(juegos_totales+1) ; i++ ) {
-        aux = (String)hosts.get("Host "+ (i));
-
-        nombre_partida.add(aux);
-        usuario.add(((User)hostUser.get(aux)).getUsername());
-        cPreguntas.add((int)hosts.get(aux));
-      }
-      try {
-
-        destino.getRemote()
-               .sendString(String.valueOf(new JSONObject().put("usuario", usuario)
-                                                          .put("nombre_partida", nombre_partida)
-                                                          .put("cPreguntas", cPreguntas)
-                                                          ));
-
-      } catch (Exception r){
-        r.printStackTrace();
-      }
-
-    }*/
-
-    /*public static void startGame (String session, String msg) {
-      openDB();
-      List<User> listUsers = User.where("username = '"+session+"'");
-      User aux = listUsers.get(0);
-      Game newGame = new Game();
-      Game.initGame(newGame, (int) hosts.get(msg), (User) hostUser.get(msg), (User) aux);
-
-      games.add(newGame);
-      //request.session().attribute("gameIndex", games.size()-1);
-
-      jugadorRespuesta.put( (User) aux, 0);
-      jugadorRespuesta.put( ((User) hostUser.get(msg)).getString("username"), 0);
-      closeDB();
-      //response.redirect("/playTwoPlayers");
-    }*/
 
 }
