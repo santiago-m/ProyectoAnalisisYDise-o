@@ -42,6 +42,7 @@ webSocket.onmessage = function (msg) {
 					}
 					else {
 						status = 'waiting';
+						timeRunning = false;
 						waitForTurn();
 					}
 				}
@@ -169,6 +170,27 @@ window.onload = function() {
 	});
 }
 
+var timeRunning = false;
+
+function startTimeOut() {
+
+	if (($('#timer').html() != null) && ($('#timer').html() != "")) {
+		timeRunning = true;
+		actualTime = $('#timer').html();
+		actualTime--;
+		$('#timer').html(actualTime);
+
+		setTimeout(function() {
+			if (actualTime != 0) {
+				startTimeOut();
+			}
+			else {
+				sendAnswer(-1);
+			}
+		}, 1000);
+	}
+}
+
 function createSession() {
 	console.log("user: " + username);
 	console.log("opponent: " + opponent);
@@ -184,6 +206,7 @@ function wait(condition1, condition2, callback) {
     if (typeof condition1() !== "undefined") {
     	if (typeof condition2() !== "undefined") {
         	callback();
+        	startTimeOut();
     	}
     	else {
         	setTimeout(function () {
@@ -224,6 +247,7 @@ function opponentReady() {
 
 function waitForTurn() {
 	$('#pointsPlace').html('');
+	$('#timer').html('');
 	$('#questionPlace').html('');
 	$('#questionPlace').html('Espere por su turno.');
 
@@ -300,6 +324,11 @@ function nextQuestion() {
 	else {
 		$('#pointsPlace').html(username + ': '+ puntaje);
 	}
+	$('#timer').html('');
+	$('#timer').html(10);
+	if (!timeRunning) {
+		startTimeOut();
+	}	
 }
 
 function refreshQuestion(msg) {
@@ -362,15 +391,25 @@ function sendAnswer(answerPos) {
 	if (cantPreguntasRespondidas === cantMaxPreguntas) {
 		finished = true;
 	}
+
+	var finalAnswer;
+
+	if (answerPos < 0) {
+		finalAnswer = 'tZiZmZeZoZuZt';
+	}
+	else {
+		finalAnswer = answers[answerPos];
+	}
+
 	webSocket.send(JSON.stringify({
 		IQuit: false,
 		finished: finished,
 		alone: suddenDeath,
 		cantPlayers: cantPlayers,
-  	username: username,
-  	opponent: opponent,
-  	puntaje: puntaje,
-  	idPregunta: idPregunta,
-  	answer: answers[answerPos]
+  		username: username,
+  		opponent: opponent,
+  		puntaje: puntaje,
+  		idPregunta: idPregunta,
+  		answer: finalAnswer
 	}));
 }
