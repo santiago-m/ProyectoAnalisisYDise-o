@@ -1,29 +1,50 @@
-<link rel="stylesheet" href="css/style.css">
+<head>
+  <title>Edicion de pregunta</title>
 
-<div id="goBack">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+
+  <!-- Our own css file-->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div id="navBar"></div>
+
+  <div id="goBack">
     <form action="/" method="get">
-        <input type="submit" value="Menu Principal" name="mainMenu_btn" id="mainMenu_btn" />
+      <input type="submit" value="Menu Principal" name="mainMenu_btn" id="mainMenu_btn" />
     </form>
-</div>
+  </div>
 
-<center>
-	<h2>Administrar Preguntas</h2>
-	<br>
-	<br>
+  <center>
+    <h2>Administrar Preguntas</h2>
+    <br>
+    <br>
 
-	<div id ="asd">
-		<strong>Ingrese una pregunta para editar:</strong>
-		<br>
-	</div>
+    <div id ="asd">
+      <strong>Ingrese una pregunta para editar:</strong>
+      <br>
+    </div>
 
-	<div id="mydiv3">
+    <form id="preguntas" action="/adminQuestions" method="post"></form>
+    <div id="container-fluid">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-3">
+        <input class="form-control" type="placeholder" name="cambiar" id="cambiar" value=""/>
+      </div>
+      <div class="col-sm-3">
+        <button id="cambiar_boton" class="btn btn-outline-success" value="">Buscar</button>
+      </div>
+    </div>
+  </center>
 
-		<input type="placeholder" name="cambiar" id="cambiar"/>
-		<button id="cambiar_boton">Enviar</button>
-		<form id="preguntas" action="/adminQuestions" method="post">
-
-		</form>
-	</div>
-
-	<script src="json/edicionPreguntas.js"></script>
-</center>
+  <script type="text/javascript" src="js/main.js"></script>
+  <script src="json/edicionPreguntas.js"></script>
+</body>
