@@ -65,11 +65,15 @@ webSocket.onmessage = function (msg) {
 			}
 
 			if (state == "opponentGaveUp") {
-				alert('You have win the game against ' + opponent + ' because he abandoned');
+				if (cantPlayers > 1) {
+					alert('You have win the game against ' + opponent + ' because he abandoned');
+				}
 				$('#quitGame').submit();
 			}
 			if (state == "gaveUp") {
-				alert('You have abandoned the game against ' + opponent + 'You Lost!');
+				if (cantPlayers > 1) {
+					alert('You have abandoned the game against ' + opponent + ' You Lost!');	
+				}
 				$('#quitGame').submit();
 			}
 
