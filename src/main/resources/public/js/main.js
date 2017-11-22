@@ -8,18 +8,17 @@ $(document).ready(function() {
 	var admin = $('#admin').html();
 	var puntaje = $('#puntaje').html();
 
-	if (!getCookie('admin')) {
-		if (admin) {
-			document.cookie = "admin="+admin;	
-		}
-		else {
-			document.cookie = "admin=false";
-		}
+	if (admin == 'true') {
+		document.cookie = "admin="+admin;	
 	}
-	if (!getCookie('username')) {
+	else {
+		document.cookie = "admin=false";
+	}
+	
+	if (!getCookie('username') || getCookie('username') == 'undefined') {
 		document.cookie = "username="+usrname;		
 	}
-	if (!getCookie('puntaje')) {
+	if (!getCookie('puntaje') || getCookie('puntaje') == 'undefined') {
 		document.cookie = "puntaje="+puntaje;
 	}
 
@@ -40,10 +39,6 @@ $(document).ready(function() {
     event.preventDefault();
     $("#profileModal").modal();
   });
-});
-
-$(window).on("unload", function(e) {
-    deleteAllCookies();
 });
 
 function getCookie(name) {

@@ -454,7 +454,7 @@ public class App {
       User usuarioActual = request.session().attribute("user");
 
       if (usuarioActual == null) {
-        response.redirect("/login");
+        response.redirect("/");
       }
       else {          
         
