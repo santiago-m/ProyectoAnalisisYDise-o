@@ -98,19 +98,6 @@ public class App {
         try {
           games.remove((int) req.session().attribute("gameIndex"));
         }
-      }
-      else {
-        return new ModelAndView(new HashMap(), "./views/mainpage.mustache");
-      }
-    }, new MustacheTemplateEngine()
-    );
-
-    //Funcion anonima utilizada para mostrar el menu del jugador.
-    get("/gameMenu", (req, res) -> {
-      if (req.session().attribute("gameIndex") != null) {
-        try {
-          games.remove((int) req.session().attribute("gameIndex"));
-        }
         catch(IndexOutOfBoundsException e) {
           System.out.println("El juego ya ha sido eliminado por el contrincante");
         }
@@ -118,6 +105,15 @@ public class App {
         req.session().removeAttribute("gameIndex");
         preguntas.remove("game_"+(String) req.session().attribute(SESSION_NAME));
       }
+
+      openDB();
+      List<Question> possibleQuestions = Question.where("active = 1 and creador != '"+req.session().attribute(SESSION_NAME)+"' and ('"+( (User) (req.session().attribute("user"))).getInteger("id")+"', id) not in (SELECT * from respondidas) ");
+
+      if (possibleQuestions.isEmpty()) {
+        mensajes.put("canAnswer", false);
+      }
+      closeDB();
+
       return new ModelAndView(mensajes, "./views/gameMenu.mustache");
     }, new MustacheTemplateEngine()
     );

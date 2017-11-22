@@ -18,7 +18,7 @@ public class Game extends Model{
       validatePresenceOf("jugador1").message("Please, provide your username");
       validatePresenceOf("jugador2").message("Please, provide your username");
       validatePresenceOf("ganador").message("It must be a winner");
-      validatePresenceOf("estaado").message("It must be a winner");
+      validatePresenceOf("estado").message("It must be a winner");
       //validatePresenceOf("player2").message("It must be a winner");
     }
 

@@ -30,14 +30,14 @@
 
       <div class="container">
 
-          <p id="message">{{cantAnswer}}</p>
-          <form action="/play" method="GET">
-              <input type="submit" value="Jugar Solo" class="btn btn-outline-primary btn-block" />
+          <p id="canAnswer" hidden>{{canAnswer}}</p>
+          <form id="playAloneForm" action="/play" method="GET">
+              <input id="playAloneBtn" value="Jugar Solo" class="btn btn-outline-primary btn-block" />
           </form>
           <br>
 
-          <form action="/menuHost" method="GET">
-              <input type="submit" value="Multi-Jugador" class="btn btn-outline-primary btn-block" />
+          <form id="playMultiForm" action="/menuHost" method="GET">
+              <input id="playMultiBtn" value="Multi-Jugador" class="btn btn-outline-primary btn-block" />
           </form>
           <br>
           

@@ -8,6 +8,25 @@ $(document).ready(function() {
 	var admin = $('#admin').html();
 	var puntaje = $('#puntaje').html();
 
+	var canAnswer = $('#canAnswer').html();
+
+	$('#playMultiBtn').click(function(e) {
+		if (canAnswer != "false") {
+			$('#playMultiForm').submit();
+		}
+		else {
+			alert('No tiene mas preguntas disponibles para responder. Intente otro dia');
+		}
+	});
+	$('#playAloneBtn').click(function(e) {
+		if (canAnswer != "false") {
+			$('#playAloneForm').submit();
+		}
+		else {
+			alert('No tiene mas preguntas disponibles para responder. Intente otro dia');
+		}
+	});
+
 	if (admin == 'true') {
 		document.cookie = "admin="+admin;	
 	}
