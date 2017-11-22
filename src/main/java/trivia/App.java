@@ -457,7 +457,7 @@ public class App {
       User usuarioActual = request.session().attribute("user");
 
       if (usuarioActual == null) {
-        response.redirect("/login");
+        response.redirect("/");
       }
       else {
 
@@ -608,7 +608,7 @@ public class App {
 
         if (request.session().attribute("category").equals("admin"))
           mensajes.put("admin", true);
-          mensajes.put("name", request.session().attribute(SESSION_NAME));
+        mensajes.put("name", request.session().attribute(SESSION_NAME));
         response.redirect("/");
         mensajes.put("puntaje", ((User) request.session().attribute("user")).getInteger("puntaje"));
             
