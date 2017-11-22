@@ -1,100 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Creacion de pregunta</title>
+<head>
+  <title>Edicion de pregunta</title>
 
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <style>
-    body {
-        background-color: #e2e2e2;
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    }
-    </style>
-  </head>
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">Pregunta2</a>
+  <!-- Our own css file-->
+  <link rel="stylesheet" href="css/style.css">
+</head>
 
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
+<body>
+  <div id="navBar"></div>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-              <a class="nav-link" href="/"> Menu Principal <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-              <form action="/play" method="POST" id="jugar"></form>
-              <a class="nav-link" href="/play" onclick="document.getElementById('jugar').submit(); return false;"> Un jugador </a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/menuHost"> Multi-Jugador </a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/profile"> Perfil </a>
-          </li>
-          <li class="nav-item">
-              <form action="/logout" method="POST" id="salir"></form>
-              <a class="nav-link" href="/logout" onclick="document.getElementById('salir').submit(); return false;"> Cerrar Sesion </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+  <div id="goBack">
+    <form action="/" method="get">
+      <input type="submit" value="Cancelar" name="mainMenu_btn" class="btn btn-outline-primary" id="mainMenu_btn" />
+    </form>
+  </div>
 
-    <center>
-      <br>
-      <h2>Creacion de pregunta</h2>
+  <center>
+    <br>
+    <h2>Creacion de pregunta</h2>
 
-      <br>
+    <br>
 
-      <div id="container-fluid">
+    <div class="container">
 
-    		<form action="/submitQuestion" method="POST">
+    	<form action="/submitQuestion" method="POST">
 
-          <div class="col-sm-4">
-    			   <span>Pregunta: </span> <input class="form-control" id="txt_question" name="txt_question" value="" placeholder="¿?" type="text">
-          </div>
-          <br>
+        <div class="span1">
+    			<span>Pregunta: </span> <input class="form-control" id="txt_question" name="txt_question" value="" placeholder="¿?" type="text">
+        </div>
+        <br>
 
-      		<div class="col-sm-3">
-            <span>Respuesta Correcta: </span>     <input class="form-control" id="txt_correct" name="txt_correct" value="" placeholder="Bien :D" type="text">
-          </div>
-          <br>
+      	<div class="span2">
+          <span>Respuesta Correcta: </span>     <input class="form-control" id="txt_correct" name="txt_correct" value="" placeholder="Bien :D" type="text">
+        </div>
+        <br>
 
-    			<div class="col-sm-3">
-            <span>Respuesta Incorrecta 1: </span> <input class="form-control" id="txt_incorrect1" name="txt_incorrect1" value="" placeholder="Mal D:" type="text">
-          </div>
-          <br>
+    		<div class="span3">
+          <span>Respuesta Incorrecta 1: </span> <input class="form-control" id="txt_incorrect1" name="txt_incorrect1" value="" placeholder="Mal D:" type="text">
+        </div>
+        <br>
 
-    			<div class="col-sm-3">
-            <input type="checkbox" name="wrong1" value="wrong1">
-            <span>Respuesta Incorrecta 2: </span> <input class="form-control" id="txt_incorrect2" name="txt_incorrect2" value="" placeholder="Otra mal D:" type="text">
-          </div>
-          <br>
+    		<div class="span4">
+          <input type="checkbox" name="wrong1" value="wrong1">
+          <span>Respuesta Incorrecta 2: </span> <input class="form-control" id="txt_incorrect2" name="txt_incorrect2" value="" placeholder="Otra mal D:" type="text">
+        </div>
+        <br>
 
-    			<div class="col-sm-3">
-            <input type="checkbox" name="wrong2" value="wrong2">
-            <span>Respuesta Incorrecta 3: </span> <input class="form-control" id="txt_incorrect3" name="txt_incorrect3" value="" placeholder="Mal x3" type="text">
-          </div>
-    			<br>
-    			<br>
+    		<div class="span5">
+          <input type="checkbox" name="wrong2" value="wrong2">
+          <span>Respuesta Incorrecta 3: </span> <input class="form-control" id="txt_incorrect3" name="txt_incorrect3" value="" placeholder="Mal x3" type="text">
+        </div>
+    		<br>
+        <br>
 
-          <div class="col-sm-3">
-    			  <input type="Submit" value="Crear Pregunta!" class="btn btn-outline-success"/>
-          </div>
-    		</form>
-    	</div>
+        <div class="span6">
+      	  <input type="Submit" value="Crear Pregunta!" class="btn btn-outline-success"/>
+        </div>
+    	</form>
+  	</div>
 
 
-    </center>
+  </center>
+  <script type="text/javascript" src="js/main.js"></script>
+  
+</body>
 
-    <script type="text/javascript" src="js/jquery-3.2.1.js"></script>
-    <script type="text/javascript" src="js/popper.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js" ></script>
-  </body>
-</html>
