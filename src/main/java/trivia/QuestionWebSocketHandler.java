@@ -82,7 +82,6 @@ public class QuestionWebSocketHandler {
                     System.out.println("Cannot tell " + clientUsername + " that the opponent " + clientOpponent + " is not ready yet");
                 }   
             }
-
         }
 
         if (data.get("answer") != null) {
@@ -93,7 +92,15 @@ public class QuestionWebSocketHandler {
                 }    
             }
         }
-    }
+        else {
+          if (data.get("IQuit") != null) {
+            boolean quit = (boolean) data.get("IQuit");
+            if (quit) {
+              setResult(clientUsername, clientOpponent);
+            }
+          }
+        }
+      }
 
     public void manageAnswer(Session client, spark.Session sess, Map message) {
         String username = (String) message.get("username");
@@ -107,12 +114,17 @@ public class QuestionWebSocketHandler {
         boolean finished = (boolean) message.get("finished");
         boolean playingAlone = (boolean) message.get("alone");
 
+        boolean quit = (boolean) message.get("IQuit");
+
         Map<String, Object> respuesta = new HashMap<String, Object>();
 
         spark.Session sparkSession;
 
         sparkSession = sess;
-
+      if (quit) {
+        setResult(username, opponent);
+      }
+      else {
         if (Game.esCorrecta(questionID.intValue(), answer)) {
 
             if (finished) {
@@ -162,6 +174,35 @@ public class QuestionWebSocketHandler {
             }
             
         }
+      }  
+    }
+
+    private void setResult(String playerWhoQuit, String opponent) {
+        Map<String, Object> temp = new HashMap<String, Object>();
+        temp.put("playerState", "gaveUp");
+
+        try {
+          usernameSession.get(playerWhoQuit).getRemote().sendString(new Gson().toJson(temp));
+        }
+        catch(java.io.IOException e) {
+          System.out.println("Could not inform player that lost because he abandoned");
+        }
+
+        temp.put("playerState", "opponentGaveUp");
+        
+        try {
+          usernameSession.get(opponent).getRemote().sendString(new Gson().toJson(temp));
+        }
+        catch(java.io.IOException e) {
+          System.out.println("Could not inform opponent that win because player abandoned");
+        }      
+
+
+        sessions.remove(usernameSession.get(playerWhoQuit));
+        sessions.remove(usernameSession.get(opponent));
+
+        usernameSession.remove(playerWhoQuit);
+        usernameSession.remove(opponent);
     }
 
     private void checkResult(String player, String opponent) {
