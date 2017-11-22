@@ -8,6 +8,7 @@ import org.javalite.activejdbc.Model;
 */
 public class Question extends Model {
 	private int cantOpciones = 1;
+  /*private static Gson gson = new Gson();*/
 
 	static{
       blankToNull("wrong2", "wrong3");
@@ -32,19 +33,19 @@ public class Question extends Model {
 
   	public void unCheck(){
   		this.set("leido", 0);
-  		this.saveIt();	
+  		this.saveIt();
   	}
 
   	public void calcularOpciones() {
   		if (this.get("wrong1") != null) {
-			cantOpciones++;
-		}
-		if (this.get("wrong2") != null) {
-			cantOpciones++;
-		}
-		if (this.get("wrong3") != null) {
-			cantOpciones++;
-		}
+				cantOpciones++;
+			}
+			if (this.get("wrong2") != null) {
+				cantOpciones++;
+			}
+			if (this.get("wrong3") != null) {
+				cantOpciones++;
+			}
   	}
 
   	public int getCantOpciones() {
