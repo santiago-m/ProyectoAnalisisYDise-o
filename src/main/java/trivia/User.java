@@ -43,12 +43,12 @@ public class User extends Model {
 		User player = users.get(0);
 
 		Map preguntas = new HashMap();
-        preguntas.put("ID", -1);
-        preguntas.put("pregunta", "");
-      	preguntas.put("opcion 1", "");
-      	preguntas.put("opcion 2", "");
-      	preguntas.put("opcion 3", "");
-      	preguntas.put("opcion 4", "");
+      preguntas.put("ID", -1);
+      preguntas.put("pregunta", "");
+      preguntas.put("opcion 1", "");
+      preguntas.put("opcion 2", "");
+      preguntas.put("opcion 3", "");
+      preguntas.put("opcion 4", "");
 
     	String respuestasEnOrden[];
       	List<Question> questions = Question.where("active = 1 and creador != '"+player.getString("username")+"' and ('"+player.getInteger("id")+"', id) not in (SELECT * from respondidas) ");
@@ -57,11 +57,11 @@ public class User extends Model {
       	int cantPreguntas = questions.size();
 
 
-      	if (!questions.isEmpty()) {
-          preguntaActual = App.randInt(1, cantPreguntas);
-          pregunta = questions.get(preguntaActual-1);
-        
-        preguntas.put("ID", pregunta.getInteger("id"));
+      if (!questions.isEmpty()) {
+        preguntaActual = App.randInt(1, cantPreguntas);
+        pregunta = questions.get(preguntaActual-1);
+
+	     	preguntas.put("ID", pregunta.getInteger("id"));
 
         pregunta.calcularOpciones();
         respuestasEnOrden = new String[pregunta.getCantOpciones()];
@@ -82,7 +82,7 @@ public class User extends Model {
         }
         preguntas.put("pregunta", pregunta.get("pregunta"));
         preguntas.put("cantPreguntasDisponibles", questions.size());
-        
+
         Respondida preguntaRespondida = new Respondida();
         preguntaRespondida.set("usuario", player.getInteger("id"));
         preguntaRespondida.set("pregunta", pregunta.getInteger("id"));
@@ -137,6 +137,8 @@ public class User extends Model {
 	}
 
   	static{
+			blankToNull("username", "password");
     	validatePresenceOf("username").message("Please, provide your username");
+			validatePresenceOf("password").message("Please, provide a password");
   	}
 }

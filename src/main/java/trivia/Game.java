@@ -18,6 +18,8 @@ public class Game extends Model{
       validatePresenceOf("jugador1").message("Please, provide your username");
       validatePresenceOf("jugador2").message("Please, provide your username");
       validatePresenceOf("ganador").message("It must be a winner");
+      validatePresenceOf("estaado").message("It must be a winner");
+      //validatePresenceOf("player2").message("It must be a winner");
     }
 
     private spark.Session sessionP1, sessionP2;
@@ -79,7 +81,7 @@ public class Game extends Model{
   public HashMap closeGame() {
     activo = false;
     App.openDB();
-    
+
     HashMap winnerLoser = new HashMap();
 
     if (player1.getHP() > player2.getHP()) {
@@ -226,14 +228,14 @@ public class Game extends Model{
       	if (!questions.isEmpty() && ( ((int) cantRespondidas.get(player.getUsername()) ) < cantPreguntas) ) {
           preguntaActual = App.randInt(1, cantPreguntas);
           pregunta = questions.get(preguntaActual-1);
-        
+
         preguntas.put("ID", pregunta.getInteger("id"));
 
         pregunta.calcularOpciones();
         respuestasEnOrden = new String[pregunta.getCantOpciones()];
-          
+
         int posicionRespCorrecta = App.randInt(1, pregunta.getCantOpciones());
-        
+
         for (int i = 1; i <= pregunta.getCantOpciones(); i++) {
 
           if (i > posicionRespCorrecta) {
@@ -248,7 +250,7 @@ public class Game extends Model{
         }
         preguntas.put("pregunta", pregunta.get("pregunta"));
         preguntas.put("cantPreguntasDisponibles", questions.size());
-        
+
         Respondida preguntaRespondida = new Respondida();
         preguntaRespondida.set("usuario", player.getInteger("id"));
         preguntaRespondida.set("pregunta", pregunta.getInteger("id"));
@@ -299,7 +301,7 @@ public class Game extends Model{
           player2.recoverLife();
         }
         player1.quitarVida(cantPreguntas);
-      }  
+      }
     }
   }
 
@@ -332,7 +334,6 @@ public class Game extends Model{
     if (playerName.equals(player1.getUsername())) {
 
       if (player2 != null) {
-        System.out.println("Oponnent name: "+player2.getUsername());
         return player2.getUsername();
       }
       else {
@@ -340,9 +341,8 @@ public class Game extends Model{
       }
     }
     else {
-      System.out.println("Oponnent name: "+player1.getUsername());
       return player1.getUsername(); 
-    }
+     } 
   }
 
   //Metodos get y set de los atributos
@@ -393,5 +393,4 @@ public class Game extends Model{
   public spark.Session getSessionP2() {
     return sessionP2;
   }
-
 }

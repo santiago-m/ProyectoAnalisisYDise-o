@@ -29,11 +29,6 @@ public class Question extends Model {
   		}
   	}
 
-    /*public static String toJson (Question q) {
-      System.out.println(q.get(attributes));
-      return gson.toJson(q.get(attributes));
-    }*/
-
   	public void check() {
   		this.set("leido", 1);
   		this.saveIt();
@@ -41,19 +36,19 @@ public class Question extends Model {
 
   	public void unCheck(){
   		this.set("leido", 0);
-  		this.saveIt();	
+  		this.saveIt();
   	}
 
   	public void calcularOpciones() {
   		if (this.get("wrong1") != null) {
-			cantOpciones++;
-		}
-		if (this.get("wrong2") != null) {
-			cantOpciones++;
-		}
-		if (this.get("wrong3") != null) {
-			cantOpciones++;
-		}
+				cantOpciones++;
+			}
+			if (this.get("wrong2") != null) {
+				cantOpciones++;
+			}
+			if (this.get("wrong3") != null) {
+				cantOpciones++;
+			}
   	}
 
   	public int getCantOpciones() {

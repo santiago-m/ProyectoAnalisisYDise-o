@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 
 public class App {
 
+  public static List<spark.Session> openSessions = new ArrayList<>();
   public static final String SESSION_NAME = "username";
   private static ArrayList<Game> games = new ArrayList<Game>();
   public static Map hostUser = new HashMap();
@@ -41,10 +42,8 @@ public class App {
   static Map<Session, String> hostCreado = new ConcurrentHashMap<>();
   static int nextUserNumber = 1;
 
-  public static List<spark.Session> openSessions = new ArrayList<>();
-
   public static void main(String[] args ) {
-      
+
     //Se selecciona la carpeta en la cual se guardaran los archivos estaticos, como css o json.
     staticFileLocation("/public");
 
@@ -56,7 +55,7 @@ public class App {
 
     //se reinicia el servidor con los datos actualizados
     init();
-    
+
     //HashMap con los valores del perfil del usuario de la sesion iniciada.
     Map profile = new HashMap();
     //HashMap que permite mostrar mensajes en diferentes fases del juego.
@@ -89,6 +88,19 @@ public class App {
       }
       else {
         return new ModelAndView(mensajes, "./views/mainpage.mustache");
+      }
+    }, new MustacheTemplateEngine()
+    );
+
+    //Funcion anonima utilizada para mostrar el menu del jugador.
+    get("/gameMenu", (req, res) -> {
+      if (req.session().attribute("gameIndex") != null) {
+        try {
+          games.remove((int) req.session().attribute("gameIndex"));
+        }
+      }
+      else {
+        return new ModelAndView(new HashMap(), "./views/mainpage.mustache");
       }
     }, new MustacheTemplateEngine()
     );
@@ -139,7 +151,7 @@ public class App {
         games.add(aux);
         req.session().attribute("gameIndex", games.size()-1);
       }
-        
+
       String templateRoute = "./views/play.mustache";
 
       return new ModelAndView(new HashMap(), templateRoute);
@@ -171,7 +183,6 @@ public class App {
           return new ModelAndView(new HashMap(), "./views/adminQuestions.mustache");
         }
       }
-      
       return new ModelAndView(new HashMap(), "./views/mainpage.mustache");
     }, new MustacheTemplateEngine()
     );
@@ -350,6 +361,182 @@ public class App {
       return null;
     });
 
+    //Funcion anonima que crea un bucle hasta que se conecta un segundo jugador para crear una partida multiplayer.
+    get("/waiting", (req, res) -> {
+
+      Map<String, String> usernameHostname = new HashMap<String, String>();
+      
+      String username = req.session().attribute(SESSION_NAME);
+      String hostNum = (String) hostUser.get(username);
+      String hostname = (String) hosts.get(hostNum);
+
+      usernameHostname.put("Username", username);
+      usernameHostname.put("Hostname", hostname);
+
+      return new ModelAndView(usernameHostname, "./views/WFP.mustache");
+    }, new MustacheTemplateEngine()
+    );
+
+    //Funcion anonima que permite a dos usuarios responder preguntas de manera simultanea.
+    get("/playTwoPlayers", (request, response) -> {
+      return new ModelAndView(new HashMap(), "./views/twoPlayersRedirect.mustache");
+    }, new MustacheTemplateEngine()
+    );
+
+    //Funcion anonima muestra el ganador de una partida multiplayer.
+    get("/informWinner", (req, res) -> {
+      closeHost(req.session().attribute(SESSION_NAME));
+
+      return new ModelAndView(winnerLoser, "./views/winnerAlert.mustache");
+    }, new MustacheTemplateEngine()
+    );
+
+    //Funcion anonima que muestra el menu multiplayer, permitiendo crear una partida o unirse a una ya creada.
+    get("/menuHost", (req, res) -> {
+      return new ModelAndView(new HashMap(), "./views/menuMultiplayer.mustache");
+    }, new MustacheTemplateEngine()
+    );
+
+    //Funcion anonima utilizada para recolectar los datos de la partida que el usuario desea crear.
+    get("/hostLAN", (req, res) -> {
+      return new ModelAndView(mensajes, "./views/crearHost.mustache");
+    }, new MustacheTemplateEngine()
+    );
+
+    //Funcion anonima que muestra una tabla con las partidas creadas por otros usuarios, permitiendo al usuario conectarse a alguna.
+    get("/listarHosts", (req, res) -> {
+      return new ModelAndView(hosts, "./views/listarHosts.mustache");
+    }, new MustacheTemplateEngine()
+    );
+
+    // Funcion que expone los datos actuales de una pregunta para proceder a la edicion
+    get ("/changeQuestion", (request, response) -> {
+      return new ModelAndView(preguntas, "./views/changeQuestion.mustache");
+    }, new MustacheTemplateEngine()
+    );
+
+    post ("/adminQuestions", (request, response) -> {
+
+      openDB();
+      List<Question> cambiar = Question.where("id = "+ Integer.parseInt(request.queryParams("opciones")));
+
+      Question pregunta = cambiar.get(0);
+
+      preguntas.put("ID", pregunta.getInteger("id"));
+      preguntas.put("pregunta", pregunta.get("pregunta"));
+      preguntas.put("opcion 1", pregunta.getString("respuestaCorrecta"));
+      preguntas.put("opcion 2", pregunta.getString("wrong1"));
+      preguntas.put("opcion 3", pregunta.getString("wrong2"));
+      preguntas.put("opcion 4", pregunta.getString("wrong3"));
+      preguntas.put("activada", pregunta.getString("active"));
+
+      closeDB();
+
+      response.redirect("./changeQuestion");
+
+      return null;
+    });
+
+    // Funcion que hace efectivos los cambios de la pregunta en la base de datos
+    post ("/changeQuestion", (request, response) -> {
+
+      openDB();
+
+      List<Question> cambiar = Question.where("id = "+ (Integer) preguntas.get("ID"));
+      Question pregunta = cambiar.get(0);
+
+      pregunta.set("pregunta", request.queryParams("cambiar0")).saveIt();
+      pregunta.set("respuestaCorrecta", request.queryParams("cambiar1")).saveIt();
+      pregunta.set("wrong1", request.queryParams("cambiar2")).saveIt();
+      pregunta.set("wrong2", request.queryParams("cambiar3")).saveIt();
+      pregunta.set("wrong3", request.queryParams("cambiar4")).saveIt();
+
+      if (request.queryParams("cb-activa") != null) {
+        pregunta.set("active", 1).saveIt();
+      }
+      else {
+        pregunta.set("active", 0).saveIt();
+      }
+
+      closeDB();
+      response.redirect("./adminMenu");
+      return null;
+    });
+
+    //Funcion anonima tipo POST que inicializa un juego entre el usuario y el creador de la partida que ha elegido.
+    post("/selectHost", (request, response) -> {
+
+      //hosts.get("Host "+(i+1))
+      String hostName = request.queryParams("hostName");  // "hostName" form oculto que tiene el nombre del host
+
+      Game newGame = new Game();
+
+      Game.initGame(newGame, (int) hosts.get(hostName), (User) hostUser.get(hostName), (User) request.session().attribute("user"));
+
+      games.add(newGame);
+      request.session().attribute("gameIndex", games.size()-1);
+
+      jugadorRespuesta.put( ((User) request.session().attribute("user")).getString("username"), 0);
+      jugadorRespuesta.put( ((User) hostUser.get(hostName)).getString("username"), 0);
+
+      int cantJugadores = newGame.getCantUsuarios();
+      preguntas.put("game_"+(String) request.session().attribute(SESSION_NAME), cantJugadores);
+      preguntas.put("game_"+newGame.getPlayer1().getUsername(), cantJugadores);
+      preguntas.put("status_"+(String) request.session().attribute(SESSION_NAME), "waiting");
+      preguntas.put("status_"+newGame.getPlayer1().getUsername(), "ready");
+      preguntas.put("cantPreguntas_"+(String) request.session().attribute(SESSION_NAME), hosts.get(hostName));
+      preguntas.put("cantPreguntas_"+newGame.getPlayer1().getUsername(), hosts.get(hostName));
+
+      response.redirect("/play");
+      return null;
+    });
+
+    //Funcion anonima tipo POST que controla los datos ingresados por el usuario que desea crear una partida multi-jugador.
+    //Si los datos tienen el formato correcto, se procede a la espera de otro jugador que se conecte a la partida.
+    post("/host", (request, response) -> {
+      String hostName = request.queryParams("hostName");
+      int cantPreguntas = 0;
+
+      try {
+        cantPreguntas = Integer.parseInt(request.queryParams("cantPreguntas"));
+      }
+      catch (NumberFormatException e) {
+        System.out.println("Error en el formato del numero.");
+        mensajes.put("estadoHost", "Debe ingresar una cantidad de preguntas");
+        response.redirect("/hostLAN");
+        return null;
+      }
+
+      if (!existeHost(hostName)) {
+
+      openDB();
+      List<Question> questions = Question.where("active = 1 and creador != '"+((User) request.session().attribute("user")).getUsername()+"' and ('"+((User) request.session().attribute("user")).getInteger("id")+"', id) not in (SELECT * from respondidas) ");
+
+      if (questions.isEmpty() || questions.size() < cantPreguntas) {
+        mensajes.put("estadoHost", "Lo siento, no tiene preguntas disponibles suficientes.");
+        response.redirect("/hostLAN");
+        return null;
+      }
+      closeDB();
+
+      mensajes.put("estadoHost", "");
+
+      hostUser.put(hostName, (User) request.session().attribute("user"));
+      hostUser.put(request.session().attribute(SESSION_NAME), "Host "+hosts.size());
+      hosts.put("Host "+ (((int) hosts.get("cantidadHosts"))+1), hostName);
+      hosts.put("cantidadHosts",( (int) hosts.get("cantidadHosts"))+1);
+      hosts.put(hostName, cantPreguntas);
+
+      response.redirect("/waiting");
+
+      }
+      else {
+        mensajes.put("estadoHost", "Lo siento, el nombre de host ya existe o ya existe un host creado por este usuario.");
+        response.redirect("/hostLAN");
+      }
+      return null;
+    });
+
     //Funcion anonima tipo post que se ejecuta iterativamente hasta que dos jugadores estan conectados. Entonces crea un juego multiplayer
     post("/waitForPlayers", (request, response) -> {
       int actualMax = games.size()-1;
@@ -370,68 +557,6 @@ public class App {
         response.redirect("/waiting");
       }
 
-      return null;
-    });
-
-
-    //Funcion anonima tipo post que administra la obtencion de una pregunta que sera respondida por el usuario que corresponda en modo multiplayer.
-    //Ademas controla que la respuesta dada por el usuario en la pregunta anterior sea correcta y realiza las acciones necesarias en caso que esto suceda.
-    post("/playTwoPlayers", (request, response) -> {
-      User usuarioActual = request.session().attribute("user");
-      if (usuarioActual == null) {
-        response.redirect("/login");
-      }
-      else {
-        int indexOfGame = (int) request.session().attribute("gameIndex");
-        if (games.get(indexOfGame).isClosed()) {
-          response.redirect("/informWinner");
-          return null;
-        }
-        else {
-          String respuestaDada = request.queryParams("answer");
-          if (respuestaDada != null) {
-            openDB();
-            String respuestaCorrecta = (Question.where("id = "+preguntas.get("ID"))).get(0).getString("respuestaCorrecta");
-            closeDB();
-               
-            if ((respuestaDada != null) && (respuestaDada.equals(respuestaCorrecta))) {
-              User actual = request.session().attribute("user");
-              jugadorRespuesta.put( actual.getString("username"), (Integer) jugadorRespuesta.get(actual.getString("username"))+1);
-              int correctasSeguidas = (Integer) jugadorRespuesta.get(((User) request.session().attribute("user")).getString("username"));
-              games.get((int) request.session().attribute("gameIndex")).respondioCorrectamente(actual, correctasSeguidas);
-            }
-          }
-        }
-
-        Map preguntaObtenida = new HashMap();
-        preguntaObtenida = games.get(indexOfGame).obtenerPregunta(usuarioActual);
-
-        if ( (preguntaObtenida.get("pregunta").equals("")) || (games.get(indexOfGame).getPlayer1().getHP() == 0) || (games.get(indexOfGame).getPlayer2().getHP() == 0)) {
-          if (preguntaObtenida.get("pregunta").equals("")) {
-            mensajes.put("cantAnswer", "Lo siento, uno de los jugadores no tiene mas preguntas disponibles para responder.");
-          }
-
-          HashMap aux = games.get(indexOfGame).closeGame();
-          winnerLoser.put("ganador", aux.get("ganador"));
-          winnerLoser.put("perdedor", aux.get("perdedor"));
-
-          request.session().removeAttribute("gameIndex");
-
-          response.redirect("/informWinner");
-        }
-        else {
-          mensajes.put("cantAnswer", "");
-          preguntas.put("pregunta", preguntaObtenida.get("pregunta"));
-          preguntas.put("opcion 1", preguntaObtenida.get("opcion 1"));
-          preguntas.put("opcion 2", preguntaObtenida.get("opcion 2"));
-          preguntas.put("opcion 3", preguntaObtenida.get("opcion 3"));
-          preguntas.put("opcion 4", preguntaObtenida.get("opcion 4"));
-          preguntas.put("ID", preguntaObtenida.get("ID"));
-          preguntas.put("cantPreguntasDisponibles", preguntaObtenida.get("cantPreguntasDisponibles"));
-
-          response.redirect("/play");
-        }
-      }
       return null;
     });
 
@@ -502,7 +627,7 @@ public class App {
       return null;
     });
 
-        //Funcion anonima tipo post que obtiene los datos ingresados por el usuario e intenta registrar al usuario en la base de datos.
+    //Funcion anonima tipo post que obtiene los datos ingresados por el usuario e intenta registrar al usuario en la base de datos.
     post("/register", (request, response) -> {
       openDB();
       User usuario = new User(request.queryParams("reg_username"), request.queryParams("reg_password"));
@@ -572,7 +697,7 @@ public class App {
       return null;
     });
 
-//Funcion anonima tipo post que intenta iniciar sesion con los datos ingresados por el usuario en el menu de logueo.
+    //Funcion anonima tipo post que intenta iniciar sesion con los datos ingresados por el usuario en el menu de logueo.
     post("/login", (request, response) -> {
 
       openDB();
@@ -617,6 +742,7 @@ public class App {
         return null;
       }
     });
+
 
     //Funcion anonima tipo post que cierra una sesion abierta.
     post ("/logout", (request, response) -> {
