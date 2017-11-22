@@ -1,0 +1,959 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><pnml>
+<net id="Net-One" type="P/T net">
+<token id="Default" enabled="true" red="0" green="0" blue="0"/>
+<place id="EsperandoContrincante">
+<graphics>
+<position x="675.0" y="240.0"/>
+</graphics>
+<name>
+<value>EsperandoContrincante</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="EsperandoJugadores">
+<graphics>
+<position x="240.0" y="225.0"/>
+</graphics>
+<name>
+<value>EsperandoJugadores</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="Jugador1Esperando">
+<graphics>
+<position x="1170.0" y="495.0"/>
+</graphics>
+<name>
+<value>Jugador1Esperando</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>1</value>
+</capacity>
+</place>
+<place id="Jugador1Respondiendo">
+<graphics>
+<position x="975.0" y="495.0"/>
+</graphics>
+<name>
+<value>Jugador1Respondiendo</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>1</value>
+</capacity>
+</place>
+<place id="Jugador2Esperando">
+<graphics>
+<position x="390.0" y="480.0"/>
+</graphics>
+<name>
+<value>Jugador2Esperando</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>1</value>
+</capacity>
+</place>
+<place id="Jugador2Respondiendo">
+<graphics>
+<position x="225.0" y="480.0"/>
+</graphics>
+<name>
+<value>Jugador2Respondiendo</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>1</value>
+</capacity>
+</place>
+<place id="Jugadores">
+<graphics>
+<position x="495.0" y="45.0"/>
+</graphics>
+<name>
+<value>Jugadores</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="Jugando">
+<graphics>
+<position x="660.0" y="390.0"/>
+</graphics>
+<name>
+<value>Jugando</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="ListoParaJugar">
+<graphics>
+<position x="405.0" y="330.0"/>
+</graphics>
+<name>
+<value>ListoParaJugar</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="Servidor">
+<graphics>
+<position x="540.0" y="150.0"/>
+</graphics>
+<name>
+<value>Servidor</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>1</value>
+</capacity>
+</place>
+<transition id="AbandonaJ1E">
+<graphics>
+<position x="1080.0" y="45.0"/>
+</graphics>
+<name>
+<value>AbandonaJ1E</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="AbandonaJ1R">
+<graphics>
+<position x="975.0" y="45.0"/>
+</graphics>
+<name>
+<value>AbandonaJ1R</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="AbandonaJ2E">
+<graphics>
+<position x="120.0" y="45.0"/>
+</graphics>
+<name>
+<value>AbandonaJ2E</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="AbandonaJ2R">
+<graphics>
+<position x="15.0" y="45.0"/>
+</graphics>
+<name>
+<value>AbandonaJ2R</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="AdministrarOrden">
+<graphics>
+<position x="660.0" y="465.0"/>
+</graphics>
+<name>
+<value>AdministrarOrden</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="AvisarCreador">
+<graphics>
+<position x="405.0" y="225.0"/>
+</graphics>
+<name>
+<value>AvisarCreador</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="CrearHost">
+<graphics>
+<position x="300.0" y="105.0"/>
+</graphics>
+<name>
+<value>CrearHost</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="Jugar">
+<graphics>
+<position x="555.0" y="315.0"/>
+</graphics>
+<name>
+<value>Jugar</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="RespondeBienJ1">
+<graphics>
+<position x="975.0" y="405.0"/>
+</graphics>
+<name>
+<value>RespondeBienJ1</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="RespondeBienJ2">
+<graphics>
+<position x="90.0" y="555.0"/>
+</graphics>
+<name>
+<value>RespondeBienJ2</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="RespondeMalJ1">
+<graphics>
+<position x="945.0" y="600.0"/>
+</graphics>
+<name>
+<value>RespondeMalJ1</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="RespondeMalJ2">
+<graphics>
+<position x="225.0" y="615.0"/>
+</graphics>
+<name>
+<value>RespondeMalJ2</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="SelectHost">
+<graphics>
+<position x="690.0" y="105.0"/>
+</graphics>
+<name>
+<value>SelectHost</value>
+<graphics>
+<offset x="-5.0" y="35.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>false</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<arc id="AbandonaJ1E to Jugadores" source="AbandonaJ1E" target="Jugadores">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="1086" y="57" curvePoint="false"/>
+<arcpath id="001" x="522" y="57" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="AbandonaJ1R to Jugadores" source="AbandonaJ1R" target="Jugadores">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="981" y="57" curvePoint="false"/>
+<arcpath id="001" x="522" y="57" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="AbandonaJ2E to Jugadores" source="AbandonaJ2E" target="Jugadores">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="137" y="52" curvePoint="false"/>
+<arcpath id="001" x="492" y="56" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="AbandonaJ2R to Jugadores" source="AbandonaJ2R" target="Jugadores">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="31" y="57" curvePoint="false"/>
+<arcpath id="001" x="492" y="56" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="AdministrarOrden to Jugador1Respondiendo" source="AdministrarOrden" target="Jugador1Respondiendo">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="676" y="477" curvePoint="false"/>
+<arcpath id="001" x="972" y="505" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="AdministrarOrden to Jugador2Esperando" source="AdministrarOrden" target="Jugador2Esperando">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="666" y="477" curvePoint="false"/>
+<arcpath id="001" x="416" y="491" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="AvisarCreador to ListoParaJugar" source="AvisarCreador" target="ListoParaJugar">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="417" y="252" curvePoint="false"/>
+<arcpath id="001" x="417" y="327" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="CrearHost to EsperandoJugadores" source="CrearHost" target="EsperandoJugadores">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="312" y="132" curvePoint="false"/>
+<arcpath id="001" x="259" y="223" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="EsperandoContrincante to Jugar" source="EsperandoContrincante" target="Jugar">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="674" y="260" curvePoint="false"/>
+<arcpath id="001" x="572" y="322" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="EsperandoJugadores to AvisarCreador" source="EsperandoJugadores" target="AvisarCreador">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="266" y="237" curvePoint="false"/>
+<arcpath id="001" x="411" y="237" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugador1Respondiendo to AbandonaJ1E" source="Jugador1Respondiendo" target="AbandonaJ1E">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="990" y="492" curvePoint="false"/>
+<arcpath id="001" x="1092" y="72" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugador1Respondiendo to AbandonaJ1R" source="Jugador1Respondiendo" target="AbandonaJ1R">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="987" y="492" curvePoint="false"/>
+<arcpath id="001" x="987" y="72" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugador1Respondiendo to RespondeBienJ1" source="Jugador1Respondiendo" target="RespondeBienJ1">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="989" y="492" curvePoint="false"/>
+<arcpath id="001" x="987" y="432" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugador1Respondiendo to RespondeMalJ1" source="Jugador1Respondiendo" target="RespondeMalJ1">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="984" y="521" curvePoint="false"/>
+<arcpath id="001" x="957" y="597" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugador2Esperando to AbandonaJ2E" source="Jugador2Esperando" target="AbandonaJ2E">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="394" y="479" curvePoint="false"/>
+<arcpath id="001" x="136" y="62" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugador2Respondiendo to AbandonaJ2R" source="Jugador2Respondiendo" target="AbandonaJ2R">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="230" y="478" curvePoint="false"/>
+<arcpath id="001" x="27" y="72" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugador2Respondiendo to RespondeBienJ2" source="Jugador2Respondiendo" target="RespondeBienJ2">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="224" y="499" curvePoint="false"/>
+<arcpath id="001" x="107" y="562" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugador2Respondiendo to RespondeMalJ2" source="Jugador2Respondiendo" target="RespondeMalJ2">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="238" y="506" curvePoint="false"/>
+<arcpath id="001" x="237" y="612" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugadores to CrearHost" source="Jugadores" target="CrearHost">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="492" y="61" curvePoint="false"/>
+<arcpath id="001" x="316" y="117" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugadores to SelectHost" source="Jugadores" target="SelectHost">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="521" y="61" curvePoint="false"/>
+<arcpath id="001" x="697" y="112" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugando to AdministrarOrden" source="Jugando" target="AdministrarOrden">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="675" y="416" curvePoint="false"/>
+<arcpath id="001" x="672" y="462" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Jugar to Jugando" source="Jugar" target="Jugando">
+<graphics/>
+<inscription>
+<value>Default,2</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="571" y="332" curvePoint="false"/>
+<arcpath id="001" x="659" y="393" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="ListoParaJugar to Jugar" source="ListoParaJugar" target="Jugar">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="431" y="340" curvePoint="false"/>
+<arcpath id="001" x="561" y="327" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="RespondeBienJ1 to Jugador1Respondiendo" source="RespondeBienJ1" target="Jugador1Respondiendo">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="987" y="432" curvePoint="false"/>
+<arcpath id="001" x="987" y="492" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="RespondeBienJ2 to Jugador2Respondiendo" source="RespondeBienJ2" target="Jugador2Respondiendo">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="106" y="572" curvePoint="false"/>
+<arcpath id="001" x="224" y="499" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="RespondeMalJ1 to Jugador1Esperando" source="RespondeMalJ1" target="Jugador1Esperando">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="961" y="612" curvePoint="false"/>
+<arcpath id="001" x="1168" y="513" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="RespondeMalJ1 to Jugador2Respondiendo" source="RespondeMalJ1" target="Jugador2Respondiendo">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="951" y="612" curvePoint="false"/>
+<arcpath id="001" x="251" y="494" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="RespondeMalJ2 to Jugador1Esperando" source="RespondeMalJ2" target="Jugador1Esperando">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="241" y="632" curvePoint="false"/>
+<arcpath id="001" x="1167" y="508" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="RespondeMalJ2 to Jugador2Esperando" source="RespondeMalJ2" target="Jugador2Esperando">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="242" y="622" curvePoint="false"/>
+<arcpath id="001" x="390" y="501" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="SelectHost to EsperandoContrincante" source="SelectHost" target="EsperandoContrincante">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="702" y="132" curvePoint="false"/>
+<arcpath id="001" x="688" y="237" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="SelectHost to Servidor" source="SelectHost" target="Servidor">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="696" y="122" curvePoint="false"/>
+<arcpath id="001" x="566" y="158" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Servidor to AvisarCreador" source="Servidor" target="AvisarCreador">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="539" y="170" curvePoint="false"/>
+<arcpath id="001" x="421" y="237" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+</net>
+</pnml>
