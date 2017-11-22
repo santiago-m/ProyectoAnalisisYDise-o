@@ -1,6 +1,8 @@
 $(document).ready(function() {
 
 	var estadoLogin = $('#estadoLogin').html();
+	var estadoRegistro = $('#estadoRegistro').html();
+	
 
 	var usrname = $('#usrname').html();
 	var admin = $('#admin').html();
@@ -22,7 +24,11 @@ $(document).ready(function() {
 	}
 
 	if ((estadoLogin != "") && (estadoLogin != undefined)) {
-		alert('Usuario o Contraseña incorrectos. Por favor intente nuevamente');
+		alert(estadoLogin);
+	}
+
+	if ((estadoRegistro != "") && (estadoRegistro != undefined)) {
+		alert(estadoRegistro);
 	}
 
 	$("#modalSignIn").load("partials/modal-login.html");
