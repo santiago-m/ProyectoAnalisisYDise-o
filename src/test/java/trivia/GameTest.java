@@ -27,7 +27,7 @@ public class GameTest{
         Base.close();
     }
 
-    @Test
+    /*@Test
     public void prueba(){
       App.openDB();
 
@@ -43,7 +43,6 @@ public class GameTest{
       game.set("ganador", -1);
 
       game.set("estado", "activo");
-      game.saveIt();
 
       game.setPlayer1(usuario);
       game.setPlayer2(null);
@@ -52,6 +51,6 @@ public class GameTest{
 
       App.closeDB();
 
-      assertEquals(game.isValid(), true);
-    }
+      asse88888888888rtEquals(game.isValid(), true);
+    }*/
 }
