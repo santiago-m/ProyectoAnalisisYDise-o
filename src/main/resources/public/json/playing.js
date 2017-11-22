@@ -216,7 +216,9 @@ function nextQuestion() {
 		$('#answersPlace').html('');
 		for (var i = 0; i < answers.length; i++) {
 			if (answers[i] != '') {
-				$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
+				$('#answersPlace').append('<p> <button id="answer'+i+'" name="answer" value="'+answers[i]+'" class="btn btn-outline-primary" onclick="javascript:sendAnswer('+i+')">'+answers[i]+'</button></p>');
+				//<input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  
+
 			}
 		}
 	}
@@ -264,7 +266,7 @@ function nextQuestion() {
 		$('#answersPlace').html('');
 		for (var i = 0; i < answers.length; i++) {
 			if (answers[i] != '') {
-				$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
+				$('#answersPlace').append('<p> <button id="answer'+i+'" name="answer" value="'+answers[i]+'" class="btn btn-outline-primary" onclick="javascript:sendAnswer('+i+')">'+answers[i]+'</button> </p>');
 			}
 		}	
 	}
@@ -312,37 +314,27 @@ function refreshQuestion(msg) {
 
 	for (var i = 0; i < answers.length; i++) {
 		if (answers[i] != '') {
-			$('#answersPlace').append('<p> <input id="answer'+i+'" type="radio" name="answer" value="'+answers[i]+'"> '+answers[i]+'  </p>');
+			$('#answersPlace').append('<p> <button id="answer'+i+'" name="answer" value="'+answers[i]+'" class="btn btn-outline-primary" onclick="javascript:sendAnswer('+i+')">'+answers[i]+'</button> </p>');
 		}
 	}
 
 	console.log(data);
 }
 
-function sendAnswer() {
+function sendAnswer(answerPos) {
 	pregunta = null;
 	var finished = false;
 	if (cantPreguntasRespondidas === cantMaxPreguntas) {
 		finished = true;
 	}
-	radioAnswers = document.getElementsByName('answer');
-	console.log(radioAnswers);
-	for (var i = 0; i < radioAnswers.length; i++) {
-		actual = $('#answer'+i);
-		if (actual.is(':checked')) {
-			console.log(actual);
-
-
-			webSocket.send(JSON.stringify({
-				finished: finished,
-				alone: suddenDeath,
-				cantPlayers: cantPlayers,
-  				username: username,
-  				opponent: opponent,
-  				puntaje: puntaje,
-  				idPregunta: idPregunta,
-  				answer: actual.val()
-			}));
-		}
-	}
+	webSocket.send(JSON.stringify({
+		finished: finished,
+		alone: suddenDeath,
+		cantPlayers: cantPlayers,
+  	username: username,
+  	opponent: opponent,
+  	puntaje: puntaje,
+  	idPregunta: idPregunta,
+  	answer: answers[answerPos]
+	}));
 }
