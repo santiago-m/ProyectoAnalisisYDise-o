@@ -3,13 +3,19 @@ $(document).ready(function() {
 	var admin = $('#admin').html();
 	var puntaje = $('#puntaje').html();
 
-	document.cookie = "username="+usrname;
-	document.cookie = "puntaje="+puntaje;
-	if (admin) {
-		document.cookie = "admin="+admin;	
+	if (!getCookie('admin')) {
+		if (admin) {
+			document.cookie = "admin="+admin;	
+		}
+		else {
+			document.cookie = "admin=false";
+		}
 	}
-	else {
-		document.cookie = "admin=false";
+	if (!getCookie('username')) {
+		document.cookie = "username="+usrname;		
+	}
+	if (!getCookie('puntaje')) {
+		document.cookie = "puntaje="+puntaje;
 	}
 
 	$("#modalSignIn").load("partials/modal-login.html");
@@ -22,3 +28,13 @@ $(document).ready(function() {
     $("#profileModal").modal();
   });
 });
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+function delete_cookie( name ) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}

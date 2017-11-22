@@ -1,82 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Menu Multi-Jugador</title>
+<head>
+	<!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <style>
-    body {
-        background-color: #e2e2e2;
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 
-    }
-    .container {
-      width: 30% ;
-      min-width: 175px;
-    }
-    </style>
-  </head>
+	<link rel="stylesheet" href="css/style.css">
+</head>
 
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">Pregunta2</a>
-
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-              <a class="nav-link" href="/"> Menu Principal </a>
-          </li>
-          <li class="nav-item">
-              <form action="/play" method="POST" id="jugar"></form>
-              <a class="nav-link" href="/play" onclick="document.getElementById('jugar').submit(); return false;"> Un jugador </a>
-          </li>
-          <li class="nav-item active">
-              <a class="nav-link" href="/menuHost"> Multi-Jugador <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/profile"> Perfil </a>
-          </li>
-          <li class="nav-item">
-              <form action="/logout" method="POST" id="salir"></form>
-              <a class="nav-link" href="/logout" onclick="document.getElementById('salir').submit(); return false;"> Cerrar Sesion </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-    <center>
-      <br>
-      <h2>Menu Multi-Jugador</h2>
-
-      <br>
-
-      <div class="container">
-        <form action="/hostLAN" method="GET">
-          <input type="submit" class="btn btn-outline-primary btn-block" value="Crear Partida" />
-        </form>
-        <br>
-
-        <form action="/listarHosts" method="GET">
-          <input type="submit" class="btn btn-outline-primary btn-block" value="Unirse a una Partida" />
-        </form>
-
-        <br>
-				<br>
-				  <form action="/" method="GET">
-		        <input type="submit" value="Volver" class="btn btn-info" />
-		      </form>
-      </div>
-
-    </center>
-
-    <script type="text/javascript" src="js/jquery-3.2.1.js"></script>
-    <script type="text/javascript" src="js/popper.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js" ></script>
-  </body>
-</html>
+<body>
+	<div id="navBar"></div>
+	
+	<center>
+		<br>
+		<h2>Menu Multi-Jugador</h2>
+		<br>
+		<div class="container">
+			<form action="/hostLAN" method="GET">
+				<input type="submit" class="btn btn-outline-primary btn-block" value="Crear Partida" />
+			</form>
+			<br>
+			
+			<form action="/listarHosts" method="GET">
+				<input type="submit" class="btn btn-outline-primary btn-block" value="Unirse a una Partida" />
+			</form>
+			
+			<br>
+			<br>
+			<form action="/" method="GET">
+				<input type="submit" value="Volver" class="btn btn-info" />
+			</form>
+		</div>
+	</center>
+	
+	<script type="text/javascript" src="js/main.js"></script>
+</body>

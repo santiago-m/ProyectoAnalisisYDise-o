@@ -1,84 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Crear Partida</title>
+<head>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <style>
-    body {
-        background-color: #e2e2e2;
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 
-    }
-    </style>
-  </head>
+  <!-- Bootstrap Jquery Validator-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>
 
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">Pregunta2</a>
+  <link rel="stylesheet" href="css/style.css">
+</head>
 
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
+<body>
+  <div id="navBar"></div>
+  
+  <div id="goBack">
+    <form action="/" method="get">
+      <input type="submit" value="Menu Principal" name="mainMenu_btn" class="btn btn-outline-primary" id="mainMenu_btn" />
+    </form>
+  </div>
+  
+  <center>
+    <h2>Crear Partida</h2>
+    <br>
+    <br>
+    <div id="container-fluid">
+      <p id="message">{{estadoHost}}</p>
+      <form data-toggle="validator" action="/host" method="POST" role="form">   
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label for="hostName" class="control-label"><strong>Nombre de la partida: </strong></label>
+            <input class="form-control" id="hostName" name="hostName" placeholder="Host 1" type="text" value="" required>
+          </div>
+          <br>
+        </div>
+      
+        <div class="col-sm-3">
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-              <a class="nav-link" href="/"> Menu Principal </a>
-          </li>
-          <li class="nav-item">
-              <form action="/play" method="POST" id="jugar"></form>
-              <a class="nav-link" href="/play" onclick="document.getElementById('jugar').submit(); return false;"> Un jugador </a>
-          </li>
-          <li class="nav-item active">
-              <a class="nav-link" href="/menuHost"> Multi-Jugador <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/profile"> Perfil </a>
-          </li>
-          <li class="nav-item">
-              <form action="/logout" method="POST" id="salir"></form>
-              <a class="nav-link" href="/logout" onclick="document.getElementById('salir').submit(); return false;"> Cerrar Sesion </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-    <center>
-      <br>
-      <h2>Crear Partida</h2>
-
-      <br>
-
-      <div id="container-fluid">
-				<p id="message">{{estadoHost}}</p>
-
-				<form action="/host" method="POST">
-
-					<div class="col-sm-3">
-						<strong>Nombre de la partida: <strong>
-						<input class="form-control" id="hostName" name="hostName" type="text" /><br>
-					</div>
-
-					<div class="col-sm-3">
-						<strong>Cantidad de preguntas limite: <strong>
-						<input class="form-control" id="cantPreguntas" name="cantPreguntas" type="text" /><br>
-					</div>
-
-					<div class="col-sm-3">
-						<input type="submit" class="btn btn-outline-success" value="Crear Host" />
-					</div>
-				</form>
-
-			</div>
-
-    </center>
-
-
-    <script type="text/javascript" src="js/jquery-3.2.1.js"></script>
-    <script type="text/javascript" src="js/popper.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js" ></script>
-  </body>
-</html>
+          <div class="form-group">
+            <label for="cantPreguntas" class="control-label"><strong>Cantidad de preguntas limite: </strong></label>
+            <input class="form-control" id="cantPreguntas" name="cantPreguntas" placeholder="5" type="number" value="" required>
+          </div>
+          <br>
+        </div>
+      
+        <div>
+          <button type="submit" class="btn btn-success btn-block">Crear Host</button>
+        </div>
+      </form>
+    </div>
+  </center>
+  
+  
+  <script type="text/javascript" src="js/main.js"></script>
+</body>
