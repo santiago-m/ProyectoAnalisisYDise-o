@@ -88,7 +88,7 @@ public class App {
         }
       }
       else {
-        return new ModelAndView(new HashMap(), "./views/mainpage.mustache");
+        return new ModelAndView(mensajes, "./views/mainpage.mustache");
       }
     }, new MustacheTemplateEngine()
     );

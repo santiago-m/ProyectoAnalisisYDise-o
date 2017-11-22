@@ -1,4 +1,7 @@
 $(document).ready(function() {
+
+	var estadoLogin = $('#estadoLogin').html();
+
 	var usrname = $('#usrname').html();
 	var admin = $('#admin').html();
 	var puntaje = $('#puntaje').html();
@@ -16,6 +19,10 @@ $(document).ready(function() {
 	}
 	if (!getCookie('puntaje')) {
 		document.cookie = "puntaje="+puntaje;
+	}
+
+	if ((estadoLogin != "") && (estadoLogin != undefined)) {
+		alert('Usuario o Contraseña incorrectos. Por favor intente nuevamente');
 	}
 
 	$("#modalSignIn").load("partials/modal-login.html");
