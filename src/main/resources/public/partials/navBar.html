@@ -52,7 +52,7 @@
     }
     else {
       $('#rightPart').html('');
-      $('#rightPart').html('<li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" href="#">'+name+' <span class="caret"></span> </a> <ul class="dropdown-menu"> <li><a href="#"><button id="editProfile" class="btn btn-primary">Editar Perfil</button></a></li> <li><a href="#"> <form action="/logout" method="POST"> <input type="submit" value="Cerrar Sesion" class="btn btn-danger" /></form></a></li></ul></li>');
+      $('#rightPart').html('<li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" href="#">'+name+' <span class="caret"></span> </a> <ul class="dropdown-menu"> <li><a href="#"><button id="editProfile" class="btn btn-primary">Editar Perfil</button></a></li> <li><a href="#"> <form action="/logout" method="POST"> <input onclick="javascript:deleteAllCookies()" type="submit" value="Cerrar Sesion" class="btn btn-danger" /></form></a></li></ul></li>');
     }
 
    });
@@ -63,5 +63,13 @@ function getCookie(name) {
   if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
+function delete_cookie( name ) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
 
+function deleteAllCookies() {
+  delete_cookie('username');
+  delete_cookie('puntaje');
+  delete_cookie('admin');
+}
 </script>
